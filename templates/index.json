@@ -55,7 +55,11 @@
       "disabled": false,
       "type": "home-image-with-text",
       "settings": {
-        "article": "69bd8d18547baa3863959d56"
+        "article": "69bd8d1afd91fc305498350a",
+        "image_alt": "",
+        "heading_override": "",
+        "description_override": "",
+        "button_link_override": ""
       },
       "blocks": {},
       "custom_css": []

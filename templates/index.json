@@ -33,8 +33,11 @@
     "featured-text": {
       "disabled": false,
       "type": "home-featured-text",
-      "settings": {},
-      "blocks": {}
+      "settings": {
+        "description": "<p>Founded in 2015, The Happiness Planner was the first brand to incorporate psychology techniques like CBT, NLP, and positive psychology into everyday planners. What started as a new way to approach personal growth became a global trend, empowering millions to become more self-aware, rewire their patterns, and create a life of happiness and fulfillment.<br><br>Life may not always go as planned. But with The Happiness Planner by your side, you’ll have a powerful daily companion to help you practice positive thinking, gratitude, and reframing, so you can feel grounded and aligned, no matter what life throws your way.<br><br>Whatever you may be going through or feeling, our tools are designed to help you reflect on your thoughts and behaviors, uncover what’s holding you back, and create new patterns that support the life you want to live and love.</p>"
+      },
+      "blocks": {},
+      "custom_css": []
     },
     "custom-liquid": {
       "disabled": false,

@@ -40,8 +40,10 @@
       "custom_css": []
     },
     "reviews-carousel": {
+      "disabled": false,
       "type": "home-reviews-carousel",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "custom-liquid": {
       "disabled": false,
@@ -52,8 +54,11 @@
     "image-with-text-1": {
       "disabled": false,
       "type": "home-image-with-text",
-      "settings": {},
-      "blocks": {}
+      "settings": {
+        "article": "69bd8d18547baa3863959d56"
+      },
+      "blocks": {},
+      "custom_css": []
     },
     "image-with-text-2": {
       "disabled": false,

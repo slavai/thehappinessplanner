@@ -178,6 +178,39 @@
   }
   define("localization-form", LocalizationForm);
 
+  // --- cart drawer quantity / remove -----------------------------------
+  async function cartChange(key, quantity) {
+    const url = (window.routes && window.routes.cart_change_url) || "/cart/change";
+    try {
+      const r = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ id: key, quantity }),
+      });
+      if (r.ok) window.location.reload();
+    } catch (e) {
+      window.location.href = "/cart";
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    const item = e.target.closest(".cart--drawer-item");
+    if (!item) return;
+    const key = item.dataset.key;
+    const qtyEl = item.querySelector("[data-qty-value]");
+    const current = parseInt(qtyEl && qtyEl.textContent, 10) || 0;
+    if (e.target.closest("[data-qty-inc]")) {
+      e.preventDefault();
+      cartChange(key, current + 1);
+    } else if (e.target.closest("[data-qty-dec]")) {
+      e.preventDefault();
+      cartChange(key, Math.max(0, current - 1));
+    } else if (e.target.closest("[data-remove]")) {
+      e.preventDefault();
+      cartChange(key, 0);
+    }
+  });
+
   // --- element-relocator -------------------------------------------------
   class ElementRelocator extends HTMLElement {
     connectedCallback() {

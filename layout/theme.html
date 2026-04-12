@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap">
   {{ stylesheet_tag (asset_url 'theme.css') }}
+  <script>window.routes = { cart_change_url: "{{ routes.cart_change_url }}", cart_url: "/cart" };</script>
   {{ script_tag (asset_url 'theme.js') }}
 </head>
 <body>

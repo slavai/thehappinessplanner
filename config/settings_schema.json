@@ -22,15 +22,15 @@
         "type": "text",
         "id": "stamped_api_key",
         "label": "Public API key",
-        "info": "Found in Stamped dashboard → API Keys. Starts with 'pubkey-'.",
+        "info": "Found in Stamped dashboard → API Keys. Starts with 'pubkey-'. Passed as apiKey arg to StampedFn.init().",
         "default": "pubkey-523mDsz4evBt0gHm3X8Jnv8k5h1s3R"
       },
       {
         "type": "text",
-        "id": "stamped_shop_id",
-        "label": "Shop ID",
-        "info": "Numeric store identifier from Stamped dashboard.",
-        "default": "7739449"
+        "id": "stamped_s_id",
+        "label": "Stamped store ID (sId)",
+        "info": "Numeric store identifier assigned by Stamped (NOT the Shopify shop_id). Visible on the Stamped dashboard.",
+        "default": "14189"
       }
     ]
   }

@@ -6,6 +6,25 @@
 {{ assign 'image_value' (default section.settings.image selected_article.image) }}
 {{ assign 'link_value' (default section.settings.button_link_override selected_article.url) }}
 
+<div style="background:#ffeb3b;color:#000;padding:16px;font-family:monospace;font-size:12px;line-height:1.6;border:2px solid red;">
+  <strong>DEBUG (remove after testing):</strong><br>
+  section.settings.article (raw) = "<code>{{ section.settings.article }}</code>"<br>
+  section.settings.article.title (direct) = "<code>{{ section.settings.article.title }}</code>"<br>
+  section.settings.article.id = "<code>{{ section.settings.article.id }}</code>"<br>
+  section.settings.article.handle = "<code>{{ section.settings.article.handle }}</code>"<br>
+  selected_article (after lookup) = "<code>{{ selected_article }}</code>"<br>
+  selected_article.title = "<code>{{ selected_article.title }}</code>"<br>
+  selected_article.id = "<code>{{ selected_article.id }}</code>"<br>
+  heading_value (computed) = "<code>{{ heading_value }}</code>"<br>
+  description_value (computed) = "<code>{{ description_value }}</code>"<br>
+  image_value = "<code>{{ image_value }}</code>"<br>
+  link_value = "<code>{{ link_value }}</code>"<br>
+  {{#if section.settings.article}}Article check: SET{{else}}Article check: NOT SET{{/if}}<br>
+  {{#if selected_article}}Lookup check: FOUND{{else}}Lookup check: NOT FOUND{{/if}}<br>
+  {{#if selected_article.title}}Title check: PRESENT{{else}}Title check: EMPTY{{/if}}<br>
+  Blog handle attempt (via articles.news.title) = "<code>{{ articles.news.title }}</code>"<br>
+</div>
+
 <div class="image-with-text--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="none" data-container-width="6" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-mobile-full-width="true" data-spacing-above="none" data-spacing-below="none">
   <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="false" data-overlap="false" data-text-position="{{ section.settings.text_position }}">
     <div class="featured-content--container" data-background-color="transparent">

@@ -1,0 +1,16 @@
+<div class="shopify-policy__container">
+  <div class="shopify-policy__title">
+    <h1>{{ page_title }}</h1>
+  </div>
+  <div class="shopify-policy__body">
+    <div class="rte">{{{ page.content }}}</div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Policy content",
+  "tag": "section",
+  "settings": []
+}
+{{/schema}}

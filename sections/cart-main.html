@@ -1,0 +1,198 @@
+<div class="shopify-section section--cart">
+  <cart-element class="cart--root" data-section-id="{{ section.id }}" data-background-color="none" data-view="desktop" data-container-width="3" data-transition-container="cart-desktop" data-transition-type="fade-in" data-transition-cascade="vertical" data-transition-cascade-interval="250">
+    {{#form 'cart' cart}}
+    <div class="cart--wrapper">
+      <div class="cart--header">
+        <h2 class="cart--title" data-item="section-heading" data-transition-item="cart-desktop" data-transition-type="slide-in">Your Cart</h2>
+      </div>
+
+      {{#if cart.item_count > 0}}
+      <div class="cart--shipping">
+        <div class="cart--shipping-message" data-item="paragraph">
+          {{#if cart.total_price >= 10000}}
+            You have qualified for free shipping!
+          {{else}}
+            You are {{ money cart.free_shipping_remaining }} from free shipping.
+          {{/if}}
+        </div>
+        <div class="cart--shipping-bar" data-transition-item="cart-desktop" data-transition-type="custom"></div>
+      </div>
+
+      <div class="cart--body">
+        <div class="cart--headings" data-item="nav-text">
+          <div class="cart--heading--image"></div>
+          <div class="cart--heading--title"></div>
+          <div class="cart--heading--price">Price</div>
+          <div class="cart--heading--quantity">Quantity</div>
+          <div class="cart--heading--total">Total</div>
+        </div>
+
+        {{#for cart.items as |line_item|}}
+        <div class="cart--item" data-transition-item="cart-desktop" data-transition-type="slide-in">
+          <div class="cart--item--image">
+            <a href="{{ line_item.url }}">
+              {{#if line_item.image}}
+              <img src="{{ line_item.image.src }}" alt="{{ line_item.title }}" loading="lazy">
+              {{/if}}
+            </a>
+          </div>
+          <div class="cart--item--title">
+            <a href="{{ line_item.url }}" data-item="block-heading">{{ line_item.product.title }}</a>
+            {{#unless line_item.variant.title == "Default Title"}}
+            <div class="cart--item--variant" data-item="nav-text">{{ line_item.variant.title }}</div>
+            {{/unless}}
+          </div>
+          <div class="cart--item--price" data-item="nav-text">
+            {{ money line_item.price }}
+          </div>
+          <div class="cart--item--quantity">
+            <input type="number" name="updates[]" value="{{ line_item.quantity }}" min="0" data-item="nav-text">
+          </div>
+          <div class="cart--item--total" data-item="nav-text">
+            {{ money line_item.line_price }}
+          </div>
+        </div>
+        {{/for}}
+      </div>
+      {{/if}}
+
+      <div class="cart--footer" data-transition-item="cart-desktop">
+        <div class="cart--notes">
+          <label for="desktop-cart_note" class="cart--notes--heading">Leave a note with your order</label>
+          <textarea class="cart--notes--textarea" id="desktop-cart_note" name="note">{{ cart.note }}</textarea>
+        </div>
+        <div class="cart--summary">
+          <div class="cart--totals">
+            <div class="cart--total">
+              <div data-item="block-heading">Subtotal:</div>
+              <div class="cart--total-price money" data-item="nav-text">{{ money cart.total_price }}</div>
+            </div>
+            <div class="cart--tax-info" data-item="paragraph">Taxes and shipping calculated at checkout</div>
+          </div>
+          <button type="submit" name="checkout" class="cart--checkout-button" data-item="button" data-text="Checkout" data-transition-button="">
+            <span class="cart-button--text">Checkout</span>
+            <span class="cart-button--spinner">
+              <svg class="icon--root icon--spinner" data-invertible="false">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {{#unless cart.item_count > 0}}
+      <div class="cart--empty" data-text-alignment="center">
+        <div class="cart--empty-text" data-item="paragraph">
+          <span data-item="rte-content">Your cart is currently empty.<br>
+          <a href="/collections/all">Click here to continue shopping</a>.</span>
+        </div>
+      </div>
+      {{/unless}}
+    </div>
+    {{/form}}
+  </cart-element>
+
+  <cart-element class="cart--root" data-section-id="{{ section.id }}" data-background-color="none" data-view="mobile" data-container-width="3" data-transition-container="cart-mobile" data-transition-type="fade-in" data-transition-cascade="vertical" data-transition-cascade-interval="250">
+    {{#form 'cart' cart}}
+    <div class="cart--wrapper">
+      <div class="cart--header">
+        <h2 class="cart--title" data-item="section-heading" data-transition-item="cart-mobile" data-transition-type="slide-in">Your Cart</h2>
+      </div>
+
+      {{#if cart.item_count > 0}}
+      <div class="cart--shipping">
+        <div class="cart--shipping-message" data-item="paragraph">
+          {{#if cart.total_price >= 10000}}
+            You have qualified for free shipping!
+          {{else}}
+            You are {{ money cart.free_shipping_remaining }} from free shipping.
+          {{/if}}
+        </div>
+        <div class="cart--shipping-bar" data-transition-item="cart-mobile" data-transition-type="custom"></div>
+      </div>
+
+      <div class="cart--body">
+        {{#for cart.items as |line_item|}}
+        <div class="cart--item" data-transition-item="cart-mobile" data-transition-type="slide-in">
+          <div class="cart--item--image">
+            <a href="{{ line_item.url }}">
+              {{#if line_item.image}}
+              <img src="{{ line_item.image.src }}" alt="{{ line_item.title }}" loading="lazy">
+              {{/if}}
+            </a>
+          </div>
+          <div class="cart--item--title">
+            <a href="{{ line_item.url }}" data-item="block-heading">{{ line_item.product.title }}</a>
+            {{#unless line_item.variant.title == "Default Title"}}
+            <div class="cart--item--variant" data-item="nav-text">{{ line_item.variant.title }}</div>
+            {{/unless}}
+          </div>
+          <div class="cart--item--price" data-item="nav-text">
+            {{ money line_item.price }}
+          </div>
+          <div class="cart--item--quantity">
+            <input type="number" name="updates[]" value="{{ line_item.quantity }}" min="0" data-item="nav-text">
+          </div>
+          <div class="cart--item--total" data-item="nav-text">
+            {{ money line_item.line_price }}
+          </div>
+        </div>
+        {{/for}}
+      </div>
+      {{/if}}
+
+      <div class="cart--notes">
+        <label for="mobile-cart_note" class="cart--notes--heading">Leave a note with your order</label>
+        <textarea class="cart--notes--textarea" id="mobile-cart_note" name="note">{{ cart.note }}</textarea>
+      </div>
+
+      {{#unless cart.item_count > 0}}
+      <div class="cart--empty" data-text-alignment="center">
+        <div class="cart--empty-text" data-item="paragraph">
+          <span data-item="rte-content">Your cart is currently empty.<br>
+          <a href="/collections/all">Click here to continue shopping</a>.</span>
+        </div>
+      </div>
+      {{/unless}}
+    </div>
+    <div class="cart--summary">
+      <div class="cart--totals">
+        <div class="cart--total">
+          <div data-item="block-heading">Subtotal:</div>
+          <div class="cart--total-price money" data-item="nav-text">{{ money cart.total_price }}</div>
+        </div>
+        <div class="cart--tax-info" data-item="paragraph">Taxes and shipping calculated at checkout</div>
+      </div>
+      <button type="submit" name="checkout" class="cart--checkout-button" data-item="button" data-text="Checkout" data-transition-button="">
+        <span class="cart-button--text">Checkout</span>
+        <span class="cart-button--spinner">
+          <svg class="icon--root icon--spinner" data-invertible="false">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+          </svg>
+        </span>
+      </button>
+    </div>
+    {{/form}}
+  </cart-element>
+</div>
+
+{{#schema}}
+{
+  "name": "Cart",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Your Cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_notes",
+      "label": "Show order notes",
+      "default": true
+    }
+  ]
+}
+{{/schema}}

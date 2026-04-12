@@ -1,0 +1,129 @@
+<div class="featured-collection--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="{{ section.settings.border }}" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-section-type="index_featured_collection" data-spacing-above="full" data-spacing-below="full"> <div class="featured-collection--wrapper" data-container="section"> <div class="featured-collection--header-nav" data-container="nav" data-text-alignment="center" data-mobile-text-alignment="left"><div class="featured-collection--header" data-container="block"> <h2 class="featured-collection--title" data-item="section-heading" data-transition-item="viewport" data-transition-type="slide-in" data-transition-active="true" data-transition-finished="true">{{#if section.settings.collection}} <a href="{{ section.settings.collection }}">{{ section.settings.heading }}</a>{{else}}{{ section.settings.heading }}{{/if}} </h2> </div><div class="carousel-nav-arrow" data-id="{{ section.id }}" data-mq="small"> <button class="carousel-nav-arrow--prev" type="button" aria-disabled="true" aria-label="previous" tabindex="-1"><svg class="icon--root icon--chevron-left" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg"> <path d="m3.13 10 8.58 8.58L10.29 20l-10-10 10-10 1.42 1.42z" fill="#000" fill-rule="nonzero"></path> </svg></button> <span class="carousel-nav-arrow--current" data-item="paragraph" data-value="1"></span> <span class="carousel-nav-arrow--total" data-item="paragraph" data-value="2" data-mobile-value="5"></span> <button class="carousel-nav-arrow--next" type="button" aria-disabled="false" aria-label="next" tabindex="0"><svg class="icon--root icon--chevron-right" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg"> <path d="M8.87 10 .29 1.42 1.71 0l10 10-10 10-1.42-1.42z" fill="#000" fill-rule="nonzero"></path> </svg></button> </div></div> <div class="featured-collection--products" data-display-type="slideshow" data-container="panel" data-transition-container="{{ section.id }}" data-transition-type="fade-in" data-transition-cascade="horizontal" data-transition-cascade-interval="200"> <carousel-element class="carousel--root" data-id="{{ section.id }}" data-last-slide="false" data-columns="{{ section.settings.columns }}" data-mobile-only="" data-mobile-columns="1" data-mobile-next-visible="" data-spacing-around-blocks="true" data-transition-type="slide" style="--blocks-per-slide: {{ section.settings.columns }}; --blocks-per-slide-mobile: 1; --total-slides: 2; --total-slides-mobile: {{ section.blocks.size }}; --total-spaces: {{ section.blocks.size }}; --total-spaces-mobile: {{ section.blocks.size }}; --slide-height: 650px; --right-image-height: 469px; --slide-pos: 0%;" data-first-slide="true"> <div class="carousel--wrapper"><button class="carousel--prev" aria-label="previous" aria-disabled="true" data-mq="medium-large" tabindex="-1"><div class="nav-arrow" data-direction="left"> <div></div> <div></div> <div></div>
+</div>
+</button><div class="carousel--container">{{#for section.blocks as |block|}}
+<div class="carousel--block" data-id="{{ block.id }}" style="--media-height: 587; --block-height: 650;"><div class="product-card--root" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}" style="--transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true"> <a href="{{ block.settings.product_link }}" class="product-card--image-wrapper" tabindex="-1">{{#if block.settings.label}}<div class="product--labels" data-item="overline" data-text-color="body"><div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="new">{{ block.settings.label }}</div></div>{{/if}}<img src="{{ image_url block.settings.image width=800 }}" alt="{{ block.settings.title }}" width="800" height="800" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)">{{#if block.settings.hover_image}}<img src="{{ image_url block.settings.hover_image width=800 }}" alt="{{ block.settings.title }}" width="800" height="800" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)">{{/if}}</a> <div class="product-card--details"> <div class="product-card--details-wrapper"><div class="product-card--vendor" data-item="sub-nav-text">{{ block.settings.vendor }}</div><a href="{{ block.settings.product_link }}" class="product-card--title-link"> <p class="product-card--title" data-item="paragraph">{{ block.settings.title }}</p> </a></div><div class="product--price-container"> <div class="product--price-wrapper">{{#if block.settings.show_from}}<span class="product--from" data-item="nav-text">From</span>{{/if}}<span class="product--price" data-item="nav-text"><span class="money">{{ block.settings.price }}</span></span> </div></div></div>
+</div></div>
+{{/for}}</div><button class="carousel--next" aria-label="next" aria-disabled="false" data-mq="medium-large" tabindex="0"><div class="nav-arrow" data-direction="right"> <div></div> <div></div> <div></div>
+</div>
+</button></div>
+</carousel-element> </div> </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "class": "shopify-section section--featured-collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "100-Day Planners & Journals"
+    },
+    {
+      "type": "collection_picker",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background color",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "light", "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Border",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "both", "label": "Both" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "both"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product image"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_image",
+          "label": "Hover image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product title",
+          "default": "The 100-Day Planner"
+        },
+        {
+          "type": "text",
+          "id": "vendor",
+          "label": "Vendor",
+          "default": "The Happiness Planner\u00ae"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$19.99 USD"
+        },
+        {
+          "type": "select",
+          "id": "show_from",
+          "label": "Show 'From' prefix",
+          "options": [
+            { "value": "true", "label": "Yes" },
+            { "value": "", "label": "No" }
+          ],
+          "default": "true"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Product label (e.g. New, Sale)"
+        },
+        {
+          "type": "url",
+          "id": "product_link",
+          "label": "Product link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
+  ]
+}
+{{/schema}}

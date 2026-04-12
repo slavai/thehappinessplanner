@@ -1,0 +1,13 @@
+{
+  "name": "blog.html",
+  "layout": "theme",
+  "sections": {
+    "main": {
+      "type": "blog-index-main",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

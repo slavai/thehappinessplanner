@@ -1,0 +1,95 @@
+<div class="custom-liquid--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="{{ section.settings.border }}" data-container-width="3" data-mobile-full-width="false" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="none" data-spacing-below="none" data-text-alignment="center"> <div class="custom-liquid--wrapper"> <div class="custom-substack-box" style="max-width: 450px; margin: 0 auto; padding: 10px 20px; background: #ffffff;
+            font-family: serif; font-size: 14px; text-align: center;">{{#if section.settings.heading}} <h3 style="margin-bottom: 10px; font-size: 18px; font-weight: 300; font-family: serif;">
+{{ section.settings.heading }}
+  </h3>{{/if}}{{#if section.settings.subtext}} <p style="font-size: 16px; margin-bottom: 20px; color: #444;">
+  {{ section.settings.subtext }}
+  </p>{{/if}} <form action="{{ section.settings.form_action }}" method="GET" target="_blank"> <input type="email" name="email" placeholder="{{ section.settings.placeholder_text }}" required="" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ccc;
+                  border-radius: 6px; font-size: 12px;"> <button type="submit" style="width: 100%; padding: 12px; background-color: {{ section.settings.button_color }}; color: white;
+                   border: none; border-radius: 6px; cursor: pointer; font-size: 13px;
+                   font-weight: bold; font-family: inherit;">
+      {{ section.settings.button_text }}
+    </button> </form>{{#if section.settings.footer_text}} <p style="font-size: 12px; color: #888; margin-top: 12px;">
+    {{ section.settings.footer_text }}
+  </p>{{/if}}
+</div> </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Custom Liquid (Newsletter)",
+  "tag": "section",
+  "class": "shopify-section section--custom-liquid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join 93,000+ readers designing their lives with intention"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Get 10% off your first order + weekly dose of inspiration & tools for mindset shifts, healing, and inner growth."
+    },
+    {
+      "type": "url",
+      "id": "form_action",
+      "label": "Form action URL"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe \u2192"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer text",
+      "default": "No spam. Just words worth reading."
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background color",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "light", "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Border",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "both", "label": "Both" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "both"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Custom Liquid (Newsletter)"
+    }
+  ]
+}
+{{/schema}}

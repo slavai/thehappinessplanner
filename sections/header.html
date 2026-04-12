@@ -1,0 +1,156 @@
+<header-element class="header--root" data-section-id="{{ section.id }}" data-section-type="header" data-background-color="{{ section.settings.background_color }}" data-bottom-border="{{ section.settings.bottom_border }}" data-container-width="6" data-hover-disabled="false" data-layout="drawer" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-overlap-behavior="drawer" data-reduce-height="true" data-scroll-hide="false" data-spacing-above="none" data-spacing-below="none" data-sticky="false" data-sticky-enabled="{{ section.settings.sticky_enabled }}" data-transparent-enabled="false" data-transparent-white-text="false" aria-expanded="true" aria-hidden="false" data-loaded="true">
+  <div class="header--wrapper">
+    <h1 class="header--logo">
+      <div class="header--primary-logo">
+        <a href="/" title="{{ shop.name }}" itemscope="" itemprop="url" itemtype="https://schema.org/Organization">
+          {{#if section.settings.logo}}
+            <img src="{{ image_url section.settings.logo width=762 }}" alt="{{ section.settings.logo_alt }}" srcset="{{ image_url section.settings.logo width=352 }} 352w, {{ image_url section.settings.logo width=762 }} 762w" width="762" height="150" loading="eager" itemprop="logo" style="--width:{{ section.settings.logo_width }}px;--mobile-width:{{ section.settings.logo_mobile_width }}px;" fetchpriority="high">
+          {{/if}}
+        </a>
+      </div>
+    </h1>
+
+    <nav class="header--primary-nav" aria-hidden="false">
+      <button class="header--drawer-toggle" data-drawer-open="left" data-drawer-view="y-menu" aria-haspopup="menu" aria-label="Toggle drawer">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <button class="header--search" data-drawer-open="top" data-drawer-view="search" data-item="nav-text" aria-label="Search" tabindex="0">
+        <svg class="icon--root icon--search" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <circle cx="8.46" cy="8.46" r="5.56" fill="none" stroke="#000" stroke-miterlimit="10"></circle>
+          <path fill="none" stroke="#000" stroke-miterlimit="10" d="m14.4 14.4 2.7 2.7"></path>
+        </svg>
+      </button>
+
+      <x-menu-element class="x-menu" aria-hidden="false" data-mq="medium-large" style="--highlight-color:{{ section.settings.highlight_color }};">
+        <ul class="x-menu--level-1--container">
+          {{ assign 'main_menu' (lookup linklists section.settings.menu) }}
+          {{#for main_menu.links as |link|}}
+            <li class="x-menu--level-1--link" data-depth="{{#if link.links}}2{{else}}1{{/if}}" data-megamenu="false">
+              <a href="{{ link.url }}" data-item="nav-text"{{#if link.links}} aria-haspopup="true" aria-expanded="false"{{/if}}>
+                <span class="x-menu--level-1--text">{{ link.title }}{{#if link.links}}<svg class="icon--root icon--chevron-down" data-invertible="true" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"> <path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path> </svg>{{/if}}</span>
+              </a>
+              {{#if link.links}}
+                <div class="x-menu--level-2--container" aria-hidden="true" data-background-color="none" data-megamenu="false" data-text-color="body" style="--height: auto; --natural-height: 0px;">
+                  <div class="x-menu--level-2--wrapper">
+                    <ul class="x-menu--level-2--list" data-single-parents="true">
+                      {{#for link.links as |child_link|}}
+                        <li class="x-menu--level-2--link">
+                          <a href="{{ child_link.url }}" data-item="sub-nav-text"{{#if child_link.url 'contains' "http"}} target="_blank"{{/if}}>{{ child_link.title }}</a>
+                        </li>
+                      {{/for}}
+                    </ul>
+                  </div>
+                </div>
+              {{/if}}
+            </li>
+          {{/for}}
+        </ul>
+      </x-menu-element>
+    </nav>
+
+    <nav class="header--secondary-nav" data-item="nav-text">
+      <button class="header--search" data-drawer-open="top" data-drawer-view="search" data-item="nav-text" aria-label="Search" tabindex="0">
+        <svg class="icon--root icon--search" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <circle cx="8.46" cy="8.46" r="5.56" fill="none" stroke="#000" stroke-miterlimit="10"></circle>
+          <path fill="none" stroke="#000" stroke-miterlimit="10" d="m14.4 14.4 2.7 2.7"></path>
+        </svg>
+      </button>
+
+      <a class="header--account" href="/account" aria-label="Account">
+        <svg class="icon--root icon--account" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <circle cx="9.99" cy="5.96" r="3.07" fill="none" stroke="#000" stroke-miterlimit="10"></circle>
+          <path fill="none" stroke="#000" stroke-miterlimit="10" d="M4.5 17.11c0-3.04 2.46-5.5 5.5-5.5s5.5 2.46 5.5 5.5"></path>
+        </svg>
+      </a>
+
+      <a class="header--cart" data-type="icon" aria-label="Cart" data-drawer-open="right" data-drawer-view="cart-drawer" aria-haspopup="menu" href="/cart" data-cart-count="{{ cart.item_count }}">
+        <svg class="icon--root icon--bag" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path fill="none" stroke="#000" stroke-miterlimit="10" d="M17.04 17.1H2.96L3.5 2.89h12.99l.54 14.21Z"></path>
+          <path fill="none" stroke="#000" stroke-miterlimit="10" d="M7.24 5.79v2.37a2.76 2.76 0 1 0 5.52 0V5.79"></path>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</header-element>
+
+<element-relocator data-move-into=".mobile-nav--account" data-mq="none"></element-relocator>
+<element-relocator data-move-into=".mobile-nav--search" data-mq="none"></element-relocator>
+<element-relocator data-move-into=".mobile-nav--menu" data-mq="none"></element-relocator>
+<element-relocator data-move-into=".mobile-nav--localization" data-mq="none"></element-relocator>
+
+{{#schema}}
+{
+  "name": "Header",
+  "tag": "header",
+  "class": "shopify-section shopify-section-group-header-group section--header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Logo alt text",
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width (px)",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "default": 381
+    },
+    {
+      "type": "range",
+      "id": "logo_mobile_width",
+      "label": "Mobile logo width (px)",
+      "min": 80,
+      "max": 400,
+      "step": 5,
+      "default": 305
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "light",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_border",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_enabled",
+      "label": "Sticky header",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Menu highlight color",
+      "default": "#d02e2e"
+    }
+  ],
+  "blocks": []
+}
+{{/schema}}

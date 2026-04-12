@@ -1,0 +1,60 @@
+<div class="shopify-section section--article">
+  <article class="article--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="4" data-heading-position="below" data-show-author="true" data-show-date="true" data-show-featured="true">
+    <div class="article--wrapper">
+      <div class="article--heading" data-transition-container="{{ section.id }}" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="500">
+        <div class="article--header--info" data-container="block">
+          <h1 class="article--title" data-item="section-heading" data-transition-item="{{ section.id }}">{{ article.title }}</h1>
+          <div class="article--info" data-mq="medium-large" data-transition-item="{{ section.id }}">
+            <div class="article--timesince" data-item="nav-text" data-text-color="gray">
+              <time datetime="{{ article.published_at }}">{{ article.published_at }}</time>
+            </div>
+            <span class="article--dot" data-mq="medium-large">&middot;</span>
+            <div class="article--author" data-item="caption">Written by {{ article.author }}</div>
+          </div>
+        </div>
+        {{#if article.image}}
+        <picture class="image--root article--image" data-background="false" data-display-type="original" data-full-width="" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-overlay-style="" data-parallax="" data-overlay-style="" style="--aspect-ratio:1.2802;--mobile-aspect-ratio:1.2802;">
+          <img src="{{ article.image.src }}" alt="{{ article.title }}" loading="eager" fetchpriority="high" draggable="false">
+        </picture>
+        {{/if}}
+        <div class="article--info" data-mq="small" data-transition-item="{{ section.id }}">
+          <div class="article--timesince" data-item="nav-text" data-text-color="gray">
+            <time datetime="{{ article.published_at }}">{{ article.published_at }}</time>
+          </div>
+          <span class="article--dot" data-mq="medium-large">&middot;</span>
+          <div class="article--author" data-item="caption">Written by {{ article.author }}</div>
+        </div>
+      </div>
+      <div class="article--content" data-item="rte-content">
+        {{{ article.content }}}
+      </div>
+    </div>
+  </article>
+</div>
+
+{{#schema}}
+{
+  "name": "Blog post",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show featured image",
+      "default": true
+    }
+  ]
+}
+{{/schema}}

@@ -1,0 +1,60 @@
+<div class="shopify-section section--article-comments">
+  <div class="article-comments--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="2" data-spacing-above="false">
+    <div class="article-comments-wrapper">
+      <h2 class="article-comments--heading" data-item="section-heading" data-transition-item="viewport" data-transition-type="slide-in">Comments</h2>
+      <div id="comments" class="comments--root">
+        {{#if article.comments_count > 0}}
+        <div class="comments--list">
+          {{#for article.comments as |comment|}}
+          <div id="{{ comment.id }}-comment" class="comment--item">
+            <p class="comment--meta">
+              <span data-item="nav-text">{{ comment.author }}</span> &mdash;
+              <span data-item="nav-text" data-text-color="gray"><time datetime="{{ comment.created_at }}">{{ comment.created_at }}</time></span>
+            </p>
+            <div class="comment--content" data-item="paragraph">
+              {{{ comment.content }}}
+            </div>
+          </div>
+          {{/for}}
+        </div>
+        {{/if}}
+
+        {{#form 'new_comment' article}}
+        <div class="comments--form-meta">
+          <div class="comments--form-name">
+            <input data-item="nav-text" type="text" id="comment_name" name="comment[author]" autocomplete="name" size="40" placeholder="Name" required="">
+            <label for="comment_name">Name</label>
+          </div>
+          <div class="comments--form-email">
+            <input data-item="nav-text" type="email" id="comment_email" name="comment[email]" autocomplete="email" size="40" placeholder="Email" required="">
+            <label for="comment_email">Email</label>
+          </div>
+        </div>
+        <div class="comments--form-input">
+          <textarea data-item="nav-text" id="comment_body" name="comment[body]" cols="40" rows="5" placeholder="Comment" required=""></textarea>
+          <label for="comment_body">Comment</label>
+        </div>
+        <div class="comments--form-moderated" data-item="nav-text">All comments are moderated before being published.</div>
+        <button class="comments--form-submit" type="submit" data-item="button" data-text="Submit Comment" data-transition-button="">
+          <span>Submit Comment</span>
+        </button>
+        {{/form}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Article comments",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_comments",
+      "label": "Show comments",
+      "default": true
+    }
+  ]
+}
+{{/schema}}

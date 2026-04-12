@@ -1,0 +1,103 @@
+{
+  "name": "index.html",
+  "layout": "theme",
+  "sections": {
+    "slideshow-hero": {
+      "type": "home-slideshow",
+      "settings": {}
+    },
+    "featured-text": {
+      "type": "home-featured-text",
+      "settings": {}
+    },
+    "custom-liquid": {
+      "type": "home-custom-liquid",
+      "settings": {}
+    },
+    "image-with-text-1": {
+      "type": "home-image-with-text",
+      "settings": {}
+    },
+    "image-with-text-2": {
+      "type": "home-image-with-text",
+      "settings": {}
+    },
+    "featured-product-1": {
+      "type": "home-featured-product",
+      "settings": {}
+    },
+    "featured-collection-1": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-video-1": {
+      "type": "home-featured-video",
+      "settings": {}
+    },
+    "featured-product-2": {
+      "type": "home-featured-product",
+      "settings": {}
+    },
+    "slideshow-2": {
+      "type": "home-slideshow",
+      "settings": {}
+    },
+    "featured-collection-2": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-collection-3": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-collection-4": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-collection-5": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-collection-6": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-collection-7": {
+      "type": "home-featured-collection",
+      "settings": {}
+    },
+    "featured-video-2": {
+      "type": "home-featured-video",
+      "settings": {}
+    },
+    "grid-with-overlay": {
+      "type": "home-grid-with-overlay",
+      "settings": {}
+    },
+    "image-with-text-overlay": {
+      "type": "home-image-with-text-overlay",
+      "settings": {}
+    }
+  },
+  "order": [
+    "slideshow-hero",
+    "featured-text",
+    "custom-liquid",
+    "image-with-text-1",
+    "image-with-text-2",
+    "featured-product-1",
+    "featured-collection-1",
+    "featured-video-1",
+    "featured-product-2",
+    "slideshow-2",
+    "featured-collection-2",
+    "featured-collection-3",
+    "featured-collection-4",
+    "featured-collection-5",
+    "featured-collection-6",
+    "featured-collection-7",
+    "featured-video-2",
+    "grid-with-overlay",
+    "image-with-text-overlay"
+  ]
+}

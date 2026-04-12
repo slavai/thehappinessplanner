@@ -1,0 +1,97 @@
+<div class="shopify-section section--blog">
+  <div class="blog--root" data-section-id="{{ section.id }}" data-background-color="none" data-columns="1" data-container-width="6" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-mobile-full-width="true" data-show-featured="false" data-show-tag-filter="true" data-show-title="true" data-spacing-above="none" data-spacing-below="none">
+    <div class="blog--wrapper">
+      <div class="blog--header--root">
+        <div class="blog--header">
+          <div class="blog--title-container" data-transition-item="viewport" data-transition-type="slide-in">
+            <h1 class="blog--title" data-item="section-heading">
+              <a href="{{ blog.url }}">{{ blog.title }}</a>
+            </h1>
+          </div>
+          <div class="blog--filter--root">
+            <nav class="blog--filter--body" id="blog_filters">
+              <ul class="blog--filter--menu" data-item="nav-text">
+                <li class="blog--filter--menu-item" data-item="block-link" {{#if current_tags}}{{else}}data-selected="true"{{/if}}>
+                  <a href="{{ blog.url }}#blog_filters">Everything</a>
+                </li>
+                {{#for blog.all_tags as |tag|}}
+                <li class="blog--filter--menu-item" {{#if tag.active}}data-selected="true"{{/if}} data-item="block-link">
+                  <a href="{{ blog.url }}/tagged/{{ tag.handle }}#blog_filters">{{ tag }}</a>
+                </li>
+                {{/for}}
+              </ul>
+              <disclosure-element class="disclosure--root" data-id="blog-disclosure" data-type="url-redirect">
+                <label class="disclosure--label" id="blog-disclosure-filter-toggle" data-item="hidden-text"><span>Filter</span></label>
+                <div class="disclosure--main">
+                  <button class="disclosure--toggle" data-item="nav-text" aria-expanded="false" aria-controls="blog-disclosure-filter" aria-labelledby="blog-disclosure-filter-toggle">
+                    <div class="disclosure--current-option">{{#if current_tags}}{{ current_tags.first }}{{else}}Everything{{/if}}</div>
+                    <svg class="icon--root icon--chevron-down" data-invertible="true" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path>
+                    </svg>
+                  </button>
+                  <ul class="disclosure--form" id="blog-disclosure-filter" data-transition-item="viewport" data-transition-type="scale-in" data-transition-trigger="custom" aria-hidden="true">
+                    <li class="disclosure--option" tabindex="0" data-item="sub-nav-text" data-value="{{ blog.url }}" {{#unless current_tags}}aria-current="true"{{/unless}}>Everything</li>
+                    {{#for blog.all_tags as |tag|}}
+                    <li class="disclosure--option" tabindex="0" data-item="sub-nav-text" data-value="{{ blog.url }}/tagged/{{ tag.handle }}" {{#if tag.active}}aria-current="true"{{else}}aria-current="false"{{/if}}>{{ tag }}</li>
+                    {{/for}}
+                  </ul>
+                </div>
+              </disclosure-element>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog--body" data-container="panel" data-columns="1" data-mobile-columns="1">
+        {{#for blog.articles as |article|}}
+        <div class="blog--article" data-transition-item="viewport" data-transition-type="slide-in">
+          <a href="{{ article.url }}" class="blog--article--image-wrapper" aria-label="{{ article.title }}">
+            {{#if article.image}}
+            <div class="blog--article--image" data-transition-item="" data-transition-type="zoom-in" data-transition-trigger="hover">
+              <img src="{{ article.image.src }}" alt="{{ article.title }}" loading="lazy" draggable="false">
+            </div>
+            {{/if}}
+          </a>
+          <div class="blog--article--info">
+            <h2 class="blog--article--heading" data-item="block-heading">
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            </h2>
+            <div class="blog--article--meta" data-item="nav-text">
+              <div class="blog--article--date" data-text-color="gray">
+                <time datetime="{{ article.published_at }}">{{ article.published_at }}</time>
+              </div>
+              <span class="blog--article--dot">·</span>
+              <div class="blog--article--author" data-item="caption">Written by {{ article.author }}</div>
+            </div>
+            <div class="blog--article--excerpt" data-item="paragraph">
+              {{ article.excerpt_or_content }}
+            </div>
+            <a href="{{ article.url }}" class="blog--article--link" data-item="block-link">Read more</a>
+          </div>
+        </div>
+        {{/for}}
+      </div>
+
+      {{#if blog.articles.size > 0}}
+      <div class="blog--pagination" data-container="block">
+        {{ paginate }}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Blog index",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Blog"
+    }
+  ]
+}
+{{/schema}}

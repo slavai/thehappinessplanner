@@ -1,0 +1,31 @@
+{
+  "general": {
+    "search": "Search",
+    "cart": "Cart",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "products": {
+    "add_to_cart": "Add to cart",
+    "sold_out": "Sold out",
+    "quantity": "Quantity"
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal"
+  },
+  "collections": {
+    "title": "Collections",
+    "sort_by": "Sort by"
+  },
+  "blog": {
+    "read_more": "Read more",
+    "comments": "Comments"
+  },
+  "404": {
+    "title": "Page not found",
+    "subtext": "The page you requested does not exist."
+  }
+}

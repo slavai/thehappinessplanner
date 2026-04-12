@@ -1,0 +1,212 @@
+{{#style}}
+  .main-product--root {
+    --text-column-width: 375px;
+    --media-gap: 8px;
+    --thumbnail-width: 80px;
+  }
+{{/style}}
+
+<div class="shopify-section section--product-page">
+  <div class="main-product--root" data-section-type="product_page" data-background-color="none" data-container-width="4" data-handle="{{ product.handle }}" data-mobile-spacing-above="none" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="left" style="--text-column-width:375px;--media-gap:8px;--thumbnail-width:80px;">
+    <div class="main-product--wrapper">
+      <div class="main-product--desktop" data-mq="medium-large">
+        <product-media-variants class="product-media--variants--root" data-layout="thumbnails" data-variant-scroll="true">
+          <div class="product-media--variants">
+            <div class="product-media--container" data-container="panel" data-columns="1">
+              {{#for product.images as |image|}}
+              <div class="product-media--root" data-media-type="image" style="--product-media--aspect-ratio:{{ image.aspect_ratio }};">
+                <modal-trigger class="product-media--modal" aria-label="Enlarge product image" tabindex="0">
+                  <product-zoom-element class="product-zoom--root" data-magnify="1.7">
+                    <img src="{{ image_url image width=505 }}" alt="{{ default image.alt product.title }}" srcset="{{ image_url image width=300 }} 300w, {{ image_url image width=400 }} 400w, {{ image_url image width=500 }} 500w" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" class="product-zoom--wrapper" sizes="(max-width: 767px) calc(100vw - 32px), calc(1200px - 519px)">
+                    <img src="{{ image_url image width=505 }}" alt="{{ default image.alt product.title }}" srcset="{{ image_url image width=300 }} 300w, {{ image_url image width=400 }} 400w, {{ image_url image width=500 }} 500w" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" class="product-zoom--enlarged" sizes="(max-width: 767px) calc(100vw - 32px), calc(1200px - 519px)" aria-hidden="true">
+                  </product-zoom-element>
+                </modal-trigger>
+              </div>
+              {{/for}}
+            </div>
+          </div>
+          <product-thumbs-element class="product-media--thumbs">
+            <div class="product-media--thumbs-wrapper">
+              {{#for product.images as |image|}}
+              <div class="product-media--thumb" tabindex="0">
+                <img src="{{ image_url image width=505 }}" alt="{{ default image.alt product.title }}" srcset="{{ image_url image width=50 }} 50w, {{ image_url image width=100 }} 100w, {{ image_url image width=200 }} 200w" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" sizes="80px">
+              </div>
+              {{/for}}
+            </div>
+          </product-thumbs-element>
+        </product-media-variants>
+      </div>
+
+      <div class="main-product--mobile" data-mq="small" data-layout="slideshow" data-container="block">
+        <main-product-carousel class="carousel--root" data-last-slide="false" data-auto-rotate="false" data-columns="1" data-mobile-columns="1" data-spacing-around-blocks="true" data-transition-type="slide">
+          <div class="carousel--wrapper">
+            <div class="carousel--container">
+              {{#for product.images as |image|}}
+              <div class="carousel--block">
+                <div class="product-media--root" data-media-type="image" style="--product-media--aspect-ratio:{{ image.aspect_ratio }};">
+                  <img src="{{ image_url image width=505 }}" alt="{{ default image.alt product.title }}" srcset="{{ image_url image width=300 }} 300w, {{ image_url image width=400 }} 400w, {{ image_url image width=500 }} 500w" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" sizes="(max-width: 767px) calc(100vw - 32px), 352px">
+                </div>
+              </div>
+              {{/for}}
+            </div>
+          </div>
+        </main-product-carousel>
+        <div class="carousel-nav-arrow" data-mq="small">
+          <button class="carousel-nav-arrow--prev" type="button" aria-disabled="true" aria-label="previous">
+            <svg class="icon--root icon--chevron-left" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="m3.13 10 8.58 8.58L10.29 20l-10-10 10-10 1.42 1.42z" fill="#000" fill-rule="nonzero"></path>
+            </svg>
+          </button>
+          <span class="carousel-nav-arrow--current" data-item="paragraph"></span>
+          <span class="carousel-nav-arrow--total" data-item="paragraph"></span>
+          <button class="carousel-nav-arrow--next" type="button" aria-disabled="false" aria-label="next">
+            <svg class="icon--root icon--chevron-right" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.87 10 .29 1.42 1.71 0l10 10-10 10-1.42-1.42z" fill="#000" fill-rule="nonzero"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {{#form 'product'}}
+      <div class="product-form--block" data-block-type="heading" data-fit-together="false">
+        <div data-transition-item="viewport" data-transition-type="slide-in">
+          <h2 class="product-form--block--heading" data-item="section-heading">{{ product.title }}</h2>
+        </div>
+      </div>
+
+      <div class="product-form--block" data-block-type="vendor" data-fit-together="false">
+        <div class="product-form--block--vendor" data-item="sub-nav-text">
+          <a href="/collections/vendors?q={{ product.vendor }}">{{ product.vendor }}</a>
+        </div>
+      </div>
+
+      <div class="product-form--block" data-block-type="price" data-fit-together="false">
+        <product-price-element class="product-price--root">
+          <div class="product-price--wrapper">
+            <div class="product-price--original" data-item="nav-text">
+              <span class="money">{{ money product.price }}</span>
+            </div>
+            {{#if product.compare_at_price}}
+            <div class="product-price--compare" data-item="nav-text" data-text-color="gray">
+              <span class="money">{{ money product.compare_at_price }}</span>
+            </div>
+            {{/if}}
+          </div>
+        </product-price-element>
+      </div>
+
+      <div class="product-form--block" data-block-type="options" data-fit-together="false">
+        {{#for product.options_with_values as |option|}}
+        <div class="product-form--option">
+          <label data-item="nav-text">{{ option.name }}</label>
+          <select name="options[{{ option.name }}]" class="product-form--select">
+            {{#for option.values as |value|}}
+            <option value="{{ value }}">{{ value }}</option>
+            {{/for}}
+          </select>
+        </div>
+        {{/for}}
+      </div>
+
+      <div class="product-form--block" data-block-type="quantity-selector" data-fit-together="false">
+        <quantity-selector class="quantity-selector--root" data-type="product">
+          <label data-item="nav-text">Quantity</label>
+          <div class="quantity-selector--container">
+            <button type="button" class="quantity-selector--minus" tabindex="0" aria-label="Minus">
+              <svg class="icon--root icon--minus" data-invertible="false" width="10" height="2" viewBox="0 0 10 2" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 1.714H0V.286h10z" fill="#000" fill-rule="nonzero"></path>
+              </svg>
+            </button>
+            <input class="quantity-selector--input" type="text" name="quantity" value="1" min="1" pattern="[0-9]*" tabindex="-1" data-loading="false">
+            <button type="button" class="quantity-selector--plus" tabindex="0" aria-label="Plus">
+              <svg class="icon--root icon--plus" data-invertible="false" width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 5.714H5.714V10H4.286V5.714H0V4.286h4.286V0h1.428v4.286H10z" fill="#000" fill-rule="nonzero"></path>
+              </svg>
+            </button>
+          </div>
+        </quantity-selector>
+      </div>
+
+      <div class="product-form--block" data-block-type="buy-buttons" data-fit-together="false">
+        <product-buy-buttons-element class="product-buy-buttons--root" data-cart-type="drawer" data-container="block">
+          <button class="product-buy-buttons--primary" data-enabled="true" aria-busy="false" data-text="Add to cart" data-item="secondary-button" data-transition-button="">
+            <span class="product-buy-buttons--cta-text">{{ section.settings.add_to_cart_text }}</span>
+            <span class="product-buy-buttons--spinner">
+              <svg class="icon--root icon--spinner" data-invertible="false">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+              </svg>
+            </span>
+          </button>
+          <div class="product-buy-buttons--drawer" data-background-color="none" data-translucent="true" data-mq="small" aria-hidden="false" tabindex="-1">
+            <div class="product-buy-buttons--drawer-info-container">
+              <div class="product-buy-buttons--drawer-info">
+                <div data-item="paragraph">{{ product.title }}</div>
+              </div>
+            </div>
+            <button class="product-buy-buttons--primary" data-enabled="true" aria-busy="false" data-text="Add to cart" data-item="button" data-transition-button="">
+              <span class="product-buy-buttons--cta-text">{{ section.settings.add_to_cart_text }}</span>
+              <span class="product-buy-buttons--spinner">
+                <svg class="icon--root icon--spinner" data-invertible="false">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        </product-buy-buttons-element>
+      </div>
+
+      <div class="product-form--block" data-block-type="description" data-fit-together="false">
+        <div class="product-form--block--description" data-item="rte-content">
+          {{{ product.description }}}
+        </div>
+      </div>
+
+      <div class="product-form--block" data-block-type="social-sharing" data-fit-together="false">
+        <div class="social-icons--root" data-type="share" data-hover-color="brand" data-alignment="left" data-mobile-alignment="left">
+          <div class="social-icons--items">
+            <a class="social-facebook--link" href="https://facebook.com/sharer.php?u={{ shop.url }}{{ product.url }}&t={{ product.title }}" target="_blank" aria-label="Share on Facebook">
+              <svg class="icon--root icon--facebook icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.896 0H1.104C.494 0 0 .494 0 1.104v17.793C0 19.506.494 20 1.104 20h9.58v-7.745H8.076V9.237h2.606V7.01c0-2.583 1.578-3.99 3.883-3.99 1.104 0 2.052.082 2.329.119v2.7h-1.598c-1.254 0-1.496.597-1.496 1.47v1.928h2.989l-.39 3.018h-2.6V20h5.098c.608 0 1.102-.494 1.102-1.104V1.104C20 .494 19.506 0 18.896 0Z" fill="#000" fill-rule="evenodd"></path>
+              </svg>
+            </a>
+            <a class="social-x--link" href="https://twitter.com/intent/tweet?text=Check%20out%20this%20product:+{{ shop.url }}{{ product.url }}" target="_blank" aria-label="Post on X">
+              <svg class="icon--root icon--x icon--social-media" data-invertible="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1668.56 1221.19">
+                <path d="m336.33 142.251 386.39 516.64-388.83 420.05h87.51l340.42-367.76 275.05 367.76h297.8l-408.13-545.7 361.92-390.99h-87.51l-313.51 338.7-253.31-338.7h-297.8zm128.69 64.46h136.81l604.13 807.76h-136.81l-604.13-807.76z"></path>
+              </svg>
+            </a>
+            <a class="social-pinterest--link" href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ product.url }}&media={{ image_url product.featured_image width=1024 }}&description={{ product.title }}" target="_blank" aria-label="Pin on Pinterest">
+              <svg class="icon--root icon--pinterest icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M.079 11.203c.026.217.059.433.099.646.018.095.034.19.055.285.053.24.113.475.183.708.015.053.027.108.044.161.088.28.19.554.301.823.033.078.07.154.104.23a10.234 10.234 0 0 0 .418.835c.104.186.215.367.33.545.045.068.086.138.132.205.16.235.331.463.511.684.045.054.094.106.14.16a10.227 10.227 0 0 0 .655.698c.146.14.296.276.45.409.07.059.137.12.208.177.222.18.45.354.688.514.027.019.057.035.085.054.214.142.435.276.66.401.082.045.165.087.247.13.185.096.373.187.563.272.086.037.17.076.257.111.048.02.097.035.145.053-.087-.79-.164-2 .036-2.86.182-.78 1.173-4.971 1.173-4.971s-.3-.6-.3-1.485c0-1.39.806-2.429 1.81-2.429.853 0 1.265.641 1.265 1.41 0 .857-.546 2.14-.828 3.329-.236.995.5 1.807 1.48 1.807 1.778 0 3.144-1.874 3.144-4.58 0-2.394-1.72-4.068-4.177-4.068-2.845 0-4.515 2.134-4.515 4.34 0 .86.331 1.781.744 2.282a.3.3 0 0 1 .07.287L5.977 13.5c-.043.182-.144.222-.334.134-1.249-.582-2.03-2.408-2.03-3.875 0-3.154 2.293-6.05 6.608-6.05 3.469 0 6.165 2.471 6.165 5.775 0 3.446-2.174 6.22-5.19 6.22-1.013 0-1.965-.527-2.291-1.149 0 0-.502 1.91-.623 2.378-.226.868-.835 1.956-1.243 2.62.278.087.562.157.85.219.086.019.175.034.263.05.217.04.436.074.657.1.09.011.18.023.271.031.303.028.609.047.92.047 5.523 0 10-4.477 10-10a9.99 9.99 0 0 0-4.41-8.292A9.922 9.922 0 0 0 12.016.203 10.052 10.052 0 0 0 10 0C4.477 0 0 4.477 0 10c0 .313.018.62.046.925.009.094.021.186.033.277" fill="#000" fill-rule="evenodd"></path>
+              </svg>
+            </a>
+            <a class="social-email--link" href="mailto:?Subject={{ product.title }}&body={{ shop.url }}{{ product.url }}" aria-label="Send via email">
+              <svg class="icon--root icon--email" data-invertible="true" width="27" height="20" viewBox="0 0 27 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.333 10.792.017 0H26.65L13.333 10.792ZM7.306 8.768 0 2.847v13.89l7.306-7.97Zm12.055 0 7.306 7.969V2.847l-7.306 5.92Zm-1.73 1.4-4.298 3.484-4.297-3.483L.024 20h26.618l-9.01-9.831Z" fill="#000"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="product-id" value="{{ product.id }}">
+      {{/form}}
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Product Main",
+  "tag": "section",
+  "class": "section--product-page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart button text",
+      "default": "Add to cart"
+    }
+  ]
+}
+{{/schema}}

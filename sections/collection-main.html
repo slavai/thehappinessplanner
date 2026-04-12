@@ -1,0 +1,98 @@
+<div class="shopify-section section--collection-grid">
+  <div class="main-collection--root" id="collection_root" data-background-color="none" data-container-width="5" data-section-type="collection" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="half" data-spacing-below="full">
+    <div class="main-collection--wrapper" data-container="section" data-body-wrapper="" data-max-columns="4">
+      <div class="main-collection--spinner" aria-hidden="true" data-container="block" data-body-spinner="">
+        <div class="main-collection--spinner-wrapper" data-item="spinner">
+          <svg class="icon--root icon--spinner" data-invertible="false">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+          </svg>
+        </div>
+      </div>
+
+      {{#paginate collection.products by=12}}
+      <div class="main-collection--grid" data-body-grid="" data-container="panel" data-columns="4" data-mobile-columns="1" data-transition-container="collection-grid" data-transition-type="fade-in" data-transition-trigger="20" data-transition-cascade="horizontal" data-transition-cascade-interval="200">
+        {{#for collection.products as |product|}}
+        <div class="product-card--root" data-handle="{{ product.handle }}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="collection-grid">
+          <a href="{{ product.url }}" class="product-card--image-wrapper" tabindex="-1">
+            {{#if product.available}}
+            {{else}}
+            <div class="product--labels" data-item="overline" data-text-color="body">
+              <div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="out-of-stock">Out of stock</div>
+            </div>
+            {{/if}}
+            <img src="{{ image_url product.featured_image width=1000 }}" alt="{{ default product.featured_image.alt product.title }}" srcset="{{ image_url product.featured_image width=200 }} 200w, {{ image_url product.featured_image width=300 }} 300w, {{ image_url product.featured_image width=400 }} 400w, {{ image_url product.featured_image width=500 }} 500w, {{ image_url product.featured_image width=600 }} 600w, {{ image_url product.featured_image width=700 }} 700w, {{ image_url product.featured_image width=800 }} 800w, {{ image_url product.featured_image width=900 }} 900w, {{ image_url product.featured_image width=1000 }} 1000w" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(25vw - 48px)">
+            {{#if product.images.[1]}}
+            <img src="{{ image_url product.images.[1] width=1000 }}" alt="{{ default product.images.[1].alt product.title }}" srcset="{{ image_url product.images.[1] width=200 }} 200w, {{ image_url product.images.[1] width=300 }} 300w, {{ image_url product.images.[1] width=400 }} 400w, {{ image_url product.images.[1] width=500 }} 500w, {{ image_url product.images.[1] width=600 }} 600w, {{ image_url product.images.[1] width=700 }} 700w, {{ image_url product.images.[1] width=800 }} 800w, {{ image_url product.images.[1] width=900 }} 900w, {{ image_url product.images.[1] width=1000 }} 1000w" width="{{ product.images.[1].width }}" height="{{ product.images.[1].height }}" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(25vw - 48px)">
+            {{/if}}
+          </a>
+          <div class="product-card--details">
+            <div class="product-card--details-wrapper">
+              <div class="product-card--vendor" data-item="sub-nav-text">{{ product.vendor }}</div>
+              <a href="{{ product.url }}" class="product-card--title-link">
+                <p class="product-card--title" data-item="paragraph">{{ product.title }}</p>
+              </a>
+            </div>
+            <div class="product--price-container">
+              <div class="product--price-wrapper">
+                {{#if product.compare_at_price}}
+                <span class="product--compare-price" data-item="nav-text"><span class="money">{{ money product.compare_at_price }}</span></span>
+                {{/if}}
+                <span class="product--price" data-item="nav-text"><span class="money">{{ money product.price }}</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/for}}
+      </div>
+
+      {{#if paginate.pages > 1}}
+      <div class="main-collection--pagination" data-container="block">
+        <div class="pagination--root" data-item="nav-text">
+          {{#if paginate.previous}}
+          <a href="{{ paginate.previous.url }}" class="pagination--prev" aria-label="Previous page">
+            <svg class="icon--root icon--chevron-left" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="m3.13 10 8.58 8.58L10.29 20l-10-10 10-10 1.42 1.42z" fill="#000" fill-rule="nonzero"></path>
+            </svg>
+          </a>
+          {{/if}}
+          {{#for paginate.parts as |part|}}
+            {{#if part.is_link}}
+            <a href="{{ part.url }}" class="pagination--item">{{ part.title }}</a>
+            {{else}}
+            <span class="pagination--item pagination--current">{{ part.title }}</span>
+            {{/if}}
+          {{/for}}
+          {{#if paginate.next}}
+          <a href="{{ paginate.next.url }}" class="pagination--next" aria-label="Next page">
+            <svg class="icon--root icon--chevron-right" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.87 10 .29 1.42 1.71 0l10 10-10 10-1.42-1.42z" fill="#000" fill-rule="nonzero"></path>
+            </svg>
+          </a>
+          {{/if}}
+        </div>
+      </div>
+      {{/if}}
+      {{/paginate}}
+
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Collection Grid",
+  "tag": "section",
+  "class": "section--collection-grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+{{/schema}}

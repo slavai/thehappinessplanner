@@ -1,0 +1,68 @@
+<div class="shopify-section section--search-results">
+  <div class="search-results--root" id="search-results-root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="5" data-view="other">
+    <div class="search-results--wrapper" data-container="section" data-body-wrapper="" data-aspect-ratio="natural">
+      <div class="search-results--spinner" aria-hidden="true" data-container="block" data-body-spinner="">
+        <div class="search-results--spinner-wrapper" data-item="spinner">
+          <svg class="icon--root icon--spinner" data-invertible="false">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+          </svg>
+        </div>
+      </div>
+
+      <div class="search-results--products" data-body-grid="" data-container="panel" data-columns="4" data-mobile-columns="1">
+        {{#if search.performed}}
+          {{#if search.results_count > 0}}
+            {{#for search.results as |item|}}
+            <div class="search-results--item">
+              <a href="{{ item.url }}" class="search-results--item-image-wrapper">
+                {{#if item.featured_image}}
+                <img src="{{ item.featured_image.src }}" alt="{{ item.title }}" loading="lazy">
+                {{/if}}
+              </a>
+              <div class="search-results--item-info">
+                <h3 class="search-results--item-title" data-item="block-heading">
+                  <a href="{{ item.url }}">{{ item.title }}</a>
+                </h3>
+                {{#if item.price}}
+                <div class="search-results--item-price" data-item="nav-text">{{ money item.price }}</div>
+                {{/if}}
+              </div>
+            </div>
+            {{/for}}
+          {{else}}
+            <div class="search-results--filter-feedback" data-container="block">
+              <p data-item="paragraph">No products match this filter.</p>
+            </div>
+          {{/if}}
+        {{/if}}
+      </div>
+
+      <div class="search-results--footer" id="search_results_footer" data-container="block">
+        <div class="search-results--pagination" data-body-pagination="">
+          {{ paginate }}
+        </div>
+        <div class="search-results--button" data-item="block-link">
+          <a data-drawer-open="top" data-drawer-view="search" tabindex="0">Search again</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Search results",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    }
+  ]
+}
+{{/schema}}

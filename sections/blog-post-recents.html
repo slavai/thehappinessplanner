@@ -1,0 +1,51 @@
+<div class="shopify-section section--recent-articles">
+  <div class="article--recents-root" data-section-id="{{ section.id }}" data-aspect-ratio="natural" data-background-color="none" data-container-width="2" data-spacing-above="false">
+    <div class="article--recents-wrapper" data-container="section">
+      <div class="article--recents-header" data-container="block" data-text-alignment="center" data-transition-item="viewport" data-transition-type="slide-in">
+        <h2 class="article--recents-title" data-item="section-heading">Continue reading</h2>
+      </div>
+      <div class="article--recents-grid" data-container="panel" data-columns="3" data-mobile-columns="1">
+        {{#for blog.articles as |recent_article|}}
+        {{#unless recent_article.id == article.id}}
+        <div class="article-card--root">
+          <a href="{{ recent_article.url }}" class="article-card--image-wrapper" aria-label="{{ recent_article.title }}">
+            {{#if recent_article.image}}
+            <div class="article-card--image" data-transition-item="" data-transition-type="zoom-in" data-transition-trigger="hover">
+              <img src="{{ recent_article.image.src }}" alt="{{ recent_article.title }}" loading="lazy" sizes="(max-width: 767px) calc(100vw - 32px), calc(266px - 21px)">
+            </div>
+            {{/if}}
+          </a>
+          <h3 class="article-card--heading" data-item="block-heading">
+            <a href="{{ recent_article.url }}">{{ recent_article.title }}</a>
+          </h3>
+        </div>
+        {{/unless}}
+        {{/for}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Recent articles",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Continue reading"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    }
+  ]
+}
+{{/schema}}

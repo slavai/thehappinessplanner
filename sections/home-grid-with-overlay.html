@@ -1,0 +1,114 @@
+<div class="featured-grid--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="none" data-container-width="4" data-hover-enabled="false" data-mobile-full-width="false" data-mobile-overlay="true" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-position="center"> <div class="featured-grid--wrapper" data-container="section"><div class="featured-grid--header" data-container="block" data-text-alignment="center" data-transition-container="{{ section.id }}-header" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="500">{{#if section.settings.heading}}<div class="featured-grid--heading" data-transition-item="{{ section.id }}-header" style="--transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true"> <h2 data-item="section-heading">{{ section.settings.heading }}</h2> </div>{{/if}}{{#if section.settings.description}}<div class="featured-grid--description" data-transition-item="{{ section.id }}-header" style="--transition--delay: 500ms;" data-transition-active="true" data-transition-finished="true"> <h3 data-item="paragraph"><p>{{ section.settings.description }}</p></h3> </div>{{/if}}</div><div class="featured-grid--body" data-container="panel" data-columns="{{ section.settings.columns }}" data-mobile-columns="1" data-block-spacing="true" data-mobile-block-spacing="true" data-text-color="white" data-transition-container="{{ section.id }}-grid" data-transition-type="fade-in" data-transition-cascade="horizontal" data-transition-cascade-interval="200" style="--row-height:250px;">{{#for section.blocks as |block|}}
+<div class="featured-grid--item" data-transition-item="{{ section.id }}-grid" style="--x-blocks: 1; --y-blocks: 1; --transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true"><a class="featured-grid--item--link-wrapper" href="{{ block.settings.link }}" aria-label="{{ section.settings.heading }}" target="{{ block.settings.link_target }}"><div class="featured-grid--item--container"><div class="featured-grid--item--media" data-transition-item="" data-transition-type="zoom-in" data-transition-trigger="hover"><picture class="image--root " data-background="false" data-display-type="fill-available" data-full-width="false" data-mobile-display-type="original" data-mobile-full-width="" data-mobile-overlay-style="none" data-parallax="" data-overlay-style="none" style="--aspect-ratio:1.09;--mobile-aspect-ratio:1.09;"><img src="{{ image_url block.settings.image width=700 }}" alt="{{ block.settings.image_alt }}" width="700" height="642" loading="lazy" sizes="(max-width: 767px) calc(100vw - 32px), 400px" draggable="false">
+</picture></div></div></a></div>
+{{/for}}</div>{{#if section.settings.button_text}}<div class="featured-grid--footer" data-container="block" data-text-alignment="center"> <a class="featured-grid--button" href="{{ section.settings.button_link }}" data-item="button" data-text="{{ section.settings.button_text }}" data-transition-button="" target="{{ section.settings.button_target }}"> <span>{{ section.settings.button_text }}</span> </a> </div>{{/if}}</div>
+</div>
+
+{{#schema}}
+{
+  "name": "Grid with Overlay",
+  "tag": "section",
+  "class": "shopify-section section--grid-with-overlay",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Over 60+ Personal Development Workshops"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Watch replays on our Happiness Planner web app."
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Watch Replays"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_target",
+      "label": "Button opens in",
+      "options": [
+        { "value": "_self", "label": "Same tab" },
+        { "value": "_blank", "label": "New tab" }
+      ],
+      "default": "_blank"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background color",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "light", "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" }
+      ],
+      "default": "none"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "grid_item",
+      "name": "Grid Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "link_target",
+          "label": "Open link in",
+          "options": [
+            { "value": "_self", "label": "Same tab" },
+            { "value": "_blank", "label": "New tab" }
+          ],
+          "default": "_blank"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grid with Overlay",
+      "blocks": [
+        { "type": "grid_item" },
+        { "type": "grid_item" },
+        { "type": "grid_item" },
+        { "type": "grid_item" },
+        { "type": "grid_item" },
+        { "type": "grid_item" }
+      ]
+    }
+  ]
+}
+{{/schema}}

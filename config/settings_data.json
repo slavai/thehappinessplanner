@@ -1,0 +1,20 @@
+{
+  "current": {
+    "theme": {
+      "color_primary": "#000000",
+      "color_secondary": "#ffffff",
+      "color_accent": "#c8a97e",
+      "type_heading_font": "Playfair Display",
+      "type_body_font": "Open Sans",
+      "social_facebook_link": "https://facebook.com/happinessplanner",
+      "social_instagram_link": "https://instagram.com/happinessplanner",
+      "social_twitter_link": "https://x.com/happinessplannr",
+      "social_tiktok_link": "",
+      "social_youtube_link": "",
+      "social_pinterest_link": ""
+    }
+  },
+  "presets": {
+    "default": {}
+  }
+}

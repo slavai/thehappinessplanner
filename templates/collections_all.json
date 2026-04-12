@@ -1,0 +1,13 @@
+{
+  "name": "collections_all.html",
+  "layout": "theme",
+  "sections": {
+    "main": {
+      "type": "collections-index-main",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,43 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Happiness Planner",
+    "theme_version": "1.0.0",
+    "theme_author": "Sintora Labs",
+    "theme_documentation_url": "",
+    "theme_support_url": "",
+    "theme_cover_img": "",
+    "theme_home_pc_preview_img": "",
+    "theme_home_mobile_preview_img": "",
+    "theme_pdp_pc_preview_img": "",
+    "theme_pdp_mobile_preview_img": "",
+    "refill_section_object": true,
+    "theme_type_version": "OS_2.1"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_primary", "label": { "en": "Primary color" }, "default": "#000000" },
+      { "type": "color", "id": "color_secondary", "label": { "en": "Secondary color" }, "default": "#ffffff" },
+      { "type": "color", "id": "color_accent", "label": { "en": "Accent color" }, "default": "#c8a97e" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font", "id": "font_heading", "label": { "en": "Heading font" }, "default": "Playfair Display" },
+      { "type": "font", "id": "font_body", "label": { "en": "Body font" }, "default": "Open Sans" }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_facebook_link", "label": { "en": "Facebook" }, "default": "https://facebook.com/happinessplanner" },
+      { "type": "text", "id": "social_instagram_link", "label": { "en": "Instagram" }, "default": "https://instagram.com/happinessplanner" },
+      { "type": "text", "id": "social_twitter_link", "label": { "en": "X (Twitter)" }, "default": "https://x.com/happinessplannr" },
+      { "type": "text", "id": "social_tiktok_link", "label": { "en": "TikTok" }, "default": "" },
+      { "type": "text", "id": "social_youtube_link", "label": { "en": "YouTube" }, "default": "" },
+      { "type": "text", "id": "social_pinterest_link", "label": { "en": "Pinterest" }, "default": "" }
+    ]
+  }
+]

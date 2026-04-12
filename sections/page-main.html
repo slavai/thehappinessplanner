@@ -1,0 +1,25 @@
+<div class="shopify-section section--page">
+  <div class="template-page--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="4" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full">
+    <div class="template-page--wrapper">
+      <h1 class="template-page--heading" data-item="section-heading" data-transition-item="viewport" data-transition-type="slide-in">{{ page.title }}</h1>
+      <div data-item="rte-content">
+        {{{ page.content }}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Page content",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show title",
+      "default": true
+    }
+  ]
+}
+{{/schema}}

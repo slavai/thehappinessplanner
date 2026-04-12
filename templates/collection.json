@@ -1,0 +1,23 @@
+{
+  "name": "collection.html",
+  "layout": "theme",
+  "sections": {
+    "collection-header": {
+      "type": "collection-header",
+      "settings": {}
+    },
+    "navigation": {
+      "type": "collection-navigation",
+      "settings": {}
+    },
+    "main": {
+      "type": "collection-main",
+      "settings": {}
+    }
+  },
+  "order": [
+    "collection-header",
+    "navigation",
+    "main"
+  ]
+}

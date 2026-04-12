@@ -1,0 +1,30 @@
+<div class="shopify-section section--404">
+  <div class="four-o-four--root" data-section-id="{{ section.id }}" data-background-color="none">
+    <div class="four-o-four--wrapper">
+      <h1 class="four-o-four--heading" data-item="section-heading">Page not found</h1>
+      <h3 class="four-o-four--info" data-item="block-heading">We're sorry, but the page you're looking for could not be found.</h3>
+      <p>Go back to our <a href="/">Home page</a> or view our range of <a href="/collections/all">products</a>.</p>
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "404 page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Page not found"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We're sorry, but the page you're looking for could not be found."
+    }
+  ]
+}
+{{/schema}}

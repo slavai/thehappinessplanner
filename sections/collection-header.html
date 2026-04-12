@@ -1,0 +1,38 @@
+<div class="shopify-section section--collection-header">
+  <div class="collection-header--root" data-background-color="none" data-container-width="6" data-mobile-spacing-above="none" data-mobile-spacing-below="half" data-show-image="true" data-show-title="true" data-spacing-above="none" data-spacing-below="none" data-header-overlap-compatible="">
+    <div class="collection-header--wrapper" data-text-alignment="center" data-text-color="white">
+      <div class="collection-header--heading" data-text-style="none">
+        <div data-transition-item="viewport" data-transition-type="slide-in">
+          <h1 class="collection-title">{{ collection.title }}</h1>
+        </div>
+      </div>
+      {{#if collection.description}}
+      <div class="collection-header--description" data-item="paragraph">
+        {{{ collection.description }}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+{{#schema}}
+{
+  "name": "Collection Header",
+  "tag": "section",
+  "class": "section--collection-header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show collection title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show collection image",
+      "default": true
+    }
+  ]
+}
+{{/schema}}

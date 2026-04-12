@@ -39,6 +39,10 @@
       "blocks": {},
       "custom_css": []
     },
+    "reviews-carousel": {
+      "type": "home-reviews-carousel",
+      "settings": {}
+    },
     "custom-liquid": {
       "disabled": false,
       "type": "home-custom-liquid",
@@ -145,6 +149,7 @@
   "order": [
     "slideshow-hero",
     "featured-text",
+    "reviews-carousel",
     "custom-liquid",
     "image-with-text-1",
     "image-with-text-2",

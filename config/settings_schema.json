@@ -39,5 +39,13 @@
       { "type": "text", "id": "social_youtube_link", "label": { "en": "YouTube" }, "default": "" },
       { "type": "text", "id": "social_pinterest_link", "label": { "en": "Pinterest" }, "default": "" }
     ]
+  },
+  {
+    "name": "Integrations",
+    "settings": [
+      { "type": "header", "content": { "en": "Stamped.io Reviews" } },
+      { "type": "text", "id": "stamped_api_key", "label": { "en": "Public API key" }, "info": { "en": "Find in Stamped.io admin → Settings → API keys" }, "default": "pubkey-523mDsz4evBt0gHm3X8Jnv8k5h1s3R" },
+      { "type": "text", "id": "stamped_shop_id", "label": { "en": "Shop ID" }, "info": { "en": "Numeric Stamped shop identifier" }, "default": "7739449" }
+    ]
   }
 ]

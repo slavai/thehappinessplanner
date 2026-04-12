@@ -6,6 +6,10 @@
       "type": "product-main",
       "settings": {}
     },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {}
+    },
     "related-products": {
       "type": "product-related",
       "settings": {}
@@ -13,6 +17,7 @@
   },
   "order": [
     "main",
+    "reviews",
     "related-products"
   ]
 }

@@ -1,0 +1,98 @@
+<div class="shopify-section section--apps">
+  <div class="apps--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="{{ section.settings.border }}" data-container-width="4" data-mobile-full-width="false" data-spacing-above="{{ section.settings.spacing_above }}" data-spacing-below="{{ section.settings.spacing_below }}">
+    <div class="apps--wrapper">
+      <div id="shopify-block-stamped-product-{{ section.id }}" class="shopify-block shopify-app-block">
+        <div id="stamped-main-widget"
+             data-widget-type="{{ section.settings.widget_type }}"
+             data-product-id="{{ product.id }}"
+             data-name="{{ product.title }}"
+             data-url="{{ shop.url }}{{ product.url }}"
+             data-image-url="{{ image_url product.featured_image width=600 }}"
+             data-description="{{ product.description }}"
+             data-product-sku="{{ product.handle }}"
+             data-product-type="{{ product.type }}">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.StampedFn = window.StampedFn || {};
+  StampedFn.init = StampedFn.init || function() {
+    StampedFn.apiKey = '{{ settings.stamped_api_key }}';
+    StampedFn.storeUrl = '{{ shop.domain }}';
+  };
+  StampedFn.init();
+</script>
+<script type="text/javascript" src="https://cdn1.stamped.io/files/widget.min.js" data-shop_id="{{ settings.stamped_shop_id }}"></script>
+
+{{#schema}}
+{
+  "name": "Product reviews (Stamped.io)",
+  "tag": "section",
+  "class": "section--product-reviews",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Stamped.io credentials are configured in Theme settings → Integrations."
+    },
+    {
+      "type": "select",
+      "id": "widget_type",
+      "label": "Widget type",
+      "options": [
+        { "value": "standard2", "label": "Full reviews list with form" },
+        { "value": "badge", "label": "Star rating badge only" },
+        { "value": "carousel", "label": "Carousel" }
+      ],
+      "default": "standard2"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background color",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "light", "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Border",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "both", "label": "Both" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "spacing_above",
+      "label": "Spacing above",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "select",
+      "id": "spacing_below",
+      "label": "Spacing below",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "full"
+    }
+  ]
+}
+{{/schema}}

@@ -1,0 +1,137 @@
+<div class="shopify-section section--apps">
+  <div class="apps--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="{{ section.settings.border }}" data-container-width="4" data-mobile-full-width="false" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="{{ section.settings.spacing_above }}" data-spacing-below="{{ section.settings.spacing_below }}" data-text-alignment="center">
+    <div class="apps--wrapper">
+      <div id="shopify-block-stamped-reviews-{{ section.id }}" class="shopify-block shopify-app-block">
+        <div id="stamped-reviews-widget"
+             data-widget-type="carousel"
+             data-title="{{ section.settings.title }}"
+             data-auto-play="{{ section.settings.auto_play }}"
+             data-auto-play-speed=""
+             data-take="{{ section.settings.take }}"
+             data-style-color-title=""
+             data-style-color-star=""
+             data-style-color-text=""
+             data-style-color-link=""
+             data-review-ids=""
+             data-product-ids=""
+             data-product-category=""
+             data-product-brand=""
+             data-tags=""
+             data-limit-words=""
+             data-fill-empty="false"
+             data-random="false"
+             data-with-photos="false"
+             data-element-id="1"
+             data-lang="{{ request.locale.iso_code }}">
+          <div class="stamped-carousel-title stamped-style-color-title">{{ section.settings.title }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.StampedFn = window.StampedFn || {};
+  StampedFn.init = StampedFn.init || function() {
+    StampedFn.apiKey = '{{ settings.stamped_api_key }}';
+    StampedFn.storeUrl = '{{ shop.domain }}';
+  };
+  StampedFn.init();
+</script>
+<script type="text/javascript" src="https://cdn1.stamped.io/files/widget.min.js" data-shop_id="{{ settings.stamped_shop_id }}"></script>
+
+{{#schema}}
+{
+  "name": "Reviews carousel (Stamped.io)",
+  "tag": "section",
+  "class": "section--reviews-carousel",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Stamped.io credentials are configured in Theme settings → Integrations."
+    },
+    {
+      "type": "header",
+      "content": "Widget"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Widget title",
+      "default": "Real Reviews from Real Customers"
+    },
+    {
+      "type": "range",
+      "id": "take",
+      "label": "Number of reviews to load",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play",
+      "label": "Auto-play carousel",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background color",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "light", "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" },
+        { "value": "accent-2", "label": "Accent 2" },
+        { "value": "accent-3", "label": "Accent 3" }
+      ],
+      "default": "accent-3"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Border",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "both", "label": "Both" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "spacing_above",
+      "label": "Spacing above",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "half"
+    },
+    {
+      "type": "select",
+      "id": "spacing_below",
+      "label": "Spacing below",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "half"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews carousel",
+      "settings": {}
+    }
+  ]
+}
+{{/schema}}

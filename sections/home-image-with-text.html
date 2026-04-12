@@ -1,8 +1,10 @@
-{{ assign 'has_article' section.settings.article }}
-{{ assign 'heading_value' (default section.settings.heading_override section.settings.article.title) }}
-{{ assign 'description_value' (default section.settings.description_override section.settings.article.content) }}
-{{ assign 'image_value' (default section.settings.image section.settings.article.image) }}
-{{ assign 'link_value' (default section.settings.button_link_override section.settings.article.url) }}
+{{#if section.settings.article}}
+  {{ assign 'selected_article' (lookup articles section.settings.article) }}
+{{/if}}
+{{ assign 'heading_value' (default section.settings.heading_override selected_article.title) }}
+{{ assign 'description_value' (default section.settings.description_override selected_article.excerpt_or_content) }}
+{{ assign 'image_value' (default section.settings.image selected_article.image) }}
+{{ assign 'link_value' (default section.settings.button_link_override selected_article.url) }}
 
 <div class="image-with-text--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="none" data-container-width="6" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-mobile-full-width="true" data-spacing-above="none" data-spacing-below="none">
   <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="false" data-overlap="false" data-text-position="{{ section.settings.text_position }}">

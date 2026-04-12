@@ -1,53 +1,26 @@
-{{#if section.settings.article}}
-  {{ assign 'selected_article' (lookup articles section.settings.article) }}
-{{/if}}
-{{ assign 'heading_value' (default section.settings.heading_override selected_article.title) }}
-{{ assign 'description_value' (default section.settings.description_override selected_article.excerpt_or_content) }}
-{{ assign 'image_value' (default section.settings.image selected_article.image) }}
-{{ assign 'link_value' (default section.settings.button_link_override selected_article.url) }}
-
-<div style="background:#ffeb3b;color:#000;padding:16px;font-family:monospace;font-size:12px;line-height:1.6;border:2px solid red;">
-  <strong>DEBUG (remove after testing):</strong><br>
-  section.settings.article (raw) = "<code>{{ section.settings.article }}</code>"<br>
-  section.settings.article.title (direct) = "<code>{{ section.settings.article.title }}</code>"<br>
-  section.settings.article.id = "<code>{{ section.settings.article.id }}</code>"<br>
-  section.settings.article.handle = "<code>{{ section.settings.article.handle }}</code>"<br>
-  selected_article (after lookup) = "<code>{{ selected_article }}</code>"<br>
-  selected_article.title = "<code>{{ selected_article.title }}</code>"<br>
-  selected_article.id = "<code>{{ selected_article.id }}</code>"<br>
-  heading_value (computed) = "<code>{{ heading_value }}</code>"<br>
-  description_value (computed) = "<code>{{ description_value }}</code>"<br>
-  image_value = "<code>{{ image_value }}</code>"<br>
-  link_value = "<code>{{ link_value }}</code>"<br>
-  {{#if section.settings.article}}Article check: SET{{else}}Article check: NOT SET{{/if}}<br>
-  {{#if selected_article}}Lookup check: FOUND{{else}}Lookup check: NOT FOUND{{/if}}<br>
-  {{#if selected_article.title}}Title check: PRESENT{{else}}Title check: EMPTY{{/if}}<br>
-  Blog handle attempt (via articles.news.title) = "<code>{{ articles.news.title }}</code>"<br>
-</div>
-
 <div class="image-with-text--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="none" data-container-width="6" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-mobile-full-width="true" data-spacing-above="none" data-spacing-below="none">
   <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="false" data-overlap="false" data-text-position="{{ section.settings.text_position }}">
     <div class="featured-content--container" data-background-color="transparent">
       <div class="featured-content--image">
         <picture class="image--root" data-background="false" data-display-type="medium" data-full-width="true" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-overlay-style="none" data-parallax="false" data-overlay-style="darken-bottom" style="--aspect-ratio:1.7857142857142858;--mobile-aspect-ratio:1.5;">
-          {{#if image_value}}
-            <img src="{{ image_url image_value width=2000 }}" alt="{{ default section.settings.image_alt heading_value }}" width="2000" height="1120" loading="lazy" sizes="(max-width: 767px) 100vw, 50vw" fetchpriority="auto" draggable="false">
+          {{#if section.settings.image}}
+            <img src="{{ image_url section.settings.image width=2000 }}" alt="{{ default section.settings.image_alt section.settings.heading }}" width="2000" height="1120" loading="lazy" sizes="(max-width: 767px) 100vw, 50vw" fetchpriority="auto" draggable="false">
           {{/if}}
         </picture>
       </div>
       <div class="stacked-text--root" data-text-color="body" data-mobile-text-color="body" data-mobile-y-alignment="center" data-x-alignment="left" data-y-alignment="center">
         <div class="stacked-text--wrapper" data-text-style="none" data-text-width="medium" data-background-color="transparent" data-translucent="true" data-container="block" data-transition-container="{{ section.id }}" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="500">
-          {{#if heading_value}}
+          {{#if section.settings.heading}}
             <div data-transition-item="{{ section.id }}" style="--transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true">
-              <h2 class="stacked-text--title" data-item="section-heading">{{ heading_value }}</h2>
+              <h2 class="stacked-text--title" data-item="section-heading">{{ section.settings.heading }}</h2>
             </div>
           {{/if}}
-          {{#if description_value}}
-            <div class="stacked-text--description" data-item="paragraph" data-transition-item="{{ section.id }}" style="--transition--delay: 500ms;" data-transition-active="true" data-transition-finished="true">{{{ description_value }}}</div>
+          {{#if section.settings.description}}
+            <div class="stacked-text--description" data-item="paragraph" data-transition-item="{{ section.id }}" style="--transition--delay: 500ms;" data-transition-active="true" data-transition-finished="true">{{{ section.settings.description }}}</div>
           {{/if}}
           {{#if section.settings.button_text}}
-            {{#if link_value}}
-              <a class="stacked-text--button" href="{{ link_value }}" data-item="button" data-text="{{ section.settings.button_text }}" data-transition-item="{{ section.id }}" data-transition-type="fade-in" data-transition-button="" style="--transition--delay: 1000ms;" data-transition-active="true" data-transition-finished="true">
+            {{#if section.settings.button_link}}
+              <a class="stacked-text--button" href="{{ section.settings.button_link }}" data-item="button" data-text="{{ section.settings.button_text }}" data-transition-item="{{ section.id }}" data-transition-type="fade-in" data-transition-button="" style="--transition--delay: 1000ms;" data-transition-active="true" data-transition-finished="true">
                 <span>{{ section.settings.button_text }}</span>
               </a>
             {{/if}}
@@ -65,23 +38,13 @@
   "class": "shopify-section section--image-with-text",
   "settings": [
     {
-      "type": "paragraph",
-      "content": "Pick a blog article to auto-fill title, description, image, and link. Any override below takes precedence."
-    },
-    {
-      "type": "article",
-      "id": "article",
-      "label": "Blog article (optional)"
-    },
-    {
       "type": "header",
-      "content": "Custom content (overrides article fields)"
+      "content": "Content"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image override",
-      "info": "Leave empty to use article's featured image"
+      "label": "Image"
     },
     {
       "type": "text",
@@ -90,21 +53,15 @@
     },
     {
       "type": "text",
-      "id": "heading_override",
-      "label": "Heading override",
-      "info": "Leave empty to use article title"
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Art of Designing the Life You Want"
     },
     {
       "type": "richtext",
-      "id": "description_override",
-      "label": "Description override",
-      "info": "Leave empty to use article content"
-    },
-    {
-      "type": "url",
-      "id": "button_link_override",
-      "label": "Button link override",
-      "info": "Leave empty to link to selected article"
+      "id": "description",
+      "label": "Description",
+      "default": "<p><strong>There's a difference between living your life and shaping it.</strong></p><p>Most people don't consciously design how they think, feel, or show up. They fall into patterns, building routines without really questioning them. Over time, that becomes their life.</p>"
     },
     {
       "type": "header",
@@ -115,6 +72,12 @@
       "id": "button_text",
       "label": "Button text",
       "default": "Read the article"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Pick any page — blog article, product, collection, or custom URL"
     },
     {
       "type": "header",

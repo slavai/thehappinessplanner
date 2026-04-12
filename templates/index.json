@@ -3,80 +3,131 @@
   "layout": "theme",
   "sections": {
     "slideshow-hero": {
+      "disabled": false,
       "type": "home-slideshow",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "17759923193410b48cd8": {
+          "type": "slide",
+          "settings": {
+            "link_target": "_self",
+            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.12"
+          },
+          "custom_css": []
+        }
+      },
+      "block_order": [
+        "17759923193410b48cd8"
+      ],
+      "custom_css": []
     },
     "featured-text": {
+      "disabled": false,
       "type": "home-featured-text",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "custom-liquid": {
+      "disabled": false,
       "type": "home-custom-liquid",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "image-with-text-1": {
+      "disabled": false,
       "type": "home-image-with-text",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "image-with-text-2": {
+      "disabled": false,
       "type": "home-image-with-text",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-product-1": {
+      "disabled": false,
       "type": "home-featured-product",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-1": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-video-1": {
+      "disabled": false,
       "type": "home-featured-video",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-product-2": {
+      "disabled": false,
       "type": "home-featured-product",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "slideshow-2": {
+      "disabled": false,
       "type": "home-slideshow",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-2": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-3": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-4": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-5": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-6": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-collection-7": {
+      "disabled": false,
       "type": "home-featured-collection",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "featured-video-2": {
+      "disabled": false,
       "type": "home-featured-video",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "grid-with-overlay": {
+      "disabled": false,
       "type": "home-grid-with-overlay",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     },
     "image-with-text-overlay": {
+      "disabled": false,
       "type": "home-image-with-text-overlay",
-      "settings": {}
+      "settings": {},
+      "blocks": {}
     }
   },
   "order": [

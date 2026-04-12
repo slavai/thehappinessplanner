@@ -13,5 +13,25 @@
     "theme_pdp_mobile_preview_img": "",
     "refill_section_object": true,
     "theme_type_version": "OS_2.1"
+  },
+  {
+    "name": "Integrations",
+    "settings": [
+      { "type": "header", "content": "Stamped.io Reviews" },
+      {
+        "type": "text",
+        "id": "stamped_api_key",
+        "label": "Public API key",
+        "info": "Found in Stamped dashboard → API Keys. Starts with 'pubkey-'.",
+        "default": "pubkey-523mDsz4evBt0gHm3X8Jnv8k5h1s3R"
+      },
+      {
+        "type": "text",
+        "id": "stamped_shop_id",
+        "label": "Shop ID",
+        "info": "Numeric store identifier from Stamped dashboard.",
+        "default": "7739449"
+      }
+    ]
   }
 ]

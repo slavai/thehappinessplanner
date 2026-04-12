@@ -14,15 +14,13 @@
     </div>
   </div>
 
+  <script src="https://cdn1.stamped.io/files/widget.min.js" data-shop_id="{{ settings.stamped_shop_id }}" data-apikey="{{ settings.stamped_api_key }}"></script>
   <script>
-    window.StampedFn = window.StampedFn || {};
-    StampedFn.init = StampedFn.init || function () {
+    if (typeof StampedFn !== 'undefined') {
       StampedFn.apiKey = '{{ settings.stamped_api_key }}';
       StampedFn.storeUrl = '{{ shop.domain }}';
-    };
-    StampedFn.init();
+    }
   </script>
-  <script src="https://cdn1.stamped.io/files/widget.min.js" data-shop_id="{{ settings.stamped_shop_id }}" defer></script>
 </div>
 
 {{#schema}}

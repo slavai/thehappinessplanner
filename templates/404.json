@@ -1,13 +1,6 @@
 {
   "name": "404.html",
   "layout": "theme",
-  "sections": {
-    "main": {
-      "type": "404-main",
-      "settings": {}
-    }
-  },
-  "order": [
-    "main"
-  ]
+  "sections": { "main": { "type": "404-main", "settings": {} } },
+  "order": ["main"]
 }

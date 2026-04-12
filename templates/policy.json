@@ -1,13 +1,6 @@
 {
   "name": "policy.html",
   "layout": "theme",
-  "sections": {
-    "main": {
-      "type": "policy-main",
-      "settings": {}
-    }
-  },
-  "order": [
-    "main"
-  ]
+  "sections": { "main": { "type": "policy-main", "settings": {} } },
+  "order": ["main"]
 }

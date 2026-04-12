@@ -1,13 +1,6 @@
 {
   "name": "page.html",
   "layout": "theme",
-  "sections": {
-    "main": {
-      "type": "page-main",
-      "settings": {}
-    }
-  },
-  "order": [
-    "main"
-  ]
+  "sections": { "main": { "type": "page-main", "settings": {} } },
+  "order": ["main"]
 }

@@ -1,63 +1,13 @@
-<div class="shopify-section section--search-navigation">
-  <navigation-element class="navigation--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="5" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-spacing-above="half" data-spacing-below="none" data-show-navigation="true" data-storage-name="search_layout" data-url="/search?type=product&q={{ search.terms }}&">
-    <div class="navigation--wrapper">
-      <div class="navigation--container" data-mq="medium-large">
-        <div class="navigation--filter" data-item="nav-text">
-          <div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="sort_filter" aria-haspopup="menu">Sort by</div>
-          <div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="refine_filter" aria-haspopup="menu">Refine</div>
-        </div>
-        <div class="navigation--results" data-item="caption">{{ search.results_count }} Results for "{{ search.terms }}"</div>
-        <div class="navigation--layout">
-          <div class="navigation--layout-button" tabindex="0" data-active="false" data-column-size="2" role="button" aria-label="toggle larger product view">
-            <svg class="icon--root icon--grid-large" data-invertible="true" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0h5.2v5.2H0V0Zm0 6.8h5.2V12H0V6.8ZM6.8 0H12v5.2H6.8V0Zm0 6.8H12V12H6.8V6.8Z" fill="#000" fill-rule="evenodd"></path>
-            </svg>
-          </div>
-          <div class="navigation--layout-button" tabindex="0" data-active="false" data-column-size="" role="button" aria-label="toggle smaller product view">
-            <svg class="icon--root icon--grid-small" data-invertible="true" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0h2.867v2.867H0V0Zm0 4.567h2.867v2.866H0V4.567Zm0 4.566h2.867V12H0V9.133ZM4.567 0h2.866v2.867H4.567V0Zm0 4.567h2.866v2.866H4.567V4.567Zm0 4.566h2.866V12H4.567V9.133ZM9.133 0H12v2.867H9.133V0Zm0 4.567H12v2.866H9.133V4.567Zm0 4.566H12V12H9.133V9.133Z" fill="#000" fill-rule="evenodd"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="navigation--mobile-header" data-container="block" data-mq="small">
-        <div class="navigation--mobile-button" tabindex="0" data-item="nav-text" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="sort_filter" aria-haspopup="menu">Sort by</div>
-        <div class="navigation--mobile-button" tabindex="0" data-item="nav-text" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="refine_filter" aria-haspopup="menu">Refine</div>
-      </div>
-      <div class="navigation--tags-container" data-container="block">
-        <ul class="navigation--active-tags" data-item="sub-nav-text">
-          <li class="navigation--active-tag" data-type="sort" tabindex="0" data-value="relevance">
-            Sort by:&nbsp;<span>Relevance</span>
-            <svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path>
-            </svg>
-          </li>
-          <li class="navigation--active-clear" tabindex="0" data-item="block-link">
-            <span>Clear all</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </navigation-element>
-</div>
+<navigation-element class="navigation--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="5" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-spacing-above="half" data-spacing-below="none" data-show-navigation="true" data-storage-name="search_layout" data-url="/search?type=product&amp;q=&amp;"> <div class="navigation--wrapper"><div class="navigation--container" data-mq="medium-large"><div class="navigation--filter" data-item="nav-text"><div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="sort_filter" aria-haspopup="menu">
+                Sort by
+              </div><div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="refine_filter" aria-haspopup="menu">Refine</div></div><div class="navigation--results" data-item="caption">0 Results for ""</div><div class="navigation--layout"> <div class="navigation--layout-button" tabindex="0" data-active="false" data-column-size="2" role="button" aria-label="toggle larger product view" style="display: none;"><svg class="icon--root icon--grid-large" data-invertible="true" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"> <path d="M0 0h5.2v5.2H0V0Zm0 6.8h5.2V12H0V6.8ZM6.8 0H12v5.2H6.8V0Zm0 6.8H12V12H6.8V6.8Z" fill="#000" fill-rule="evenodd"></path> </svg></div> <div class="navigation--layout-button" tabindex="0" data-active="false" data-column-size="" role="button" aria-label="toggle smaller product view" style="display: none;"><svg class="icon--root icon--grid-small" data-invertible="true" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"> <path d="M0 0h2.867v2.867H0V0Zm0 4.567h2.867v2.866H0V4.567Zm0 4.566h2.867V12H0V9.133ZM4.567 0h2.866v2.867H4.567V0Zm0 4.567h2.866v2.866H4.567V4.567Zm0 4.566h2.866V12H4.567V9.133ZM9.133 0H12v2.867H9.133V0Zm0 4.567H12v2.866H9.133V4.567Zm0 4.566H12V12H9.133V9.133Z" fill="#000" fill-rule="evenodd"></path> </svg></div> </div></div><div class="navigation--mobile-header" data-container="block" data-mq="small"><div class="navigation--mobile-button" tabindex="0" data-item="nav-text" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="sort_filter" aria-haspopup="menu">Sort by</div><div class="navigation--mobile-button" tabindex="0" data-item="nav-text" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="refine_filter" aria-haspopup="menu">Refine</div></div><div class="navigation--tags-container" data-container="block" style="display: block;"> <ul class="navigation--active-tags" data-item="sub-nav-text"><li class="navigation--active-tag" data-type="sort" tabindex="0" data-value="relevance">
+              Sort by:&nbsp;<span>Relevance</span><svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> <path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path> </svg></li><li class="navigation--active-tag" data-type="refine" tabindex="0" style="display:none;"><div class="navigation--active-tag--swatch" data-shape="circle"></div><span></span><svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> <path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path> </svg></li> <li class="navigation--active-tag" data-type="price" tabindex="0" style="display:none;">$<span data-min-price=""></span>&nbsp;-&nbsp;$<span data-max-price=""></span><svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> <path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path> </svg></li><li class="navigation--active-clear" tabindex="0" data-item="block-link"> <span>Clear all</span> </li> </ul> </div></div>
+</navigation-element><element-relocator data-move-into=".drawer--container[data-view='filter']" data-mq="none"></element-relocator>
 
 {{#schema}}
 {
   "name": "Search navigation",
-  "tag": "section",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_sort",
-      "label": "Show sort options",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_filter",
-      "label": "Show filter options",
-      "default": true
-    }
-  ]
+  "tag": "div",
+  "class": "shopify-section section--search-navigation"
 }
 {{/schema}}

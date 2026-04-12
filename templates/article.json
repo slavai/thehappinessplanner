@@ -2,27 +2,10 @@
   "name": "article.html",
   "layout": "theme",
   "sections": {
-    "main": {
-      "type": "blog-post-main",
-      "settings": {}
-    },
-    "navigation": {
-      "type": "blog-post-navigation",
-      "settings": {}
-    },
-    "recents": {
-      "type": "blog-post-recents",
-      "settings": {}
-    },
-    "comments": {
-      "type": "blog-post-comments",
-      "settings": {}
-    }
+    "main":     { "type": "blog-post-main", "settings": {} },
+    "nav":      { "type": "blog-post-navigation", "settings": {} },
+    "recents":  { "type": "blog-post-recents", "settings": {} },
+    "comments": { "type": "blog-post-comments", "settings": {} }
   },
-  "order": [
-    "main",
-    "navigation",
-    "recents",
-    "comments"
-  ]
+  "order": ["main", "nav", "recents", "comments"]
 }

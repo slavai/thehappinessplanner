@@ -2,179 +2,30 @@
   "name": "index.html",
   "layout": "theme",
   "sections": {
-    "slideshow-hero": {
-      "disabled": false,
-      "type": "home-slideshow",
-      "settings": {},
-      "blocks": {
-        "17759923193410b48cd8": {
-          "type": "slide",
-          "settings": {
-            "link_target": "_self",
-            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.12.05.png"
-          },
-          "custom_css": []
-        },
-        "1775992377253a81d046": {
-          "type": "slide",
-          "settings": {
-            "link_target": "_self",
-            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.11.00.png"
-          },
-          "custom_css": []
-        }
-      },
-      "block_order": [
-        "17759923193410b48cd8",
-        "1775992377253a81d046"
-      ],
-      "custom_css": []
-    },
-    "featured-text": {
-      "disabled": false,
-      "type": "home-featured-text",
-      "settings": {
-        "description": "<p>Founded in 2015, The Happiness Planner was the first brand to incorporate psychology techniques like CBT, NLP, and positive psychology into everyday planners. What started as a new way to approach personal growth became a global trend, empowering millions to become more self-aware, rewire their patterns, and create a life of happiness and fulfillment.<br><br>Life may not always go as planned. But with The Happiness Planner by your side, you’ll have a powerful daily companion to help you practice positive thinking, gratitude, and reframing, so you can feel grounded and aligned, no matter what life throws your way.<br><br>Whatever you may be going through or feeling, our tools are designed to help you reflect on your thoughts and behaviors, uncover what’s holding you back, and create new patterns that support the life you want to live and love.</p>"
-      },
-      "blocks": {},
-      "custom_css": []
-    },
-    "reviews-carousel": {
-      "disabled": false,
-      "type": "home-reviews-carousel",
-      "settings": {},
-      "blocks": {}
-    },
-    "custom-liquid": {
-      "disabled": false,
-      "type": "home-custom-liquid",
-      "settings": {},
-      "blocks": {}
-    },
-    "image-with-text-1": {
-      "disabled": false,
-      "type": "home-image-with-text",
-      "settings": {
-        "article": "69bd8d1afd91fc305498350a",
-        "image_alt": "",
-        "heading_override": "",
-        "description_override": "",
-        "button_link_override": ""
-      },
-      "blocks": {},
-      "custom_css": []
-    },
-    "image-with-text-2": {
-      "disabled": false,
-      "type": "home-image-with-text",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-product-1": {
-      "disabled": false,
-      "type": "home-featured-product",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-1": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-video-1": {
-      "disabled": false,
-      "type": "home-featured-video",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-product-2": {
-      "disabled": false,
-      "type": "home-featured-product",
-      "settings": {},
-      "blocks": {}
-    },
-    "slideshow-2": {
-      "disabled": false,
-      "type": "home-slideshow",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-2": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-3": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-4": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-5": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-6": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-collection-7": {
-      "disabled": false,
-      "type": "home-featured-collection",
-      "settings": {},
-      "blocks": {}
-    },
-    "featured-video-2": {
-      "disabled": false,
-      "type": "home-featured-video",
-      "settings": {},
-      "blocks": {}
-    },
-    "grid-with-overlay": {
-      "disabled": false,
-      "type": "home-grid-with-overlay",
-      "settings": {},
-      "blocks": {}
-    },
-    "image-with-text-overlay": {
-      "disabled": false,
-      "type": "home-image-with-text-overlay",
-      "settings": {},
-      "blocks": {}
-    }
+    "s-02": { "type": "home-slideshow-1", "settings": {} },
+    "s-03": { "type": "home-featured-text", "settings": {} },
+    "s-04": { "type": "home-reviews-carousel", "settings": {} },
+    "s-05": { "type": "home-custom-liquid", "settings": {} },
+    "s-06": { "type": "home-image-with-text-1", "settings": {} },
+    "s-07": { "type": "home-image-with-text-2", "settings": {} },
+    "s-08": { "type": "home-featured-product-1", "settings": {} },
+    "s-09": { "type": "home-featured-collection-1", "settings": {} },
+    "s-10": { "type": "home-featured-video-1", "settings": {} },
+    "s-11": { "type": "home-featured-product-2", "settings": {} },
+    "s-12": { "type": "home-slideshow-2", "settings": {} },
+    "s-13": { "type": "home-unknown-1", "settings": {} },
+    "s-14": { "type": "home-featured-collection-2", "settings": {} },
+    "s-15": { "type": "home-featured-product-3", "settings": {} },
+    "s-16": { "type": "home-featured-collection-3", "settings": {} },
+    "s-17": { "type": "home-featured-collection-4", "settings": {} },
+    "s-18": { "type": "home-featured-collection-5", "settings": {} },
+    "s-19": { "type": "home-unknown-2", "settings": {} },
+    "s-20": { "type": "home-unknown-3", "settings": {} },
+    "s-21": { "type": "home-featured-video-2", "settings": {} },
+    "s-22": { "type": "home-featured-collection-6", "settings": {} },
+    "s-23": { "type": "home-featured-collection-7", "settings": {} },
+    "s-24": { "type": "home-grid-with-overlay", "settings": {} },
+    "s-25": { "type": "home-image-with-text-overlay", "settings": {} }
   },
-  "order": [
-    "slideshow-hero",
-    "featured-text",
-    "reviews-carousel",
-    "custom-liquid",
-    "image-with-text-1",
-    "image-with-text-2",
-    "featured-product-1",
-    "featured-collection-1",
-    "featured-video-1",
-    "featured-product-2",
-    "slideshow-2",
-    "featured-collection-2",
-    "featured-collection-3",
-    "featured-collection-4",
-    "featured-collection-5",
-    "featured-collection-6",
-    "featured-collection-7",
-    "featured-video-2",
-    "grid-with-overlay",
-    "image-with-text-overlay"
-  ]
+  "order": ["s-02","s-03","s-04","s-05","s-06","s-07","s-08","s-09","s-10","s-11","s-12","s-13","s-14","s-15","s-16","s-17","s-18","s-19","s-20","s-21","s-22","s-23","s-24","s-25"]
 }

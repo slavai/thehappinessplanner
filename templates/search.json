@@ -2,17 +2,8 @@
   "name": "search.html",
   "layout": "theme",
   "sections": {
-    "navigation": {
-      "type": "search-navigation",
-      "settings": {}
-    },
-    "main": {
-      "type": "search-main",
-      "settings": {}
-    }
+    "nav": { "type": "search-navigation", "settings": {} },
+    "main": { "type": "search-main", "settings": {} }
   },
-  "order": [
-    "navigation",
-    "main"
-  ]
+  "order": ["nav", "main"]
 }

@@ -2,22 +2,9 @@
   "name": "product.html",
   "layout": "theme",
   "sections": {
-    "main": {
-      "type": "product-main",
-      "settings": {}
-    },
-    "reviews": {
-      "type": "product-reviews",
-      "settings": {}
-    },
-    "related-products": {
-      "type": "product-related",
-      "settings": {}
-    }
+    "main":     { "type": "product-main", "settings": {} },
+    "reviews":  { "type": "product-reviews", "settings": {} },
+    "related":  { "type": "product-related", "settings": {} }
   },
-  "order": [
-    "main",
-    "reviews",
-    "related-products"
-  ]
+  "order": ["main", "reviews", "related"]
 }

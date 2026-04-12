@@ -2,7 +2,6 @@
   "name": "index.html",
   "layout": "theme",
   "sections": {
-    "debug": { "type": "debug-image-paths", "settings": {} },
     "s-02": { "type": "home-slideshow-1", "settings": {} },
     "s-03": { "type": "home-featured-text", "settings": {} },
     "s-04": { "type": "home-reviews-carousel", "settings": {} },
@@ -28,5 +27,5 @@
     "s-24": { "type": "home-grid-with-overlay", "settings": {} },
     "s-25": { "type": "home-image-with-text-overlay", "settings": {} }
   },
-  "order": ["debug","s-02","s-03","s-04","s-05","s-06","s-07","s-08","s-09","s-10","s-11","s-12","s-13","s-14","s-15","s-16","s-17","s-18","s-19","s-20","s-21","s-22","s-23","s-24","s-25"]
+  "order": ["s-02","s-03","s-04","s-05","s-06","s-07","s-08","s-09","s-10","s-11","s-12","s-13","s-14","s-15","s-16","s-17","s-18","s-19","s-20","s-21","s-22","s-23","s-24","s-25"]
 }

@@ -15,6 +15,28 @@
 </button></div>
 </slideshow-carousel> </div>
 
+{{#style}}
+  /* Carousel layout — required because PurgeCSS stripped the original Shopify
+     `.carousel--block { flex: 0 0 calc(100%/var(--blocks-per-slide)) }` rule
+     that the source theme generated dynamically. Without these, blocks lay
+     out at their intrinsic 1200px width and translateX(-100%) shifts by the
+     full container width (sum of all blocks) instead of one slide. */
+  #shopline-section-{{ section.id }} .carousel--wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+  #shopline-section-{{ section.id }} .carousel--container {
+    display: flex;
+    width: 100%;
+    transition: transform 0.4s ease;
+  }
+  #shopline-section-{{ section.id }} .carousel--container > .carousel--block {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+  }
+{{/style}}
+
 {{#schema}}
 {
   "name": "Home Slideshow 1",

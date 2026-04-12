@@ -11,13 +11,22 @@
           "type": "slide",
           "settings": {
             "link_target": "_self",
-            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.12"
+            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.12.05.png"
+          },
+          "custom_css": []
+        },
+        "1775992377253a81d046": {
+          "type": "slide",
+          "settings": {
+            "link_target": "_self",
+            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.11.00.png"
           },
           "custom_css": []
         }
       },
       "block_order": [
-        "17759923193410b48cd8"
+        "17759923193410b48cd8",
+        "1775992377253a81d046"
       ],
       "custom_css": []
     },

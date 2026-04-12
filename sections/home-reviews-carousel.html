@@ -15,17 +15,7 @@
   </div>
 
   <link rel="stylesheet" href="//cdn1.stamped.io/files/widget.min.css">
-  <script>
-    function stampedInitHomeCarousel() {
-      if (typeof StampedFn !== 'undefined') {
-        StampedFn.init({
-          apiKey: '{{ settings.stamped_api_key }}',
-          sId: '{{ settings.stamped_s_id }}'
-        });
-      }
-    }
-  </script>
-  <script async src="https://cdn1.stamped.io/files/widget.min.js" onload="stampedInitHomeCarousel()"></script>
+  <script async src="https://cdn1.stamped.io/files/widget.min.js"></script>
 </div>
 
 {{#schema}}

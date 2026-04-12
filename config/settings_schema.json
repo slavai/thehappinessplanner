@@ -20,16 +20,23 @@
       { "type": "header", "content": "Stamped.io Reviews" },
       {
         "type": "text",
+        "id": "stamped_shopify_domain",
+        "label": "Original Shopify shop domain",
+        "info": "Stamped auto-resolves the appkey from window.Shopify.shop. Must be the original Shopify myshopify.com domain for which Stamped was configured (even if the live store now runs on SHOPLINE).",
+        "default": "the-happiness-planner.myshopify.com"
+      },
+      {
+        "type": "text",
         "id": "stamped_api_key",
-        "label": "Public API key",
-        "info": "Found in Stamped dashboard → API Keys. Starts with 'pubkey-'. Passed as apiKey arg to StampedFn.init().",
+        "label": "Public API key (fallback)",
+        "info": "Optional. Only used if auto-resolve via window.Shopify.shop fails. Starts with 'pubkey-'.",
         "default": "pubkey-523mDsz4evBt0gHm3X8Jnv8k5h1s3R"
       },
       {
         "type": "text",
         "id": "stamped_s_id",
-        "label": "Stamped store ID (sId)",
-        "info": "Numeric store identifier assigned by Stamped (NOT the Shopify shop_id). Visible on the Stamped dashboard.",
+        "label": "Stamped store ID (sId) (fallback)",
+        "info": "Optional. Only used if auto-resolve via window.Shopify.shop fails.",
         "default": "14189"
       }
     ]

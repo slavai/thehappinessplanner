@@ -24,7 +24,15 @@
       drawer.setAttribute("data-drawer-side", side);
       drawer.setAttribute("data-drawer-view", view);
       $$(".drawer--side", drawer).forEach((el) => {
-        el.setAttribute("aria-expanded", el === sideEl ? "true" : "false");
+        const isActive = el === sideEl;
+        el.setAttribute("aria-expanded", isActive ? "true" : "false");
+        // Force transform via inline style to bypass CSS specificity wars
+        // with the original theme.css
+        if (isActive) {
+          el.style.setProperty("transform", "none", "important");
+        } else {
+          el.style.removeProperty("transform");
+        }
       });
       sideEl.querySelectorAll(".drawer--container").forEach((c) => {
         c.hidden = c.dataset.view !== view;
@@ -36,7 +44,10 @@
       const drawer = $("drawer-element.drawer--root");
       if (!drawer) return;
       drawer.setAttribute("data-drawer-status", "closed");
-      $$(".drawer--side", drawer).forEach((el) => el.setAttribute("aria-expanded", "false"));
+      $$(".drawer--side", drawer).forEach((el) => {
+        el.setAttribute("aria-expanded", "false");
+        el.style.removeProperty("transform");
+      });
       document.body.classList.remove("drawer-open");
       document.documentElement.style.overflow = "";
     },

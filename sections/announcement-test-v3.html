@@ -1,0 +1,102 @@
+<aside class="shopify-section section--announcement" data-test-variant="v3-presets-with-blocks">
+  <announcement-bar-element class="announcement--root" data-section-id="{{ section.id }}" data-section-type="announcement" data-container="" data-background-color="dark" data-border="none" data-rotate-frequency="7" data-scroll-text="true" data-sticky-enabled="true" data-text-color="white" style="--announcement--animation-speed:3;">
+    <div class="announcement--left" data-mq="medium-large">
+      <div class="social-icons--root" data-type="follow" data-hover-color="brand" data-alignment="left" data-mobile-alignment="">
+        <div class="social-icons--items">
+          {{#for section.blocks as |block|}}
+            {{#if (eq block.type "social_link")}}
+              <a class="social-{{ block.settings.platform }}--link" rel="noreferrer" target="_blank" href="{{ block.settings.url }}" aria-label="{{ block.settings.platform }}">
+                {{#if (eq block.settings.platform "facebook")}}
+                  <svg class="icon--root icon--facebook icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> <path d="M18.896 0H1.104C.494 0 0 .494 0 1.104v17.793C0 19.506.494 20 1.104 20h9.58v-7.745H8.076V9.237h2.606V7.01c0-2.583 1.578-3.99 3.883-3.99 1.104 0 2.052.082 2.329.119v2.7h-1.598c-1.254 0-1.496.597-1.496 1.47v1.928h2.989l-.39 3.018h-2.6V20h5.098c.608 0 1.102-.494 1.102-1.104V1.104C20 .494 19.506 0 18.896 0Z" fill="#000" fill-rule="evenodd"></path> </svg>
+                {{/if}}
+                {{#if (eq block.settings.platform "x")}}
+                  <svg class="icon--root icon--x icon--social-media" data-invertible="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1668.56 1221.19"> <path d="m336.33 142.251 386.39 516.64-388.83 420.05h87.51l340.42-367.76 275.05 367.76h297.8l-408.13-545.7 361.92-390.99h-87.51l-313.51 338.7-253.31-338.7h-297.8zm128.69 64.46h136.81l604.13 807.76h-136.81l-604.13-807.76z"></path> </svg>
+                {{/if}}
+                {{#if (eq block.settings.platform "instagram")}}
+                  <svg class="icon--root icon--instagram icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> <path d="M15.33 5.87a1.208 1.208 0 0 1-1.2-1.197 1.215 1.215 0 0 1 1.207-1.212c.649.002 1.198.55 1.202 1.2.005.659-.547 1.21-1.21 1.209Zm-5.332 9.273c-2.828 0-5.128-2.297-5.14-5.134-.013-2.83 2.31-5.148 5.148-5.138a5.126 5.126 0 0 1 5.124 5.137 5.14 5.14 0 0 1-5.133 5.135Zm-.01-1.808a3.343 3.343 0 0 0 3.342-3.324 3.348 3.348 0 0 0-3.325-3.34 3.343 3.343 0 0 0-3.34 3.324 3.34 3.34 0 0 0 3.324 3.34ZM1.787 9.997h.038c0 1.052-.018 2.104.007 3.154.015.652.048 1.311.16 1.953.259 1.484 1.12 2.454 2.597 2.845.737.195 1.492.215 2.243.222 2.11.016 4.219.017 6.328-.002a11.723 11.723 0 0 0 1.952-.162c1.483-.265 2.451-1.13 2.834-2.61.214-.821.218-1.663.225-2.5.018-1.931.02-3.863-.002-5.793-.008-.725-.042-1.458-.16-2.171-.25-1.502-1.116-2.488-2.614-2.878-.82-.213-1.663-.218-2.5-.225-1.93-.018-3.861-.02-5.793.002-.724.008-1.456.047-2.17.16-1.4.224-2.388 1-2.81 2.382a6.122 6.122 0 0 0-.247 1.519c-.056 1.367-.062 2.736-.088 4.104Z" fill="#000" fill-rule="evenodd"></path> </svg>
+                {{/if}}
+              </a>
+            {{/if}}
+          {{/for}}
+        </div>
+      </div>
+    </div>
+
+    <div class="announcement--center">
+      <div class="announcement--blocks">
+        {{#for section.blocks as |block|}}
+          {{#if (eq block.type "announcement_text")}}
+            <div class="announcement--block" aria-hidden="false" data-transition-item="viewport" data-transition-trigger="custom" data-transition-type="slide-out" data-transition-active="false">
+              <div class="announcement--block-wrapper">
+                <div class="announcement--text" data-item="nav-text">{{ block.settings.text }}</div>
+              </div>
+            </div>
+          {{/if}}
+        {{/for}}
+      </div>
+    </div>
+
+    <div class="announcement--right" data-mq="medium-large"></div>
+  </announcement-bar-element>
+</aside>
+
+{{#schema}}
+{
+  "name": "Announcement TEST v3 (presets+blocks)",
+  "tag": "aside",
+  "class": "shopify-section section--announcement",
+  "settings": [
+    {
+      "type": "header",
+      "content": "TEST VARIANT 3: presets with blocks (no default)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "social_link",
+      "name": "Social link",
+      "settings": [
+        {
+          "type": "select",
+          "id": "platform",
+          "label": "Platform",
+          "options": [
+            { "value": "facebook", "label": "Facebook" },
+            { "value": "x", "label": "X" },
+            { "value": "instagram", "label": "Instagram" }
+          ],
+          "default": "facebook"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL"
+        }
+      ]
+    },
+    {
+      "type": "announcement_text",
+      "name": "Announcement text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Welcome"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar v3",
+      "blocks": [
+        { "type": "social_link", "settings": { "platform": "facebook", "url": "https://facebook.com/happinessplanner" } },
+        { "type": "social_link", "settings": { "platform": "x", "url": "https://x.com/happinessplannr" } },
+        { "type": "social_link", "settings": { "platform": "instagram", "url": "https://instagram.com/happinessplanner" } },
+        { "type": "announcement_text", "settings": { "text": "V3 PRESETS — Now shipping to the US, UK & Europe" } }
+      ]
+    }
+  ]
+}
+{{/schema}}

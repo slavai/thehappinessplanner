@@ -235,9 +235,275 @@
     "quantity-input-element",
     "collection-filters-element",
     "pagination-element",
-    "carousel-element",
     "reveal-element",
     "accordion-element",
     "tabs-element",
+    "product-price-element",
+    "product-video-element",
+    "product-zoom-element",
+    "product-thumbs-element",
+    "modal-trigger",
+    "modal-element",
   ].forEach((n) => define(n, class extends HTMLElement {}));
+
+  // --- Carousel base ----------------------------------------------------
+  // Shared paging engine used by <slideshow-carousel>, <carousel-element>,
+  // and <main-product-carousel>. Slides are .carousel--block children of
+  // .carousel--container. Page advances translate the container by
+  // -(currentPage * 100%) and update --slide-pos / data-current-slide.
+  class CarouselBase extends HTMLElement {
+    connectedCallback() {
+      const container = this.querySelector(".carousel--container");
+      if (!container) return;
+      this._container = container;
+      this._blocks = Array.from(container.querySelectorAll(":scope > .carousel--block"));
+      if (this._blocks.length === 0) return;
+      this._prevBtn = this.querySelector(":scope > .carousel--wrapper > .carousel--prev");
+      this._nextBtn = this.querySelector(":scope > .carousel--wrapper > .carousel--next");
+      this._dots = Array.from(this.querySelectorAll(".carousel-nav-dot--index"));
+      this._currentLabel = this.querySelector(".carousel-nav-arrow--current");
+      this._navPrev = this.querySelector(".carousel-nav-arrow--prev");
+      this._navNext = this.querySelector(".carousel-nav-arrow--next");
+      this._index = 0;
+
+      this._mqSmall = window.matchMedia("(max-width: 767px)");
+      this._desktopCols = parseInt(this.getAttribute("data-columns") || "1", 10) || 1;
+      this._mobileCols = parseInt(this.getAttribute("data-mobile-columns") || "1", 10) || 1;
+
+      const advance = (dir) => this.goTo(this._index + dir);
+      if (this._prevBtn) this._prevBtn.addEventListener("click", (e) => { e.preventDefault(); advance(-1); });
+      if (this._nextBtn) this._nextBtn.addEventListener("click", (e) => { e.preventDefault(); advance(1); });
+      if (this._navPrev) this._navPrev.addEventListener("click", (e) => { e.preventDefault(); advance(-1); });
+      if (this._navNext) this._navNext.addEventListener("click", (e) => { e.preventDefault(); advance(1); });
+      this._dots.forEach((dot, i) => dot.addEventListener("click", (e) => { e.preventDefault(); this.goTo(i); }));
+
+      // Touch swipe
+      let startX = null;
+      this.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+      this.addEventListener("touchend", (e) => {
+        if (startX === null) return;
+        const dx = (e.changedTouches[0].clientX - startX);
+        if (Math.abs(dx) > 50) advance(dx < 0 ? 1 : -1);
+        startX = null;
+      });
+
+      this._mqSmall.addEventListener && this._mqSmall.addEventListener("change", () => this.goTo(this._index));
+      this.goTo(0);
+    }
+    columns() {
+      return this._mqSmall.matches ? this._mobileCols : this._desktopCols;
+    }
+    pageCount() {
+      const cols = this.columns();
+      return Math.max(1, Math.ceil(this._blocks.length / cols));
+    }
+    goTo(i) {
+      const total = this.pageCount();
+      if (total <= 0) return;
+      const idx = Math.max(0, Math.min(total - 1, i));
+      this._index = idx;
+      this._container.style.transform = `translateX(-${idx * 100}%)`;
+      this.style.setProperty("--slide-pos", `-${idx * 100}%`);
+      this.setAttribute("data-current-slide", String(idx));
+      this.setAttribute("data-first-slide", idx === 0 ? "true" : "false");
+      this.setAttribute("data-last-slide", idx === total - 1 ? "true" : "false");
+      const setDisabled = (btn, on) => { if (btn) btn.setAttribute("aria-disabled", on ? "true" : "false"); };
+      setDisabled(this._prevBtn, idx === 0);
+      setDisabled(this._nextBtn, idx === total - 1);
+      setDisabled(this._navPrev, idx === 0);
+      setDisabled(this._navNext, idx === total - 1);
+      this._dots.forEach((d, di) => d.setAttribute("aria-current", di === idx ? "true" : "false"));
+      if (this._currentLabel) this._currentLabel.setAttribute("data-value", String(idx + 1));
+    }
+  }
+
+  // --- slideshow-carousel ------------------------------------------------
+  class SlideshowCarousel extends CarouselBase {
+    connectedCallback() {
+      super.connectedCallback();
+      if (!this._container) return;
+      const auto = this.getAttribute("data-auto-rotate") === "true";
+      const freq = parseFloat(this.getAttribute("data-rotate-frequency") || "5") || 5;
+      if (!auto || this.pageCount() <= 1) return;
+      const tick = () => {
+        const total = this.pageCount();
+        this.goTo((this._index + 1) % total);
+      };
+      this._timer = setInterval(tick, freq * 1000);
+      this.addEventListener("mouseenter", () => { if (this._timer) { clearInterval(this._timer); this._timer = null; } });
+      this.addEventListener("mouseleave", () => { if (!this._timer) this._timer = setInterval(tick, freq * 1000); });
+    }
+    disconnectedCallback() {
+      if (this._timer) { clearInterval(this._timer); this._timer = null; }
+    }
+  }
+  define("slideshow-carousel", SlideshowCarousel);
+
+  // --- carousel-element (multi-column, page-by-N) ------------------------
+  class CarouselElement extends CarouselBase {}
+  define("carousel-element", CarouselElement);
+
+  // --- main-product-carousel (mobile product image slider) ---------------
+  class MainProductCarousel extends CarouselBase {}
+  define("main-product-carousel", MainProductCarousel);
+
+  // --- video-component (lazy YouTube/Vimeo embed) ------------------------
+  class VideoComponent extends HTMLElement {
+    connectedCallback() {
+      const iframe = this.querySelector("iframe");
+      if (!iframe) return;
+      const api = this.getAttribute("data-api") || "youtube";
+      const id = this.getAttribute("data-video-id");
+      const autoplay = this.getAttribute("data-autoplay") === "true" ? 1 : 0;
+      if (!id) return;
+      const buildSrc = () => {
+        if (api === "vimeo") {
+          return `https://player.vimeo.com/video/${id}?autoplay=${autoplay}&loop=1&muted=1`;
+        }
+        return `https://www.youtube.com/embed/${id}?autoplay=${autoplay}&loop=1&playlist=${id}&mute=1&controls=1&enablejsapi=1`;
+      };
+      this._loaded = false;
+      const load = () => {
+        if (this._loaded) return;
+        this._loaded = true;
+        iframe.setAttribute("src", buildSrc());
+      };
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { load(); io.disconnect(); } });
+        }, { rootMargin: "200px" });
+        io.observe(this);
+      } else {
+        load();
+      }
+    }
+  }
+  define("video-component", VideoComponent);
+
+  // --- product-options-element (variant radios → variant id) -------------
+  // Reads data-variants-json off the element (an array of {id, options:[]})
+  // and on radio change collects the current option values, finds the
+  // matching variant, updates the sibling product-buy-buttons-element's
+  // <input name="id">, and refreshes the price display.
+  class ProductOptionsElement extends HTMLElement {
+    connectedCallback() {
+      let variants = [];
+      try { variants = JSON.parse(this.getAttribute("data-variants-json") || "[]"); } catch (e) { variants = []; }
+      this._variants = Array.isArray(variants) ? variants : [];
+      const radios = Array.from(this.querySelectorAll("input[type='radio'][data-option-name], input[type='radio'][data-option-index]"));
+      if (radios.length === 0) return;
+      radios.forEach((r) => r.addEventListener("change", () => this._onChange()));
+    }
+    _onChange() {
+      const selected = {};
+      this.querySelectorAll("input[type='radio']:checked").forEach((r) => {
+        const key = r.getAttribute("data-option-name") || r.getAttribute("data-option-index");
+        if (key != null) selected[key] = r.value;
+      });
+      if (this._variants.length === 0) return;
+      const match = this._variants.find((v) => {
+        if (!v || !v.options) return false;
+        return Object.keys(selected).every((k, i) => {
+          const ov = Array.isArray(v.options) ? v.options[i] : v.options[k];
+          return ov === selected[k];
+        });
+      });
+      if (!match) return;
+      const root = this.closest(".main-product--root, .product-form, .featured-product--root, [data-section-id]") || document;
+      const idInput = root.querySelector("product-buy-buttons-element input[name='id'], input.product-buy-buttons--input");
+      if (idInput) idInput.value = match.id;
+      const priceEl = root.querySelector("product-price-element .product-price--original .money, .product-price--root .money");
+      if (priceEl && match.price_formatted) priceEl.textContent = match.price_formatted;
+      const buyBtn = root.querySelector("product-buy-buttons-element .product-buy-buttons--primary");
+      if (buyBtn) {
+        const available = match.available !== false;
+        buyBtn.setAttribute("data-enabled", available ? "true" : "false");
+        if (!available) buyBtn.setAttribute("disabled", "disabled");
+        else buyBtn.removeAttribute("disabled");
+      }
+    }
+  }
+  define("product-options-element", ProductOptionsElement);
+
+  // --- product-buy-buttons-element (intercept add-to-cart) ---------------
+  class ProductBuyButtonsElement extends HTMLElement {
+    connectedCallback() {
+      const form = this.closest("form[action*='/cart/add']");
+      if (!form) return;
+      const btn = this.querySelector(".product-buy-buttons--primary");
+      if (btn) btn.addEventListener("click", (e) => {
+        if (btn.getAttribute("data-enabled") === "false") { e.preventDefault(); return; }
+        e.preventDefault();
+        this._submit(form);
+      });
+      form.addEventListener("submit", (e) => { e.preventDefault(); this._submit(form); });
+    }
+    async _submit(form) {
+      const idInput = form.querySelector("input[name='id']") || this.querySelector("input[name='id']");
+      const qtyInput = form.querySelector("input[name='quantity']");
+      const id = idInput ? idInput.value : null;
+      const quantity = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+      if (!id) return;
+      const btn = this.querySelector(".product-buy-buttons--primary");
+      if (btn) btn.setAttribute("aria-busy", "true");
+      try {
+        const r = await fetch("/cart/add.js", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ id, quantity }),
+        });
+        if (r.ok) {
+          const badge = document.querySelector("[data-cart-count]");
+          if (badge) {
+            const cur = parseInt(badge.getAttribute("data-cart-count") || badge.textContent || "0", 10) || 0;
+            badge.setAttribute("data-cart-count", String(cur + quantity));
+            badge.textContent = String(cur + quantity);
+          }
+          if (window.Drawer) {
+            window.Drawer.open("cart-drawer", "right");
+          } else {
+            const opener = document.querySelector("[data-drawer-open='right']");
+            if (opener) opener.click();
+          }
+        } else {
+          form.submit();
+        }
+      } catch (err) {
+        form.submit();
+      } finally {
+        if (btn) btn.setAttribute("aria-busy", "false");
+      }
+    }
+  }
+  define("product-buy-buttons-element", ProductBuyButtonsElement);
+
+  // --- product-media-variants (thumbnail → main image swap) --------------
+  class ProductMediaVariants extends HTMLElement {
+    connectedCallback() {
+      const container = this.querySelector(".product-media--container");
+      if (!container) return;
+      const thumbs = Array.from(this.querySelectorAll(".product-media--thumb, .product-media--thumbnail"));
+      if (thumbs.length === 0) return;
+      thumbs.forEach((thumb) => {
+        thumb.addEventListener("click", (e) => {
+          e.preventDefault();
+          const id = thumb.getAttribute("data-id");
+          if (!id) return;
+          thumbs.forEach((t) => {
+            const active = t === thumb;
+            t.setAttribute("data-active", active ? "true" : "false");
+            t.setAttribute("aria-selected", active ? "true" : "false");
+          });
+          container.querySelectorAll(".product-media--root").forEach((m) => {
+            m.setAttribute("data-active", m.getAttribute("data-id") === id ? "true" : "false");
+          });
+        });
+      });
+    }
+  }
+  define("product-media-variants", ProductMediaVariants);
+
+  // Expose Drawer so other modules (e.g. ProductBuyButtonsElement) can
+  // open the cart drawer after a successful add-to-cart.
+  window.Drawer = Drawer;
 })();

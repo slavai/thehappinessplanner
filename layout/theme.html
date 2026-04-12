@@ -18,7 +18,6 @@
     window.Shopify.shop = window.Shopify.shop || "{{ settings.stamped_shopify_domain }}";
     window.Shopify.country = window.Shopify.country || "US";
   </script>
-  {{ script_tag (asset_url 'theme.js') }}
 </head>
 <body>
   {{ section 'announcement' }}
@@ -27,6 +26,7 @@
     {{ content_for_layout }}
   </main>
   {{ section 'footer' }}
+  {{ script_tag (asset_url 'theme.js') }}
   {{ content_for_footer }}
 </body>
 </html>

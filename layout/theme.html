@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap">
-  <link rel="stylesheet" href="{{ asset_url 'theme.css' }}">
-  <script src="{{ asset_url 'theme.js' }}" defer></script>
+  {{ stylesheet_tag (asset_url 'theme.css') }}
+  {{ script_tag (asset_url 'theme.js') }}
 </head>
 <body>
   {{ section 'announcement' }}

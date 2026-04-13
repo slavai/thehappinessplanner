@@ -67,8 +67,11 @@
     "s-08": {
       "disabled": false,
       "type": "home-featured-product-1",
-      "settings": {},
-      "blocks": {}
+      "settings": {
+        "product": "16074440842642771216040650"
+      },
+      "blocks": {},
+      "custom_css": []
     },
     "s-09": {
       "disabled": false,

@@ -1,6 +1,6 @@
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-product">
 {{#for section.settings.products limit=1 as |product|}}
-<div class="main-product--root" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-handle="{{ product.handle }}">
+<div class="main-product--root" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-handle="{{ product.handle }}" data-variants="{{ json product.variants }}">
   <div class="main-product--wrapper">
     <div class="main-product--media">
       <div class="product-media--gallery">
@@ -47,45 +47,28 @@
       </div>
       {{/if}}
 
-      <!-- DEBUG -->
-      <div style="background:#ffe0e0;padding:10px;margin:10px 0;font-size:12px;">
-        DEBUG: has_only_default_variant={{ product.has_only_default_variant }}<br>
-        DEBUG: available={{ product.available }}<br>
-        DEBUG: variants.size={{ product.variants.size }}<br>
-        DEBUG: options.size={{ product.options.size }}<br>
-        DEBUG: first_available_variant.id={{ product.first_available_variant.id }}
-      </div>
-      <!-- /DEBUG -->
-
-      {{#form "product" product class="product-form"}}
-        {{#if product.has_only_default_variant}}
-          <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
-        {{else}}
-          <div class="product-variants">
-            {{#for product.options_with_values as |option|}}
-            <div class="product-option">
-              <label class="option-label">{{ option.name }}</label>
-              <div class="option-values">
-                {{#for option.values as |value|}}
-                <button type="button" class="option-value" data-option-name="{{ option.name }}" data-option-value="{{ value }}">
-                  {{ value }}
-                </button>
-                {{/for}}
-              </div>
-            </div>
+      <!-- Variant selector -->
+      {{#unless product.has_only_default_variant}}
+      <div class="product-variants">
+        {{#for product.options_with_values as |option|}}
+        <div class="product-option">
+          <label class="option-label">{{ option.name }}</label>
+          <div class="option-values">
+            {{#for option.values as |value|}}
+            <button type="button" class="option-value" data-option-name="{{ option.name }}" data-option-value="{{ value }}">
+              {{ value }}
+            </button>
             {{/for}}
           </div>
-          <select name="id" class="variant-selector" style="display: none;">
-            {{#for product.variants as |variant|}}
-            <option value="{{ variant.id }}" {{#unless variant.available}}disabled{{/unless}} data-available="{{ variant.available }}">
-              {{ variant.title }} - {{ money variant.price }}
-            </option>
-            {{/for}}
-          </select>
-        {{/if}}
+        </div>
+        {{/for}}
+      </div>
+      {{/unless}}
 
+      <!-- Add to cart form (exact syntax from SHOPLINE docs) -->
+      {{#form "product" product id="product-form-{{ section.id }}" class="product-form"}}
+        <input type="hidden" name="id" value="{{ default product.selected_or_first_available_variant.id (get 'id' (first product.variants)) }}" class="variant-id-input">
         <input type="hidden" name="quantity" value="1">
-
         {{#if product.available}}
         <button type="submit" class="add-to-cart-btn">
           {{ section.settings.add_to_cart_text }}
@@ -311,11 +294,21 @@
     });
   });
 
-  // Variant selector
+  // Variant selector - uses data attribute with variant JSON
   const optionButtons = section.querySelectorAll('.option-value');
-  const variantSelect = section.querySelector('.variant-selector');
-  if (optionButtons.length && variantSelect) {
+  const variantInput = section.querySelector('.variant-id-input');
+  const productRoot = section.querySelector('.main-product--root');
+
+  if (optionButtons.length && variantInput && productRoot) {
+    // Get variants data from data attribute
+    const variantsJson = productRoot.dataset.variants;
+    let variants = [];
+    try {
+      variants = JSON.parse(variantsJson || '[]');
+    } catch(e) {}
+
     const selectedOptions = {};
+
     optionButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const name = btn.dataset.optionName;
@@ -329,12 +322,12 @@
         btn.dataset.selected = 'true';
 
         // Find matching variant
-        const options = Array.from(variantSelect.options);
-        for (const opt of options) {
-          const title = opt.textContent.trim();
-          const matches = Object.values(selectedOptions).every(v => title.includes(v));
+        for (const v of variants) {
+          const matches = Object.values(selectedOptions).every(val =>
+            v.title.includes(val) || (v.options && v.options.includes(val))
+          );
           if (matches) {
-            variantSelect.value = opt.value;
+            variantInput.value = v.id;
             break;
           }
         }

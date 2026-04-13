@@ -93,21 +93,26 @@
                       {{/if}}
                     </a>
 
-                    {{!-- Variant swatches (only if product has >1 variant with a "color"-like option) --}}
+                    {{!-- Variant swatches: one per variant, using variant.image as background.
+                         Click → JS swaps product-card--image to the variant image (see theme.js _wireVariantSwatches). --}}
                     {{#if product.has_only_default_variant}}{{else}}
-                      {{#for product.options_with_values as |option|}}
-                        {{#if (eq option.position 1)}}
-                          <div class="product-card--swatches--horizontal-view">
-                            <div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--{{ product.id }}-{{ option.name }}">
-                              {{#for option.values as |value|}}
-                                <label class="swatch" data-item="swatch" data-shape="square" aria-label="{{ value }}" for="{{ section.id }}--{{ product.id }}-{{ option.name }}-{{ value }}">
-                                  <input class="swatch--input" type="radio" id="{{ section.id }}--{{ product.id }}-{{ option.name }}-{{ value }}" name="{{ section.id }}--{{ product.id }}-{{ option.name }}" value="{{ value }}" data-option-name="{{ option.name }}" data-item="radio">
-                                </label>
-                              {{/for}}
-                            </div>
-                          </div>
-                        {{/if}}
-                      {{/for}}
+                      <div class="product-card--swatches--horizontal-view">
+                        <div class="swatches--container" role="radiogroup" aria-label="{{ product.title }} variants">
+                          {{#for product.variants as |variant|}}
+                            <label class="swatch" data-item="swatch" data-shape="square"
+                                   aria-label="{{ variant.title }}"
+                                   title="{{ variant.title }}"
+                                   {{#if variant.image}}style="--swatch-background: url('{{ image_url variant.image width=120 }}');"{{/if}}>
+                              <input class="swatch--input" type="radio"
+                                     name="variant-{{ section.id }}-{{ product.id }}"
+                                     value="{{ variant.id }}"
+                                     data-variant-id="{{ variant.id }}"
+                                     data-variant-url="{{ variant.url }}"
+                                     data-item="radio">
+                            </label>
+                          {{/for}}
+                        </div>
+                      </div>
                     {{/if}}
 
                     <div class="product-card--details">
@@ -153,36 +158,137 @@
 
 {{#style}}
   /* ==================================================================
-     Canonical carousel math — guards against PurgeCSS stripping
-     (mistakes.md #16). Without these rules, .carousel--container
-     falls back to `display: block` and cards stack vertically.
-     JS ProductCarousel sets --blocks-per-slide / --blocks-per-slide-mobile
-     custom properties in connectedCallback() based on data-columns attrs.
+     Canonical carousel — scroll-snap based.
+     Native browser momentum + drag on touch, JS mouse-drag on desktop.
+     Guards against PurgeCSS stripping (mistakes.md #16).
      ================================================================== */
+  #shopline-section-{{ section.id }} product-carousel {
+    display: block;
+  }
   #shopline-section-{{ section.id }} product-carousel .carousel--wrapper {
-    overflow: hidden;
     position: relative;
     width: 100%;
   }
   #shopline-section-{{ section.id }} product-carousel .carousel--container {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    transition: transform 0.4s ease;
-    will-change: transform;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    user-select: none;
+    padding-bottom: 4px;
+  }
+  #shopline-section-{{ section.id }} product-carousel .carousel--container::-webkit-scrollbar {
+    display: none;
   }
   #shopline-section-{{ section.id }} product-carousel .carousel--container > .carousel--block {
-    flex: 0 0 calc(100% / var(--blocks-per-slide, 3));
-    width: calc(100% / var(--blocks-per-slide, 3));
+    flex: 0 0 calc((100% - 16px * (var(--blocks-per-slide, 3) - 1)) / var(--blocks-per-slide, 3));
+    max-width: calc((100% - 16px * (var(--blocks-per-slide, 3) - 1)) / var(--blocks-per-slide, 3));
     min-width: 0;
-    padding: 0 12px;
+    scroll-snap-align: start;
     box-sizing: border-box;
   }
   @media (max-width: 767px) {
     #shopline-section-{{ section.id }} product-carousel .carousel--container > .carousel--block {
-      flex: 0 0 calc(100% / var(--blocks-per-slide-mobile, 1));
-      width: calc(100% / var(--blocks-per-slide-mobile, 1));
+      flex: 0 0 calc((100% - 16px * (var(--blocks-per-slide-mobile, 1) - 1)) / var(--blocks-per-slide-mobile, 1));
+      max-width: calc((100% - 16px * (var(--blocks-per-slide-mobile, 1) - 1)) / var(--blocks-per-slide-mobile, 1));
     }
+  }
+
+  /* Carousel nav arrows (absolute inside wrapper, hidden on touch) */
+  #shopline-section-{{ section.id }} product-carousel .carousel--prev,
+  #shopline-section-{{ section.id }} product-carousel .carousel--next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  #shopline-section-{{ section.id }} product-carousel .carousel--prev { left: 4px; }
+  #shopline-section-{{ section.id }} product-carousel .carousel--next { right: 4px; }
+  #shopline-section-{{ section.id }} product-carousel .carousel--prev:hover,
+  #shopline-section-{{ section.id }} product-carousel .carousel--next:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.05);
+  }
+  #shopline-section-{{ section.id }} product-carousel[data-first-slide="true"] .carousel--prev {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #shopline-section-{{ section.id }} product-carousel[data-last-slide="true"] .carousel--next {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Nav-arrow chevron glyphs — simple borders, no svg dependency */
+  #shopline-section-{{ section.id }} product-carousel .nav-arrow {
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #000;
+    border-right: 2px solid #000;
+  }
+  #shopline-section-{{ section.id }} product-carousel .carousel--prev .nav-arrow {
+    transform: rotate(-135deg);
+    margin-left: 4px;
+  }
+  #shopline-section-{{ section.id }} product-carousel .carousel--next .nav-arrow {
+    transform: rotate(45deg);
+    margin-right: 4px;
+  }
+  #shopline-section-{{ section.id }} product-carousel .carousel--prev .nav-arrow > div,
+  #shopline-section-{{ section.id }} product-carousel .carousel--next .nav-arrow > div {
+    display: none; /* original theme uses 3 inner divs; we render via borders */
+  }
+
+  /* Variant swatches */
+  #shopline-section-{{ section.id }} .product-card--swatches--horizontal-view {
+    padding: 10px 0 0;
+  }
+  #shopline-section-{{ section.id }} .swatches--container {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #shopline-section-{{ section.id }} .swatch {
+    position: relative;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: var(--swatch-background, #e5e5e5) center center / cover no-repeat;
+    background-color: #e5e5e5;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+  #shopline-section-{{ section.id }} .swatch:hover {
+    transform: scale(1.08);
+  }
+  #shopline-section-{{ section.id }} .swatch:has(.swatch--input:checked) {
+    border-color: #000;
+  }
+  #shopline-section-{{ section.id }} .swatch--input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
   }
 
   /* Auto-label background colors driven by section color settings */

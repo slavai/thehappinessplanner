@@ -560,115 +560,162 @@
       this._count = this._cards.length;
       if (!this._container || !this._count) return;
 
-      this._index = 0;
       this._columns = parseInt(this.dataset.columns, 10) || 3;
       this._columnsMobile = parseInt(this.dataset.mobileColumns, 10) || 1;
-      this._autoplay = this.dataset.autoplay === "true";
 
       this._applyLayoutVars();
       this._wireNavButtons();
-      this._wireHoverImageSwap();
+      this._wireMouseDrag();
+      this._wireScrollSync();
       this._wireVariantSwatches();
-      this._wireDragSwipe();
       this._wireKeyboard();
-      if (this._autoplay) this._startAutoplay();
+      // Initial edge state after layout settles
+      requestAnimationFrame(() => this._updateEdgeState());
 
-      // Recompute on viewport resize (mobile ↔ desktop switch)
-      this._resizeHandler = () => this._applyLayoutVars();
+      this._resizeHandler = () => {
+        this._applyLayoutVars();
+        this._updateEdgeState();
+      };
       window.addEventListener("resize", this._resizeHandler, { passive: true });
     }
 
     disconnectedCallback() {
       window.removeEventListener("resize", this._resizeHandler);
-      if (this._autoplayTimer) clearInterval(this._autoplayTimer);
     }
 
     _applyLayoutVars() {
-      const totalSlidesDesktop = Math.max(1, Math.ceil(this._count / this._columns));
-      const totalSlidesMobile = Math.max(1, Math.ceil(this._count / this._columnsMobile));
       this.style.setProperty("--blocks-per-slide", this._columns);
       this.style.setProperty("--blocks-per-slide-mobile", this._columnsMobile);
-      this.style.setProperty("--total-slides", totalSlidesDesktop);
-      this.style.setProperty("--total-slides-mobile", totalSlidesMobile);
-      this.style.setProperty("--total-spaces", this._count * 2);
-      this.style.setProperty("--total-spaces-mobile", this._count);
-      this.style.setProperty("--slide-pos", "0%");
-      this.setAttribute("data-first-slide", this._index === 0 ? "true" : "false");
-      this.setAttribute(
-        "data-last-slide",
-        this._index >= totalSlidesDesktop - 1 ? "true" : "false"
-      );
+      this.style.setProperty("--total-blocks", this._count);
     }
 
-    _goToSlide(i) {
-      const totalSlides = Math.ceil(this._count / this._columns);
-      this._index = Math.max(0, Math.min(totalSlides - 1, i));
-      const pct = (this._index / totalSlides) * 100;
-      this._container.style.transform = `translateX(-${pct}%)`;
-      this.style.setProperty("--slide-pos", `-${pct}%`);
-      this.setAttribute("data-first-slide", this._index === 0 ? "true" : "false");
-      this.setAttribute(
-        "data-last-slide",
-        this._index >= totalSlides - 1 ? "true" : "false"
-      );
-      // Update the "current/total" counter in the header nav
-      const sectionRoot = this.closest("[data-section-id]");
-      if (sectionRoot) {
-        const current = sectionRoot.querySelector(".carousel-nav-arrow--current");
-        if (current) current.setAttribute("data-value", String(this._index + 1));
-        const total = sectionRoot.querySelector(".carousel-nav-arrow--total");
-        if (total) total.setAttribute("data-value", String(totalSlides));
-      }
+    _scrollByBlocks(delta) {
+      if (!this._cards.length) return;
+      const firstRect = this._cards[0].getBoundingClientRect();
+      const secondRect = this._cards.length > 1 ? this._cards[1].getBoundingClientRect() : null;
+      // Step = block-width + gap (distance from one block's left edge to the next)
+      const step = secondRect ? (secondRect.left - firstRect.left) : firstRect.width;
+      this._container.scrollBy({ left: step * delta, behavior: "smooth" });
     }
 
     _wireNavButtons() {
-      // Local prev/next inside carousel-wrapper
-      const prev = this.querySelector(".carousel--prev");
-      const next = this.querySelector(".carousel--next");
-      if (prev) prev.addEventListener("click", () => this._goToSlide(this._index - 1));
-      if (next) next.addEventListener("click", () => this._goToSlide(this._index + 1));
+      const localPrev = this.querySelector(".carousel--prev");
+      const localNext = this.querySelector(".carousel--next");
+      if (localPrev) localPrev.addEventListener("click", () => this._scrollByBlocks(-this._columns));
+      if (localNext) localNext.addEventListener("click", () => this._scrollByBlocks(this._columns));
 
-      // External prev/next from featured-collection--header-nav
       const sectionRoot = this.closest("[data-section-id]");
       if (sectionRoot) {
         const extPrev = sectionRoot.querySelector(".carousel-nav-arrow--prev");
         const extNext = sectionRoot.querySelector(".carousel-nav-arrow--next");
-        if (extPrev) extPrev.addEventListener("click", () => this._goToSlide(this._index - 1));
-        if (extNext) extNext.addEventListener("click", () => this._goToSlide(this._index + 1));
+        if (extPrev) extPrev.addEventListener("click", () => this._scrollByBlocks(-this._columns));
+        if (extNext) extNext.addEventListener("click", () => this._scrollByBlocks(this._columns));
       }
     }
 
-    _wireHoverImageSwap() {
-      // Hover on desktop already works via CSS :hover on .product-card--image vs --hover-image.
-      // On touch devices we need a JS fallback: tap and hold shows hover image briefly.
-      // Most phones won't need this, so we keep it minimal — CSS :hover handles desktop,
-      // and touch devices just show the primary image. No JS needed.
+    // Desktop mouse click-drag. Touch drag is native via overflow-x + scroll-snap.
+    _wireMouseDrag() {
+      let isDown = false;
+      let startX = 0;
+      let startScroll = 0;
+      let moved = false;
+
+      this._container.addEventListener("mousedown", (e) => {
+        // Don't intercept clicks on interactive children (links, inputs)
+        if (e.target.closest("a, button, input, label.swatch")) return;
+        isDown = true;
+        moved = false;
+        startX = e.pageX;
+        startScroll = this._container.scrollLeft;
+        this._container.style.cursor = "grabbing";
+        // Disable scroll-snap during drag to follow cursor smoothly
+        this._container.style.scrollSnapType = "none";
+        e.preventDefault();
+      });
+
+      const stop = () => {
+        if (!isDown) return;
+        isDown = false;
+        this._container.style.cursor = "";
+        // Re-enable snap — it'll animate the container to the nearest block
+        this._container.style.scrollSnapType = "";
+      };
+
+      window.addEventListener("mouseup", stop);
+      this._container.addEventListener("mouseleave", stop);
+
+      this._container.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const dx = e.pageX - startX;
+        if (Math.abs(dx) > 3) moved = true;
+        this._container.scrollLeft = startScroll - dx;
+      });
+
+      // Prevent click-through on cards when the drag actually moved
+      this._container.addEventListener("click", (e) => {
+        if (moved) {
+          e.preventDefault();
+          e.stopPropagation();
+          moved = false;
+        }
+      }, true);
+    }
+
+    _wireScrollSync() {
+      let ticking = false;
+      this._container.addEventListener("scroll", () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          this._updateEdgeState();
+          ticking = false;
+        });
+      }, { passive: true });
+    }
+
+    _updateEdgeState() {
+      const c = this._container;
+      const atStart = c.scrollLeft <= 2;
+      const atEnd = c.scrollLeft + c.clientWidth >= c.scrollWidth - 2;
+      this.setAttribute("data-first-slide", atStart ? "true" : "false");
+      this.setAttribute("data-last-slide", atEnd ? "true" : "false");
+
+      const sectionRoot = this.closest("[data-section-id]");
+      const prevs = [
+        this.querySelector(".carousel--prev"),
+        sectionRoot?.querySelector(".carousel-nav-arrow--prev")
+      ].filter(Boolean);
+      const nexts = [
+        this.querySelector(".carousel--next"),
+        sectionRoot?.querySelector(".carousel-nav-arrow--next")
+      ].filter(Boolean);
+      prevs.forEach((b) => b.setAttribute("aria-disabled", atStart ? "true" : "false"));
+      nexts.forEach((b) => b.setAttribute("aria-disabled", atEnd ? "true" : "false"));
     }
 
     _wireVariantSwatches() {
-      // Click on a swatch label → swap the card's primary image to the swatch's
-      // background image. Both images are already in the DOM (it's a radio group),
-      // so no network fetch.
+      // Click on a swatch → swap card's primary image to the swatch's background.
+      // The swatch background is a url(...) of the variant image.
       this._cards.forEach((card) => {
         const swatches = card.querySelectorAll(".swatches--container .swatch");
         const primaryImg = card.querySelector(".product-card--image");
         if (!swatches.length || !primaryImg) return;
 
+        // Cache original src so we can restore on un-select (not currently used but kept)
+        primaryImg.dataset.originalSrc = primaryImg.src;
+
         swatches.forEach((sw) => {
           sw.addEventListener("click", (e) => {
-            // Don't navigate; just swap the image
             e.preventDefault();
             const bg = sw.style.getPropertyValue("--swatch-background");
             if (bg) {
-              // Extract url(...) content
               const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
               if (match) {
                 primaryImg.src = match[1];
-                // Also update srcset if present (single URL — browser won't re-pick)
                 primaryImg.removeAttribute("srcset");
               }
             }
-            // Uncheck other swatches in the same group, check this one
             const radio = sw.querySelector("input[type='radio']");
             if (radio) radio.checked = true;
           });
@@ -676,59 +723,17 @@
       });
     }
 
-    _wireDragSwipe() {
-      let startX = 0;
-      let dragging = false;
-      const threshold = 50;
-
-      const onDown = (e) => {
-        dragging = true;
-        startX = e.touches ? e.touches[0].clientX : e.clientX;
-      };
-      const onMove = (e) => {
-        if (!dragging) return;
-        // Prevent text selection while dragging
-        if (!e.touches) e.preventDefault();
-      };
-      const onUp = (e) => {
-        if (!dragging) return;
-        dragging = false;
-        const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-        const delta = endX - startX;
-        if (Math.abs(delta) > threshold) {
-          this._goToSlide(this._index + (delta < 0 ? 1 : -1));
-        }
-      };
-
-      this._container.addEventListener("pointerdown", onDown);
-      this._container.addEventListener("pointermove", onMove);
-      this._container.addEventListener("pointerup", onUp);
-      this._container.addEventListener("pointercancel", () => (dragging = false));
-    }
-
     _wireKeyboard() {
       this.setAttribute("tabindex", "0");
       this.addEventListener("keydown", (e) => {
         if (e.key === "ArrowLeft") {
           e.preventDefault();
-          this._goToSlide(this._index - 1);
+          this._scrollByBlocks(-this._columns);
         } else if (e.key === "ArrowRight") {
           e.preventDefault();
-          this._goToSlide(this._index + 1);
+          this._scrollByBlocks(this._columns);
         }
       });
-    }
-
-    _startAutoplay() {
-      const speed = parseInt(this.dataset.autoplaySpeed, 10) || 7000;
-      this._autoplayTimer = setInterval(() => {
-        const totalSlides = Math.ceil(this._count / this._columns);
-        const next = (this._index + 1) % totalSlides;
-        this._goToSlide(next);
-      }, speed);
-      // Pause on hover
-      this.addEventListener("mouseenter", () => clearInterval(this._autoplayTimer));
-      this.addEventListener("mouseleave", () => this._startAutoplay());
     }
   }
   define("product-carousel", ProductCarousel);

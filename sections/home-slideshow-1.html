@@ -14,11 +14,13 @@
   }
   #shopline-section-{{ section.id }} .carousel--container {
     display: flex;
+    width: 100%;
     transition: transform 0.4s ease;
   }
   #shopline-section-{{ section.id }} .carousel--container > .carousel--block {
-    flex-shrink: 0;
-    min-width: 100%;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
   }
 {{/style}}
 

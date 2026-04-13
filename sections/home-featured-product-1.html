@@ -14,13 +14,15 @@
             </div>
             {{/for}}
           </div>
-          <div class="product-media--container" data-container="thumbnails" data-columns="1">
-            {{#for product.images as |image|}}
-            <button class="product-media--thumbnail" data-id="{{ image.id }}" data-active="{{#if forloop.first}}true{{else}}false{{/if}}" aria-label="{{ default image.alt product.title }}">
-              <img src="{{ image_url image width=80 }}" alt="{{ default image.alt product.title }}" width="80" height="80" loading="lazy">
-            </button>
-            {{/for}}
-          </div>
+          <product-thumbs-element class="product-media--thumbs" data-id="{{ product.id }}">
+            <div class="product-media--thumbs-wrapper">
+              {{#for product.images as |image|}}
+              <div class="product-media--thumb" data-active="{{#if forloop.first}}true{{else}}false{{/if}}" data-id="{{ image.id }}" tabindex="0">
+                <img src="{{ image_url image width=80 }}" alt="{{ default image.alt product.title }}" width="80" height="80" loading="lazy">
+              </div>
+              {{/for}}
+            </div>
+          </product-thumbs-element>
         </div>
       </product-media-variants>
     </div>
@@ -121,12 +123,12 @@
   if (!section) return;
 
   // Thumbnail gallery
-  const thumbnails = section.querySelectorAll('.product-media--thumbnail');
+  const thumbs = section.querySelectorAll('.product-media--thumb');
   const mediaItems = section.querySelectorAll('.product-media--root');
-  thumbnails.forEach(thumb => {
+  thumbs.forEach(thumb => {
     thumb.addEventListener('click', () => {
       const id = thumb.dataset.id;
-      thumbnails.forEach(t => t.dataset.active = 'false');
+      thumbs.forEach(t => t.dataset.active = 'false');
       mediaItems.forEach(m => m.dataset.active = 'false');
       thumb.dataset.active = 'true';
       const target = section.querySelector(`.product-media--root[data-id="${id}"]`);

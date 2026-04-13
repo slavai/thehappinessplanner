@@ -6,7 +6,40 @@
       "disabled": false,
       "type": "home-slideshow-1",
       "settings": {},
-      "blocks": {}
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "link": "https://joinritualy.com",
+            "new_tab": true
+          }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+            "link": "/"
+          }
+        },
+        "slide-3": {
+          "type": "slide",
+          "settings": {
+            "link": "/"
+          }
+        },
+        "slide-4": {
+          "type": "slide",
+          "settings": {
+            "link": "/"
+          }
+        },
+        "slide-5": {
+          "type": "slide",
+          "settings": {
+            "link": "/"
+          }
+        }
+      },
+      "block_order": ["slide-1", "slide-2", "slide-3", "slide-4", "slide-5"]
     },
     "s-03": {
       "disabled": false,

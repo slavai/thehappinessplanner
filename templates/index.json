@@ -69,7 +69,10 @@
       "type": "home-featured-product-1",
       "settings": {
         "product": "16074440842642771216040650",
-        "show_vendor": false
+        "show_vendor": false,
+        "products": [
+          "16074440842642771216040650"
+        ]
       },
       "blocks": {},
       "custom_css": []

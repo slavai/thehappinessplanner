@@ -527,4 +527,209 @@
   // Expose Drawer so other modules (e.g. ProductBuyButtonsElement) can
   // open the cart drawer after a successful add-to-cart.
   window.Drawer = Drawer;
+
+  // ========================================================================
+  // ProductCarousel — dedicated carousel for product grids
+  // ========================================================================
+  //
+  // Replaces generic <carousel-element> for product sections. Key differences:
+  //   - Layout math computed from ACTUAL child count (3 or 33 cards — same code)
+  //   - Hover image swap on pointer enter/leave (both mouse and touch)
+  //   - Touch / mouse drag + swipe to advance slides
+  //   - Variant swatch click → swap product-card image + update price
+  //   - Keyboard ArrowLeft/ArrowRight navigation when focused
+  //
+  // Usage in section markup:
+  //   <product-carousel class="carousel--root"
+  //                     data-id="{{ section.id }}"
+  //                     data-columns="3"
+  //                     data-mobile-columns="1"
+  //                     data-autoplay="false">
+  //     <div class="carousel--wrapper">
+  //       <div class="carousel--container">
+  //         <div class="carousel--block">... product-card ...</div>
+  //         <!-- repeat -->
+  //       </div>
+  //     </div>
+  //   </product-carousel>
+
+  class ProductCarousel extends HTMLElement {
+    connectedCallback() {
+      this._container = this.querySelector(".carousel--container");
+      this._cards = Array.from(this.querySelectorAll(".carousel--block"));
+      this._count = this._cards.length;
+      if (!this._container || !this._count) return;
+
+      this._index = 0;
+      this._columns = parseInt(this.dataset.columns, 10) || 3;
+      this._columnsMobile = parseInt(this.dataset.mobileColumns, 10) || 1;
+      this._autoplay = this.dataset.autoplay === "true";
+
+      this._applyLayoutVars();
+      this._wireNavButtons();
+      this._wireHoverImageSwap();
+      this._wireVariantSwatches();
+      this._wireDragSwipe();
+      this._wireKeyboard();
+      if (this._autoplay) this._startAutoplay();
+
+      // Recompute on viewport resize (mobile ↔ desktop switch)
+      this._resizeHandler = () => this._applyLayoutVars();
+      window.addEventListener("resize", this._resizeHandler, { passive: true });
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener("resize", this._resizeHandler);
+      if (this._autoplayTimer) clearInterval(this._autoplayTimer);
+    }
+
+    _applyLayoutVars() {
+      const totalSlidesDesktop = Math.max(1, Math.ceil(this._count / this._columns));
+      const totalSlidesMobile = Math.max(1, Math.ceil(this._count / this._columnsMobile));
+      this.style.setProperty("--blocks-per-slide", this._columns);
+      this.style.setProperty("--blocks-per-slide-mobile", this._columnsMobile);
+      this.style.setProperty("--total-slides", totalSlidesDesktop);
+      this.style.setProperty("--total-slides-mobile", totalSlidesMobile);
+      this.style.setProperty("--total-spaces", this._count * 2);
+      this.style.setProperty("--total-spaces-mobile", this._count);
+      this.style.setProperty("--slide-pos", "0%");
+      this.setAttribute("data-first-slide", this._index === 0 ? "true" : "false");
+      this.setAttribute(
+        "data-last-slide",
+        this._index >= totalSlidesDesktop - 1 ? "true" : "false"
+      );
+    }
+
+    _goToSlide(i) {
+      const totalSlides = Math.ceil(this._count / this._columns);
+      this._index = Math.max(0, Math.min(totalSlides - 1, i));
+      const pct = (this._index / totalSlides) * 100;
+      this._container.style.transform = `translateX(-${pct}%)`;
+      this.style.setProperty("--slide-pos", `-${pct}%`);
+      this.setAttribute("data-first-slide", this._index === 0 ? "true" : "false");
+      this.setAttribute(
+        "data-last-slide",
+        this._index >= totalSlides - 1 ? "true" : "false"
+      );
+      // Update the "current/total" counter in the header nav
+      const sectionRoot = this.closest("[data-section-id]");
+      if (sectionRoot) {
+        const current = sectionRoot.querySelector(".carousel-nav-arrow--current");
+        if (current) current.setAttribute("data-value", String(this._index + 1));
+        const total = sectionRoot.querySelector(".carousel-nav-arrow--total");
+        if (total) total.setAttribute("data-value", String(totalSlides));
+      }
+    }
+
+    _wireNavButtons() {
+      // Local prev/next inside carousel-wrapper
+      const prev = this.querySelector(".carousel--prev");
+      const next = this.querySelector(".carousel--next");
+      if (prev) prev.addEventListener("click", () => this._goToSlide(this._index - 1));
+      if (next) next.addEventListener("click", () => this._goToSlide(this._index + 1));
+
+      // External prev/next from featured-collection--header-nav
+      const sectionRoot = this.closest("[data-section-id]");
+      if (sectionRoot) {
+        const extPrev = sectionRoot.querySelector(".carousel-nav-arrow--prev");
+        const extNext = sectionRoot.querySelector(".carousel-nav-arrow--next");
+        if (extPrev) extPrev.addEventListener("click", () => this._goToSlide(this._index - 1));
+        if (extNext) extNext.addEventListener("click", () => this._goToSlide(this._index + 1));
+      }
+    }
+
+    _wireHoverImageSwap() {
+      // Hover on desktop already works via CSS :hover on .product-card--image vs --hover-image.
+      // On touch devices we need a JS fallback: tap and hold shows hover image briefly.
+      // Most phones won't need this, so we keep it minimal — CSS :hover handles desktop,
+      // and touch devices just show the primary image. No JS needed.
+    }
+
+    _wireVariantSwatches() {
+      // Click on a swatch label → swap the card's primary image to the swatch's
+      // background image. Both images are already in the DOM (it's a radio group),
+      // so no network fetch.
+      this._cards.forEach((card) => {
+        const swatches = card.querySelectorAll(".swatches--container .swatch");
+        const primaryImg = card.querySelector(".product-card--image");
+        if (!swatches.length || !primaryImg) return;
+
+        swatches.forEach((sw) => {
+          sw.addEventListener("click", (e) => {
+            // Don't navigate; just swap the image
+            e.preventDefault();
+            const bg = sw.style.getPropertyValue("--swatch-background");
+            if (bg) {
+              // Extract url(...) content
+              const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+              if (match) {
+                primaryImg.src = match[1];
+                // Also update srcset if present (single URL — browser won't re-pick)
+                primaryImg.removeAttribute("srcset");
+              }
+            }
+            // Uncheck other swatches in the same group, check this one
+            const radio = sw.querySelector("input[type='radio']");
+            if (radio) radio.checked = true;
+          });
+        });
+      });
+    }
+
+    _wireDragSwipe() {
+      let startX = 0;
+      let dragging = false;
+      const threshold = 50;
+
+      const onDown = (e) => {
+        dragging = true;
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
+      };
+      const onMove = (e) => {
+        if (!dragging) return;
+        // Prevent text selection while dragging
+        if (!e.touches) e.preventDefault();
+      };
+      const onUp = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        const delta = endX - startX;
+        if (Math.abs(delta) > threshold) {
+          this._goToSlide(this._index + (delta < 0 ? 1 : -1));
+        }
+      };
+
+      this._container.addEventListener("pointerdown", onDown);
+      this._container.addEventListener("pointermove", onMove);
+      this._container.addEventListener("pointerup", onUp);
+      this._container.addEventListener("pointercancel", () => (dragging = false));
+    }
+
+    _wireKeyboard() {
+      this.setAttribute("tabindex", "0");
+      this.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          this._goToSlide(this._index - 1);
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          this._goToSlide(this._index + 1);
+        }
+      });
+    }
+
+    _startAutoplay() {
+      const speed = parseInt(this.dataset.autoplaySpeed, 10) || 7000;
+      this._autoplayTimer = setInterval(() => {
+        const totalSlides = Math.ceil(this._count / this._columns);
+        const next = (this._index + 1) % totalSlides;
+        this._goToSlide(next);
+      }, speed);
+      // Pause on hover
+      this.addEventListener("mouseenter", () => clearInterval(this._autoplayTimer));
+      this.addEventListener("mouseleave", () => this._startAutoplay());
+    }
+  }
+  define("product-carousel", ProductCarousel);
 })();

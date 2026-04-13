@@ -11,6 +11,28 @@
   #shopline-section-{{ section.id }} .carousel--wrapper {
     overflow: hidden;
     position: relative;
+    height: calc(100vh - 120px);
+  }
+  #shopline-section-{{ section.id }} .carousel--block {
+    height: calc(100vh - 120px);
+  }
+  #shopline-section-{{ section.id }} .carousel--block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopline-section-{{ section.id }} .carousel--prev,
+  #shopline-section-{{ section.id }} .carousel--next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  #shopline-section-{{ section.id }} .carousel--prev {
+    left: 20px;
+  }
+  #shopline-section-{{ section.id }} .carousel--next {
+    right: 20px;
   }
 {{/style}}
 

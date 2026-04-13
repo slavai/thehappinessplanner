@@ -68,7 +68,8 @@
       "disabled": false,
       "type": "home-featured-product-1",
       "settings": {
-        "product": "16074440842642771216040650"
+        "product": "16074440842642771216040650",
+        "show_vendor": false
       },
       "blocks": {},
       "custom_css": []

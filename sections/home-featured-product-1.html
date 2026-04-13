@@ -32,25 +32,29 @@
         {{/if}}
       </div>
 
-      <div class="product-form--block" data-block-type="title" data-fit-together="true">
+      <div class="product-form--block" data-block-type="heading" data-fit-together="false">
         <a class="product-form--block--title" data-item="section-heading" href="{{ product.url }}">{{ product.title }}</a>
       </div>
 
       {{#if section.settings.show_vendor}}
-      <div class="product-form--block" data-block-type="vendor" data-fit-together="true">
-        <div class="product-form--block--vendor" data-item="paragraph">{{ product.vendor }}</div>
+      <div class="product-form--block" data-block-type="vendor" data-fit-together="false">
+        <div class="product-form--block--vendor" data-item="sub-nav-text"><a href="/collections/vendors?q={{ product.vendor }}">{{ product.vendor }}</a></div>
       </div>
       {{/if}}
 
-      <div class="product-form--block" data-block-type="price" data-fit-together="true">
-        <div class="product-form--block--price">
-          <div class="product-price--root" data-compare-at="{{#if product.compare_at_price}}true{{else}}false{{/if}}">
+      <div class="product-form--block" data-block-type="price" data-fit-together="false">
+        <product-price-element class="product-price--root" data-id="{{ product.id }}">
+          <div class="product-price--wrapper">
+            <div class="product-price--original" data-item="nav-text">
+              <span class="money">{{ money product.price }} USD</span>
+            </div>
             {{#if product.compare_at_price}}
-            <s class="product-price--compare-at" data-item="light-accent">{{ money product.compare_at_price }}</s>
+            <div class="product-price--compare" data-item="nav-text" data-text-color="gray">
+              <span class="money">{{ money product.compare_at_price }} USD</span>
+            </div>
             {{/if}}
-            <span class="product-price--current">{{ money product.price }}</span>
           </div>
-        </div>
+        </product-price-element>
       </div>
 
       {{#if section.settings.show_description}}
@@ -63,26 +67,26 @@
       <div class="product-form--block" data-block-type="variant" data-fit-together="false">
         <product-options-element class="product-options--root" data-id="{{ product.id }}">
           {{#for product.options_with_values as |option|}}
-          <div class="product-options--option">
-            <div class="product-options--option-label" data-item="small-text">{{ option.name }}</div>
-            <radios-element class="radios--root" data-layout="vertical">
-              <div class="radios--values">
-                {{#for option.values as |value|}}
-                <label class="radios--value-button {{#if forloop.first}}is-selected{{/if}}" data-item="secondary-button" data-text="{{ value }}" data-option-name="{{ option.name }}">
-                  <div>{{ value }}</div>
-                  <input class="radios--input" type="radio" name="option-{{ option.name }}" value="{{ value }}" {{#if forloop.first}}checked{{/if}} data-option-name="{{ option.name }}" data-item="radio">
-                </label>
-                {{/for}}
-              </div>
-            </radios-element>
-          </div>
+          <radios-element class="radios--root" data-layout="horizontal">
+            <label class="radios--header" id="{{ section.id }}-{{ option.name }}" data-item="nav-text">
+              <span>{{ option.name }}</span>
+            </label>
+            <div class="radios--container" role="radiogroup" aria-labelledby="{{ section.id }}-{{ option.name }}">
+              {{#for option.values as |value|}}
+              <label class="radios--value-button {{#if forloop.first}}is-selected{{/if}}" data-item="secondary-button" data-text="{{ value }}" data-option-name="{{ option.name }}">
+                <div>{{ value }}</div>
+                <input class="radios--input" type="radio" name="{{ section.id }}-{{ option.name }}" value="{{ value }}" {{#if forloop.first}}checked{{/if}} data-option-name="{{ option.name }}" data-item="radio">
+              </label>
+              {{/for}}
+            </div>
+          </radios-element>
           {{/for}}
         </product-options-element>
       </div>
       {{/unless}}
 
       <div class="product-form--block" data-block-type="buy-buttons" data-fit-together="false">
-        <product-buy-buttons-element class="product-buy-buttons--root" data-id="{{ product.id }}" data-cart-type="drawer" data-container="block">
+        <product-buy-buttons-element class="product-buy-buttons--root" data-id="{{ product.id }}" data-cart-type="drawer" data-translations="" data-container="block">
           {{#if product.available}}
           <button class="product-buy-buttons--primary" type="submit" data-enabled="true" aria-busy="false" data-text="{{ section.settings.add_to_cart_text }}" data-item="secondary-button" data-transition-button="">
             <span class="product-buy-buttons--cta-text">{{ section.settings.add_to_cart_text }}</span>
@@ -92,6 +96,7 @@
             <span class="product-buy-buttons--cta-text">{{ section.settings.sold_out_text }}</span>
           </button>
           {{/if}}
+          <div class="product-buy-buttons--smart" aria-hidden="true" data-transition-button=""></div>
           <input type="hidden" class="product-buy-buttons--input" name="id" value="{{ product.first_available_variant.id }}">
         </product-buy-buttons-element>
       </div>

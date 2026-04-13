@@ -11,35 +11,25 @@
           "type": "slide",
           "settings": {
             "link": "https://joinritualy.com",
-            "new_tab": true
-          }
+            "new_tab": true,
+            "image": "shopline://shop_images/Знімок екрана 2026-04-12 о 14.12.05.png"
+          },
+          "custom_css": []
         },
         "slide-2": {
           "type": "slide",
           "settings": {
-            "link": "/"
-          }
-        },
-        "slide-3": {
-          "type": "slide",
-          "settings": {
-            "link": "/"
-          }
-        },
-        "slide-4": {
-          "type": "slide",
-          "settings": {
-            "link": "/"
-          }
-        },
-        "slide-5": {
-          "type": "slide",
-          "settings": {
-            "link": "/"
-          }
+            "link": "/",
+            "image": "shopline://shop_images/Screenshot_2026-03-11_at_12.54.26_PM.png"
+          },
+          "custom_css": []
         }
       },
-      "block_order": ["slide-1", "slide-2", "slide-3", "slide-4", "slide-5"]
+      "block_order": [
+        "slide-1",
+        "slide-2"
+      ],
+      "custom_css": []
     },
     "s-03": {
       "disabled": false,

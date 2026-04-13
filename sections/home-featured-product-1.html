@@ -1,5 +1,5 @@
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-product">
-{{#for section.settings.products as |product| limit=1}}
+{{#for section.settings.products limit=1 as |product|}}
 <div class="main-product--root" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-handle="{{ product.handle }}" data-background-color="light" data-border="both" data-container-width="4" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="left" style="--text-column-width:375px;--media-gap:8px;--thumbnail-width:80px;">
   <div class="main-product--wrapper">
     <div class="main-product--desktop" data-mq="medium-large">

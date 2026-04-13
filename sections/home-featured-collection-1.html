@@ -199,32 +199,19 @@
     }
   }
 
-  /* Carousel nav arrows (absolute inside wrapper, hidden on touch) */
+  /* Carousel nav arrows — POSITIONING ONLY.
+     Original design (3-div .nav-arrow structure + SVG chevrons in sibling
+     .carousel-nav-arrow header-nav block) comes from theme.css and is
+     preserved verbatim from extracted-sections. Do NOT redesign here. */
   #shopline-section-{{ section.id }} product-carousel .carousel--prev,
   #shopline-section-{{ section.id }} product-carousel .carousel--next {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 3;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s, transform 0.2s;
   }
-  #shopline-section-{{ section.id }} product-carousel .carousel--prev { left: 4px; }
-  #shopline-section-{{ section.id }} product-carousel .carousel--next { right: 4px; }
-  #shopline-section-{{ section.id }} product-carousel .carousel--prev:hover,
-  #shopline-section-{{ section.id }} product-carousel .carousel--next:hover {
-    background: #fff;
-    transform: translateY(-50%) scale(1.05);
-  }
+  #shopline-section-{{ section.id }} product-carousel .carousel--prev { left: 0; }
+  #shopline-section-{{ section.id }} product-carousel .carousel--next { right: 0; }
   #shopline-section-{{ section.id }} product-carousel[data-first-slide="true"] .carousel--prev {
     opacity: 0;
     pointer-events: none;
@@ -232,25 +219,6 @@
   #shopline-section-{{ section.id }} product-carousel[data-last-slide="true"] .carousel--next {
     opacity: 0;
     pointer-events: none;
-  }
-  /* Nav-arrow chevron glyphs — simple borders, no svg dependency */
-  #shopline-section-{{ section.id }} product-carousel .nav-arrow {
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid #000;
-    border-right: 2px solid #000;
-  }
-  #shopline-section-{{ section.id }} product-carousel .carousel--prev .nav-arrow {
-    transform: rotate(-135deg);
-    margin-left: 4px;
-  }
-  #shopline-section-{{ section.id }} product-carousel .carousel--next .nav-arrow {
-    transform: rotate(45deg);
-    margin-right: 4px;
-  }
-  #shopline-section-{{ section.id }} product-carousel .carousel--prev .nav-arrow > div,
-  #shopline-section-{{ section.id }} product-carousel .carousel--next .nav-arrow > div {
-    display: none; /* original theme uses 3 inner divs; we render via borders */
   }
 
   /* Variant swatches */

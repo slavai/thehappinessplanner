@@ -1,22 +1,5 @@
-{{ assign 'product' (first section.settings.products) }}
-
-<!-- DEBUG START -->
-<div style="background: yellow; padding: 20px; font-family: monospace; font-size: 12px;">
-  <p><strong>DEBUG section.settings.products:</strong> {{ json section.settings.products }}</p>
-  <p><strong>DEBUG products.count:</strong> {{ section.settings.products.count }}</p>
-  <p><strong>Trying #for iteration:</strong></p>
-  {{#for section.settings.products as |p|}}
-    <p style="background: lime;">FOUND: {{ p.title }} | ID: {{ p.id }} | Handle: {{ p.handle }}</p>
-  {{/for}}
-  <p><strong>Trying #each iteration:</strong></p>
-  {{#each section.settings.products}}
-    <p style="background: cyan;">EACH: {{ this.title }} | {{ this }}</p>
-  {{/each}}
-</div>
-<!-- DEBUG END -->
-
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-product">
-{{#if product}}
+{{#for section.settings.products as |product| limit=1}}
 <div class="main-product--root" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-handle="{{ product.handle }}" data-background-color="light" data-border="both" data-container-width="4" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="left" style="--text-column-width:375px;--media-gap:8px;--thumbnail-width:80px;">
   <div class="main-product--wrapper">
     <div class="main-product--desktop" data-mq="medium-large">
@@ -117,11 +100,12 @@
     </div>
   </div>
 </div>
-{{else}}
+{{/for}}
+{{#unless section.settings.products.count}}
 <div class="main-product--placeholder" style="padding: 60px; text-align: center; background: #f9f9f9; color: #666;">
   <p>Select a product in the theme editor</p>
 </div>
-{{/if}}
+{{/unless}}
 </div>
 
 {{#style}}

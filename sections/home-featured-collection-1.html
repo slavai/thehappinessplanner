@@ -1,26 +1,247 @@
-<div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-collection"><div class="featured-collection--root" data-section-id="{{ section.id }}" data-background-color="none" data-border="both" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-section-type="index_featured_collection" data-spacing-above="full" data-spacing-below="full"> <div class="featured-collection--wrapper" data-container="section"> <div class="featured-collection--header-nav" data-container="nav" data-text-alignment="center" data-mobile-text-alignment="left"><div class="featured-collection--header" data-container="block"> <h2 class="featured-collection--title" data-item="section-heading" data-transition-item="viewport" data-transition-type="slide-in" data-transition-active="true" data-transition-finished="true"> <a href="/collections/the-100-day-planner">100-Day Planners &amp; Journals</a> </h2> </div><div class="carousel-nav-arrow" data-id="{{ section.id }}" data-mq="small"> <button class="carousel-nav-arrow--prev" type="button" aria-disabled="true" aria-label="previous" tabindex="-1"><svg class="icon--root icon--chevron-left" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg"> <path d="m3.13 10 8.58 8.58L10.29 20l-10-10 10-10 1.42 1.42z" fill="#000" fill-rule="nonzero"></path> </svg></button> <span class="carousel-nav-arrow--current" data-item="paragraph" data-value="1"></span> <span class="carousel-nav-arrow--total" data-item="paragraph" data-value="2" data-mobile-value="5"></span> <button class="carousel-nav-arrow--next" type="button" aria-disabled="false" aria-label="next" tabindex="0"><svg class="icon--root icon--chevron-right" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg"> <path d="M8.87 10 .29 1.42 1.71 0l10 10-10 10-1.42-1.42z" fill="#000" fill-rule="nonzero"></path> </svg></button> </div></div> <div class="featured-collection--products" data-display-type="slideshow" data-container="panel" data-transition-container="{{ section.id }}" data-transition-type="fade-in" data-transition-cascade="horizontal" data-transition-cascade-interval="200"> <carousel-element class="carousel--root" data-id="{{ section.id }}" data-last-slide="false" data-columns="3" data-mobile-only="" data-mobile-columns="1" data-mobile-next-visible="" data-spacing-around-blocks="true" data-transition-type="slide" style="--blocks-per-slide: 3; --blocks-per-slide-mobile: 1; --total-slides: 2; --total-slides-mobile: 5; --total-spaces: 6; --total-spaces-mobile: 5; --slide-height: 650px; --right-image-height: 469px; --slide-pos: 0%;" data-first-slide="true"> <div class="carousel--wrapper"><button class="carousel--prev" aria-label="previous" aria-disabled="true" data-mq="medium-large" tabindex="-1"><div class="nav-arrow" data-direction="left"> <div></div> <div></div> <div></div>
+{{!--
+  home-featured-collection-1 — Phase 3 (CMS-wired + customizable)
+
+  Architecture:
+    - Data source: product_list (merchant picks products manually)
+    - Layout: dynamic — rendered count = picked count (up to limit)
+    - Carousel: <product-carousel> (see assets/theme.js)
+    - Variant swatches: preserved verbatim from extracted source
+    - Auto labels: Sold-out (from product.available) + Sale (from compare_at_price)
+    - Custom labels: 3 tag-triggered slots with color pickers
+
+  Markup preserved VERBATIM from extracted-sections/home/09-featured_collection.html
+  per EXACT TRANSFER rule (mistakes.md #18). Only values replaced with {{ product.X }}.
+--}}
+
+{{#if section.settings.featured_products}}
+<div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-collection">
+  <div class="featured-collection--root" data-section-id="{{ section.id }}" data-background-color="none" data-border="both" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-section-type="index_featured_collection" data-spacing-above="full" data-spacing-below="full">
+    <div class="featured-collection--wrapper" data-container="section">
+      <div class="featured-collection--header-nav" data-container="nav" data-text-alignment="center" data-mobile-text-alignment="left">
+        <div class="featured-collection--header" data-container="block">
+          <h2 class="featured-collection--title" data-item="section-heading" data-transition-item="viewport" data-transition-type="slide-in" data-transition-active="true" data-transition-finished="true">
+            {{#if section.settings.heading_url}}
+              <a href="{{ section.settings.heading_url }}">{{ section.settings.heading }}</a>
+            {{else}}
+              <span>{{ section.settings.heading }}</span>
+            {{/if}}
+          </h2>
+        </div>
+        <div class="carousel-nav-arrow" data-id="{{ section.id }}" data-mq="small">
+          <button class="carousel-nav-arrow--prev" type="button" aria-disabled="true" aria-label="previous" tabindex="-1">
+            <svg class="icon--root icon--chevron-left" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="m3.13 10 8.58 8.58L10.29 20l-10-10 10-10 1.42 1.42z" fill="#000" fill-rule="nonzero"></path>
+            </svg>
+          </button>
+          <span class="carousel-nav-arrow--current" data-item="paragraph" data-value="1"></span>
+          <span class="carousel-nav-arrow--total" data-item="paragraph" data-value="1"></span>
+          <button class="carousel-nav-arrow--next" type="button" aria-disabled="false" aria-label="next" tabindex="0">
+            <svg class="icon--root icon--chevron-right" data-invertible="true" width="12" height="20" viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.87 10 .29 1.42 1.71 0l10 10-10 10-1.42-1.42z" fill="#000" fill-rule="nonzero"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="featured-collection--products" data-display-type="slideshow" data-container="panel">
+        <product-carousel class="carousel--root" data-id="{{ section.id }}" data-columns="{{ section.settings.columns_desktop }}" data-mobile-columns="{{ section.settings.columns_mobile }}" data-spacing-around-blocks="true" data-autoplay="{{ section.settings.autoplay }}" data-autoplay-speed="{{ section.settings.autoplay_speed }}000">
+          <div class="carousel--wrapper">
+            <button class="carousel--prev" aria-label="previous" aria-disabled="true" data-mq="medium-large" tabindex="-1">
+              <div class="nav-arrow" data-direction="left"><div></div><div></div><div></div></div>
+            </button>
+
+            <div class="carousel--container">
+              {{#for section.settings.featured_products as |product|}}
+                <div class="carousel--block" data-id="{{ section.id }}--block-{{ forloop.index }}" style="--media-height: 587; --block-height: 650;">
+                  <div class="product-card--root" data-handle="{{ product.handle }}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}">
+                    <a href="{{ product.url }}" class="product-card--image-wrapper" tabindex="-1">
+                      <div class="product--labels" data-item="overline" data-text-color="body">
+                        {{!-- Auto label: Sold out (highest priority) --}}
+                        {{#unless product.available}}
+                          {{#if section.settings.show_sold_out}}
+                            <div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="sold-out">{{ section.settings.sold_out_text }}</div>
+                          {{/if}}
+                        {{else}}
+                          {{!-- Auto label: Sale --}}
+                          {{#if (gt product.compare_at_price product.price)}}
+                            {{#if section.settings.show_sale}}
+                              <div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="sale">{{ section.settings.sale_text }}</div>
+                            {{/if}}
+                          {{else}}
+                            {{!-- Custom tag-triggered label slots (first match wins) --}}
+                            {{#if section.settings.label_1_tag}}{{#if (contains product.tags section.settings.label_1_tag)}}
+                              <div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="custom-1">{{ default section.settings.label_1_text section.settings.label_1_tag }}</div>
+                            {{else}}
+                              {{#if section.settings.label_2_tag}}{{#if (contains product.tags section.settings.label_2_tag)}}
+                                <div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="custom-2">{{ default section.settings.label_2_text section.settings.label_2_tag }}</div>
+                              {{else}}
+                                {{#if section.settings.label_3_tag}}{{#if (contains product.tags section.settings.label_3_tag)}}
+                                  <div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="custom-3">{{ default section.settings.label_3_text section.settings.label_3_tag }}</div>
+                                {{/if}}{{/if}}
+                              {{/if}}{{/if}}
+                            {{/if}}{{/if}}
+                          {{/if}}
+                        {{/unless}}
+                      </div>
+
+                      {{#if product.featured_image}}
+                        <img src="{{ image_url product.featured_image width=1000 }}" alt="{{ default product.featured_image.alt product.title }}" width="1000" height="1000" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)">
+                      {{/if}}
+
+                      {{#if product.images.[1]}}
+                        <img src="{{ image_url product.images.[1] width=1000 }}" alt="" width="1000" height="1000" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)">
+                      {{/if}}
+                    </a>
+
+                    {{!-- Variant swatches (only if product has >1 variant with a "color"-like option) --}}
+                    {{#if product.has_only_default_variant}}{{else}}
+                      {{#for product.options_with_values as |option|}}
+                        {{#if (eq option.position 1)}}
+                          <div class="product-card--swatches--horizontal-view">
+                            <div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--{{ product.id }}-{{ option.name }}">
+                              {{#for option.values as |value|}}
+                                <label class="swatch" data-item="swatch" data-shape="square" aria-label="{{ value }}" for="{{ section.id }}--{{ product.id }}-{{ option.name }}-{{ value }}">
+                                  <input class="swatch--input" type="radio" id="{{ section.id }}--{{ product.id }}-{{ option.name }}-{{ value }}" name="{{ section.id }}--{{ product.id }}-{{ option.name }}" value="{{ value }}" data-option-name="{{ option.name }}" data-item="radio">
+                                </label>
+                              {{/for}}
+                            </div>
+                          </div>
+                        {{/if}}
+                      {{/for}}
+                    {{/if}}
+
+                    <div class="product-card--details">
+                      <div class="product-card--details-wrapper">
+                        {{#if section.settings.show_vendor}}
+                          <div class="product-card--vendor" data-item="sub-nav-text">{{ product.vendor }}</div>
+                        {{/if}}
+                        <a href="{{ product.url }}" class="product-card--title-link">
+                          <p class="product-card--title" data-item="paragraph">{{ product.title }}</p>
+                        </a>
+                      </div>
+                      <div class="product--price-container">
+                        <div class="product--price-wrapper">
+                          {{#if product.price_varies}}
+                            <span class="product--from" data-item="nav-text">{{ section.settings.from_text }}</span>
+                          {{/if}}
+                          <span class="product--price" data-item="nav-text">
+                            <span class="money">{{ money product.price_min }}</span>
+                          </span>
+                          {{#if (gt product.compare_at_price product.price)}}
+                            <span class="product--compare-price" data-item="nav-text">
+                              <span class="money">{{ money product.compare_at_price }}</span>
+                            </span>
+                          {{/if}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {{/for}}
+            </div>
+
+            <button class="carousel--next" aria-label="next" aria-disabled="false" data-mq="medium-large" tabindex="0">
+              <div class="nav-arrow" data-direction="right"><div></div><div></div><div></div></div>
+            </button>
+          </div>
+        </product-carousel>
+      </div>
+    </div>
+  </div>
 </div>
-</button><div class="carousel--container"><div class="carousel--block" data-id="{{ section.id }}--block-1" style="--media-height: 587; --block-height: 650;"><div class="product-card--root" data-handle="the-100-day-planner-calla-lily-edition" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}" style="--transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true"> <a href="/products/the-100-day-planner-calla-lily-edition" class="product-card--image-wrapper" tabindex="-1"><div class="product--labels" data-item="overline" data-text-color="body"><div class="product--label" data-background-color="light" data-label-shape="square" data-label-type="new">New</div></div><img src="{{ asset_url 'images/HC_mokcup2.webp' }}" alt="" srcset="{{ asset_url 'images/HC_mokcup2.webp' }} 200w, {{ asset_url 'images/HC_mokcup2.webp' }} 300w, {{ asset_url 'images/HC_mokcup2.webp' }} 400w, {{ asset_url 'images/HC_mokcup2.webp' }} 500w, {{ asset_url 'images/HC_mokcup2.webp' }} 600w, {{ asset_url 'images/HC_mokcup2.webp' }} 700w, {{ asset_url 'images/HC_mokcup2.webp' }} 800w, {{ asset_url 'images/HC_mokcup2.webp' }} 900w, {{ asset_url 'images/HC_mokcup2.webp' }} 1000w" width="3584" height="3584" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"><img src="{{ asset_url 'images/HC_mokcup3.webp' }}" alt="" srcset="{{ asset_url 'images/HC_mokcup3.webp' }} 200w, {{ asset_url 'images/HC_mokcup3.webp' }} 300w, {{ asset_url 'images/HC_mokcup3.webp' }} 400w, {{ asset_url 'images/HC_mokcup3.webp' }} 500w, {{ asset_url 'images/HC_mokcup3.webp' }} 600w, {{ asset_url 'images/HC_mokcup3.webp' }} 700w, {{ asset_url 'images/HC_mokcup3.webp' }} 800w, {{ asset_url 'images/HC_mokcup3.webp' }} 900w, {{ asset_url 'images/HC_mokcup3.webp' }} 1000w" width="2918" height="3584" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"></a> <div class="product-card--details"> <div class="product-card--details-wrapper"><div class="product-card--vendor" data-item="sub-nav-text">The Happiness Planner®</div><a href="/products/the-100-day-planner-calla-lily-edition" class="product-card--title-link"> <p class="product-card--title" data-item="paragraph">The 100-Day Planner | Calla Lily Edition</p> </a></div><div class="product--price-container"> <div class="product--price-wrapper"><span class="product--from" data-item="nav-text">From</span><span class="product--price" data-item="nav-text"><span class="money">$19.99 USD</span></span> </div></div></div>
-</div></div><div class="carousel--block" data-id="{{ section.id }}--block-2" style="--media-height: 469; --block-height: 572;"><product-card class="product-card--root" data-handle="the-100-day-planner" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}" data-swatch-option-position="1" style="--transition--delay: 200ms;" data-transition-active="true" data-transition-finished="true"> <a href="/products/the-100-day-planner" class="product-card--image-wrapper" tabindex="-1"><img src="{{ asset_url 'images/100-day_Gradient.webp' }}" alt="" srcset="{{ asset_url 'images/100-day_Gradient.webp' }} 200w, {{ asset_url 'images/100-day_Gradient.webp' }} 300w, {{ asset_url 'images/100-day_Gradient.webp' }} 400w, {{ asset_url 'images/100-day_Gradient.webp' }} 500w, {{ asset_url 'images/100-day_Gradient.webp' }} 600w, {{ asset_url 'images/100-day_Gradient.webp' }} 700w, {{ asset_url 'images/100-day_Gradient.webp' }} 800w, {{ asset_url 'images/100-day_Gradient.webp' }} 900w, {{ asset_url 'images/100-day_Gradient.webp' }} 1000w" width="4481" height="3584" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"><img src="{{ asset_url 'images/Happiness_Planner_2.webp' }}" alt="" srcset="{{ asset_url 'images/Happiness_Planner_2.webp' }} 200w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 300w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 400w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 500w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 600w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 700w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 800w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 900w, {{ asset_url 'images/Happiness_Planner_2.webp' }} 1000w" width="1365" height="2048" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"></a> <div class="product-card--details"> <div class="product-card--details-wrapper"><div class="product-card--vendor" data-item="sub-nav-text">The Happiness Planner®</div><a href="/products/the-100-day-planner" class="product-card--title-link"> <p class="product-card--title" data-item="paragraph">The 100-Day Planner | Gradient</p> </a><div class="product-card--swatches--horizontal-view">
-<div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--x-view--7846235340870-color"><label for="{{ section.id }}--x-view--7846235340870-color-multi|light" class="swatch" data-item="swatch" data-shape="square" aria-label="Multi | Light" style="--swatch-background:url(https://thehappinessplanner.com/cdn/shop/files/Screenshot_2025-04-24_at_11.01.52_PM_c0a072e4-0330-4a5e-8ad8-ac8cd836f46a.png?v=1758956515&amp;width=60);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7846235340870-color-multi|light" name="{{ section.id }}--x-view--7846235340870-color" value="Multi | Light" data-option-value-id="4015254372422" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--x-view--7846235340870-color-multi|rainbow" class="swatch" data-item="swatch" data-shape="square" aria-label="Multi | Rainbow" style="--swatch-background:url(https://thehappinessplanner.com/cdn/shop/files/Screenshot_2025-04-17_at_12.09.28_AM.png?v=1744879835&amp;width=60);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7846235340870-color-multi|rainbow" name="{{ section.id }}--x-view--7846235340870-color" value="Multi | Rainbow" data-option-value-id="4015254405190" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--x-view--7846235340870-color-midnight" class="swatch" data-item="swatch" data-shape="square" aria-label="Midnight" style="--swatch-background:url(https://thehappinessplanner.com/cdn/shop/files/Screenshot_2025-06-04_at_12.31.30_AM.png?v=1748971914&amp;width=60);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7846235340870-color-midnight" name="{{ section.id }}--x-view--7846235340870-color" value="Midnight" data-option-value-id="4015254437958" data-option-name="color" data-product-url="" data-item="radio"> </label></div></div></div><div class="product--price-container"> <div class="product--price-wrapper"><span class="product--from" data-item="nav-text">From</span><span class="product--price" data-item="nav-text"><span class="money">$19.99 USD</span></span> </div></div><div class="product-card--swatches--column-view">
-<div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--y-view--7846235340870-color"><label for="{{ section.id }}--y-view--7846235340870-color-multi|light" class="swatch" data-item="swatch" data-shape="square" aria-label="Multi | Light" style="--swatch-background:url(https://thehappinessplanner.com/cdn/shop/files/Screenshot_2025-04-24_at_11.01.52_PM_c0a072e4-0330-4a5e-8ad8-ac8cd836f46a.png?v=1758956515&amp;width=60);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7846235340870-color-multi|light" name="{{ section.id }}--y-view--7846235340870-color" value="Multi | Light" data-option-value-id="4015254372422" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--y-view--7846235340870-color-multi|rainbow" class="swatch" data-item="swatch" data-shape="square" aria-label="Multi | Rainbow" style="--swatch-background:url(https://thehappinessplanner.com/cdn/shop/files/Screenshot_2025-04-17_at_12.09.28_AM.png?v=1744879835&amp;width=60);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7846235340870-color-multi|rainbow" name="{{ section.id }}--y-view--7846235340870-color" value="Multi | Rainbow" data-option-value-id="4015254405190" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--y-view--7846235340870-color-midnight" class="swatch" data-item="swatch" data-shape="square" aria-label="Midnight" style="--swatch-background:url(https://thehappinessplanner.com/cdn/shop/files/Screenshot_2025-06-04_at_12.31.30_AM.png?v=1748971914&amp;width=60);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7846235340870-color-midnight" name="{{ section.id }}--y-view--7846235340870-color" value="Midnight" data-option-value-id="4015254437958" data-option-name="color" data-product-url="" data-item="radio"> </label></div></div></div>
-</product-card></div><div class="carousel--block" data-id="{{ section.id }}--block-3" style="--media-height: 469; --block-height: 572;"><product-card class="product-card--root" data-handle="the-100-day-planner-hardcover" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}" data-swatch-option-position="1" style="--transition--delay: 400ms;" data-transition-active="true" data-transition-finished="true"> <a href="/products/the-100-day-planner-hardcover" class="product-card--image-wrapper" tabindex="-1"><img src="{{ asset_url 'images/Hardcover_pink_blue.webp' }}" alt="" srcset="{{ asset_url 'images/Hardcover_pink_blue.webp' }} 200w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 300w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 400w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 500w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 600w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 700w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 800w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 900w, {{ asset_url 'images/Hardcover_pink_blue.webp' }} 1000w" width="4481" height="3584" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"><img src="{{ asset_url 'images/Hardcover_black_teal.webp' }}" alt="" srcset="{{ asset_url 'images/Hardcover_black_teal.webp' }} 200w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 300w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 400w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 500w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 600w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 700w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 800w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 900w, {{ asset_url 'images/Hardcover_black_teal.webp' }} 1000w" width="4481" height="3584" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"></a> <div class="product-card--details"> <div class="product-card--details-wrapper"><div class="product-card--vendor" data-item="sub-nav-text">The Happiness Planner®</div><a href="/products/the-100-day-planner-hardcover" class="product-card--title-link"> <p class="product-card--title" data-item="paragraph">The 100-Day Planner | Hardcover</p> </a><div class="product-card--swatches--horizontal-view">
-<div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--x-view--7785030877254-color" aria-expanded="false"><label for="{{ section.id }}--x-view--7785030877254-color-blue" class="swatch" data-item="swatch" data-shape="square" aria-label="Blue" style="--swatch-background:rgb(0 91 211);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7785030877254-color-blue" name="{{ section.id }}--x-view--7785030877254-color" value="Blue" data-option-value-id="3760386113606" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--x-view--7785030877254-color-green" class="swatch" data-item="swatch" data-shape="square" aria-label="Green" style="--swatch-background:rgb(46 107 72);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7785030877254-color-green" name="{{ section.id }}--x-view--7785030877254-color" value="Green" data-option-value-id="3760386146374" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--x-view--7785030877254-color-pink" class="swatch" data-item="swatch" data-shape="square" aria-label="Pink" style="--swatch-background:rgb(255 192 203);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7785030877254-color-pink" name="{{ section.id }}--x-view--7785030877254-color" value="Pink" data-option-value-id="3760386179142" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--x-view--7785030877254-color-black" class="swatch" data-item="swatch" data-shape="square" aria-label="Black" style="--swatch-background:rgb(0 0 0);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7785030877254-color-black" name="{{ section.id }}--x-view--7785030877254-color" value="Black" data-option-value-id="3760386080838" data-option-name="color" data-product-url="" data-item="radio"> </label><button class="swatches--expand" type="button" data-item="block-link"> <span>+1</span> </button></div></div></div><div class="product--price-container"> <div class="product--price-wrapper"><span class="product--price" data-item="nav-text"><span class="money">$26.99 USD</span></span> </div></div><div class="product-card--swatches--column-view">
-<div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--y-view--7785030877254-color" aria-expanded="false"><label for="{{ section.id }}--y-view--7785030877254-color-blue" class="swatch" data-item="swatch" data-shape="square" aria-label="Blue" style="--swatch-background:rgb(0 91 211);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7785030877254-color-blue" name="{{ section.id }}--y-view--7785030877254-color" value="Blue" data-option-value-id="3760386113606" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--y-view--7785030877254-color-green" class="swatch" data-item="swatch" data-shape="square" aria-label="Green" style="--swatch-background:rgb(46 107 72);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7785030877254-color-green" name="{{ section.id }}--y-view--7785030877254-color" value="Green" data-option-value-id="3760386146374" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--y-view--7785030877254-color-pink" class="swatch" data-item="swatch" data-shape="square" aria-label="Pink" style="--swatch-background:rgb(255 192 203);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7785030877254-color-pink" name="{{ section.id }}--y-view--7785030877254-color" value="Pink" data-option-value-id="3760386179142" data-option-name="color" data-product-url="" data-item="radio"> </label><label for="{{ section.id }}--y-view--7785030877254-color-black" class="swatch" data-item="swatch" data-shape="square" aria-label="Black" style="--swatch-background:rgb(0 0 0);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7785030877254-color-black" name="{{ section.id }}--y-view--7785030877254-color" value="Black" data-option-value-id="3760386080838" data-option-name="color" data-product-url="" data-item="radio"> </label><button class="swatches--expand" type="button" data-item="block-link"> <span>+1</span> </button></div></div></div>
-</product-card></div><div class="carousel--block" data-id="{{ section.id }}--block-4" style="--media-height: 469; --block-height: 572;"><product-card class="product-card--root" data-handle="the-100-day-planner-softcover" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}" data-swatch-option-position="1" style="--transition--delay: 600ms;" data-transition-active="true" data-transition-finished="true"> <a href="/products/the-100-day-planner-softcover" class="product-card--image-wrapper" tabindex="-1"><img src="{{ asset_url 'images/The100-DayPlanner_Teal.webp' }}" alt="" srcset="{{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 200w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 300w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 400w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 500w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 600w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 700w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 800w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 900w, {{ asset_url 'images/The100-DayPlanner_Teal.webp' }} 1000w" width="3244" height="2596" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"><img src="{{ asset_url 'images/The100-DayPlanner_Pink.webp' }}" alt="" srcset="{{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 200w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 300w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 400w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 500w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 600w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 700w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 800w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 900w, {{ asset_url 'images/The100-DayPlanner_Pink.webp' }} 1000w" width="3244" height="2596" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"></a> <div class="product-card--details"> <div class="product-card--details-wrapper"><div class="product-card--vendor" data-item="sub-nav-text">The Happiness Planner®</div><a href="/products/the-100-day-planner-softcover" class="product-card--title-link" tabindex="-1"> <p class="product-card--title" data-item="paragraph">The 100-Day Planner | Softcover</p> </a><div class="product-card--swatches--horizontal-view">
-<div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--x-view--7750831013958-color" aria-expanded="false"><label for="{{ section.id }}--x-view--7750831013958-color-blue" class="swatch" data-item="swatch" data-shape="square" aria-label="Blue" style="--swatch-background:rgb(0 91 211);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7750831013958-color-blue" name="{{ section.id }}--x-view--7750831013958-color" value="Blue" data-option-value-id="3666617991238" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><label for="{{ section.id }}--x-view--7750831013958-color-green" class="swatch" data-item="swatch" data-shape="square" aria-label="Green" style="--swatch-background:rgb(46 107 72);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7750831013958-color-green" name="{{ section.id }}--x-view--7750831013958-color" value="Green" data-option-value-id="3666618056774" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><label for="{{ section.id }}--x-view--7750831013958-color-pink" class="swatch" data-item="swatch" data-shape="square" aria-label="Pink" style="--swatch-background:rgb(255 192 203);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7750831013958-color-pink" name="{{ section.id }}--x-view--7750831013958-color" value="Pink" data-option-value-id="3666618024006" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><label for="{{ section.id }}--x-view--7750831013958-color-black" class="swatch" data-item="swatch" data-shape="square" aria-label="Black" style="--swatch-background:rgb(0 0 0);"> <input class="swatch--input" type="radio" id="{{ section.id }}--x-view--7750831013958-color-black" name="{{ section.id }}--x-view--7750831013958-color" value="Black" data-option-value-id="3666654527558" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><button class="swatches--expand" type="button" data-item="block-link" tabindex="-1"> <span>+1</span> </button></div></div></div><div class="product--price-container"> <div class="product--price-wrapper"><span class="product--price" data-item="nav-text"><span class="money">$19.99 USD</span></span> </div></div><div class="product-card--swatches--column-view">
-<div class="swatches--container" role="radiogroup" aria-labelledby="{{ section.id }}--y-view--7750831013958-color" aria-expanded="false"><label for="{{ section.id }}--y-view--7750831013958-color-blue" class="swatch" data-item="swatch" data-shape="square" aria-label="Blue" style="--swatch-background:rgb(0 91 211);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7750831013958-color-blue" name="{{ section.id }}--y-view--7750831013958-color" value="Blue" data-option-value-id="3666617991238" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><label for="{{ section.id }}--y-view--7750831013958-color-green" class="swatch" data-item="swatch" data-shape="square" aria-label="Green" style="--swatch-background:rgb(46 107 72);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7750831013958-color-green" name="{{ section.id }}--y-view--7750831013958-color" value="Green" data-option-value-id="3666618056774" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><label for="{{ section.id }}--y-view--7750831013958-color-pink" class="swatch" data-item="swatch" data-shape="square" aria-label="Pink" style="--swatch-background:rgb(255 192 203);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7750831013958-color-pink" name="{{ section.id }}--y-view--7750831013958-color" value="Pink" data-option-value-id="3666618024006" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><label for="{{ section.id }}--y-view--7750831013958-color-black" class="swatch" data-item="swatch" data-shape="square" aria-label="Black" style="--swatch-background:rgb(0 0 0);"> <input class="swatch--input" type="radio" id="{{ section.id }}--y-view--7750831013958-color-black" name="{{ section.id }}--y-view--7750831013958-color" value="Black" data-option-value-id="3666654527558" data-option-name="color" data-product-url="" data-item="radio" tabindex="-1"> </label><button class="swatches--expand" type="button" data-item="block-link" tabindex="-1"> <span>+1</span> </button></div></div></div>
-</product-card></div><div class="carousel--block" data-id="{{ section.id }}--block-5" style="--media-height: 469; --block-height: 532;"><div class="product-card--root" data-handle="the-100-day-planner-softcover-orange" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}" style="--transition--delay: 800ms;" data-transition-active="true" data-transition-finished="true"> <a href="/products/the-100-day-planner-softcover-orange" class="product-card--image-wrapper" tabindex="-1"><img src="{{ asset_url 'images/The_100-Day_Planner_Orange.webp' }}" alt="" srcset="{{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 200w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 300w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 400w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 500w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 600w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 700w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 800w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 900w, {{ asset_url 'images/The_100-Day_Planner_Orange.webp' }} 1000w" width="3244" height="2596" loading="lazy" class="product-card--image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"><img src="{{ asset_url 'images/77A3247.webp' }}" alt="The 100-Day Planner | Orange &amp; Pink - The Happiness Planner®" srcset="{{ asset_url 'images/77A3247.webp' }} 200w, {{ asset_url 'images/77A3247.webp' }} 300w, {{ asset_url 'images/77A3247.webp' }} 400w, {{ asset_url 'images/77A3247.webp' }} 500w, {{ asset_url 'images/77A3247.webp' }} 600w, {{ asset_url 'images/77A3247.webp' }} 700w, {{ asset_url 'images/77A3247.webp' }} 800w, {{ asset_url 'images/77A3247.webp' }} 900w, {{ asset_url 'images/77A3247.webp' }} 1000w" width="2240" height="3360" loading="lazy" class="product-card--hover-image" sizes="(max-width: 767px) calc(100vw - 32px), calc(33vw - 53px)"></a> <div class="product-card--details"> <div class="product-card--details-wrapper"><div class="product-card--vendor" data-item="sub-nav-text">The Happiness Planner®</div><a href="/products/the-100-day-planner-softcover-orange" class="product-card--title-link" tabindex="-1"> <p class="product-card--title" data-item="paragraph">The 100-Day Planner | Softcover</p> </a></div><div class="product--price-container"> <div class="product--price-wrapper"><span class="product--price" data-item="nav-text"><span class="money">$24.99 USD</span></span> </div></div></div>
-</div></div></div><button class="carousel--next" aria-label="next" aria-disabled="false" data-mq="medium-large" tabindex="0"><div class="nav-arrow" data-direction="right"> <div></div> <div></div> <div></div>
-</div>
-</button></div>
-</carousel-element></div></div>
-</div> </div>
+{{/if}}
+
+{{#style}}
+  /* Auto-label background colors driven by section color settings */
+  #shopline-section-{{ section.id }} .product--label[data-label-type="sold-out"] {
+    background: {{ section.settings.sold_out_bg }};
+    color: {{ section.settings.sold_out_fg }};
+  }
+  #shopline-section-{{ section.id }} .product--label[data-label-type="sale"] {
+    background: {{ section.settings.sale_bg }};
+    color: {{ section.settings.sale_fg }};
+  }
+  #shopline-section-{{ section.id }} .product--label[data-label-type="custom-1"] {
+    background: {{ section.settings.label_1_bg }};
+    color: {{ section.settings.label_1_fg }};
+  }
+  #shopline-section-{{ section.id }} .product--label[data-label-type="custom-2"] {
+    background: {{ section.settings.label_2_bg }};
+    color: {{ section.settings.label_2_fg }};
+  }
+  #shopline-section-{{ section.id }} .product--label[data-label-type="custom-3"] {
+    background: {{ section.settings.label_3_bg }};
+    color: {{ section.settings.label_3_fg }};
+  }
+{{/style}}
 
 {{#schema}}
 {
   "name": "Home Featured Collection 1",
   "tag": "section",
-  "class": "section--featured-collection"
+  "class": "section--featured-collection",
+  "settings": [
+    { "type": "header",  "content": "Content" },
+    { "type": "text",    "id": "heading",     "label": "Heading",
+      "default": "100-Day Planners & Journals" },
+    { "type": "url",     "id": "heading_url", "label": "Heading link",
+      "default": "/collections/the-100-day-planner",
+      "info": "Optional: wrap the heading in an anchor tag." },
+    { "type": "text",    "id": "from_text",   "label": "Price prefix (varies)",
+      "default": "From",
+      "info": "Shown before the price when a product has variants at different prices." },
+
+    { "type": "header",       "content": "Products" },
+    { "type": "product_list", "id": "featured_products",
+      "label": "Products",    "limit": 20,
+      "info": "Pick the products to show. Order matters. Up to 20." },
+
+    { "type": "header",   "content": "Layout" },
+    { "type": "range",    "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 1, "max": 6, "step": 1, "default": 3 },
+    { "type": "range",    "id": "columns_mobile",
+      "label": "Columns (mobile)",
+      "min": 1, "max": 3, "step": 1, "default": 1 },
+    { "type": "checkbox", "id": "show_vendor",
+      "label": "Show vendor",  "default": true },
+    { "type": "checkbox", "id": "autoplay",
+      "label": "Autoplay",     "default": false },
+    { "type": "range",    "id": "autoplay_speed",
+      "label": "Autoplay speed (seconds)",
+      "min": 3, "max": 15, "step": 1, "default": 7 },
+
+    { "type": "header",   "content": "Sold out badge" },
+    { "type": "checkbox", "id": "show_sold_out", "label": "Show",    "default": true },
+    { "type": "text",     "id": "sold_out_text", "label": "Text",    "default": "Sold out" },
+    { "type": "color",    "id": "sold_out_bg",   "label": "Background", "default": "#9E9E9E" },
+    { "type": "color",    "id": "sold_out_fg",   "label": "Text color",  "default": "#FFFFFF" },
+
+    { "type": "header",   "content": "Sale badge" },
+    { "type": "checkbox", "id": "show_sale",     "label": "Show",    "default": true },
+    { "type": "text",     "id": "sale_text",     "label": "Text",    "default": "Sale" },
+    { "type": "color",    "id": "sale_bg",       "label": "Background", "default": "#E53935" },
+    { "type": "color",    "id": "sale_fg",       "label": "Text color",  "default": "#FFFFFF" },
+
+    { "type": "header", "content": "Custom label 1 (tag-triggered)" },
+    { "type": "text",   "id": "label_1_tag",  "label": "Trigger: product tag",
+      "info": "Shows the badge on every product that has this tag. Leave empty to disable." },
+    { "type": "text",   "id": "label_1_text", "label": "Badge text",
+      "info": "Leave empty to use the tag name." },
+    { "type": "color",  "id": "label_1_bg",   "label": "Background", "default": "#2ECC71" },
+    { "type": "color",  "id": "label_1_fg",   "label": "Text color", "default": "#FFFFFF" },
+
+    { "type": "header", "content": "Custom label 2 (tag-triggered)" },
+    { "type": "text",   "id": "label_2_tag",  "label": "Trigger: product tag" },
+    { "type": "text",   "id": "label_2_text", "label": "Badge text" },
+    { "type": "color",  "id": "label_2_bg",   "label": "Background", "default": "#3498DB" },
+    { "type": "color",  "id": "label_2_fg",   "label": "Text color", "default": "#FFFFFF" },
+
+    { "type": "header", "content": "Custom label 3 (tag-triggered)" },
+    { "type": "text",   "id": "label_3_tag",  "label": "Trigger: product tag" },
+    { "type": "text",   "id": "label_3_text", "label": "Badge text" },
+    { "type": "color",  "id": "label_3_bg",   "label": "Background", "default": "#9B59B6" },
+    { "type": "color",  "id": "label_3_fg",   "label": "Text color", "default": "#FFFFFF" }
+  ]
 }
 {{/schema}}

@@ -248,13 +248,13 @@
 
   // --- Carousel base ----------------------------------------------------
   // Shared paging engine used by <slideshow-carousel>, <carousel-element>,
-  // and <main-product-carousel>. Slides are .carousel--block children of
-  // .carousel--container. Page advances translate the container by
-  // -(currentPage * 100%) and update --slide-pos / data-current-slide.
+  // and <main-product-carousel>. JS controls ALL layout - no CSS flex dependency.
   class CarouselBase extends HTMLElement {
     connectedCallback() {
+      const wrapper = this.querySelector(".carousel--wrapper");
       const container = this.querySelector(".carousel--container");
-      if (!container) return;
+      if (!container || !wrapper) return;
+      this._wrapper = wrapper;
       this._container = container;
       this._blocks = Array.from(container.querySelectorAll(":scope > .carousel--block"));
       if (this._blocks.length === 0) return;
@@ -269,6 +269,10 @@
       this._mqSmall = window.matchMedia("(max-width: 767px)");
       this._desktopCols = parseInt(this.getAttribute("data-columns") || "1", 10) || 1;
       this._mobileCols = parseInt(this.getAttribute("data-mobile-columns") || "1", 10) || 1;
+
+      // JS controls layout - set explicit pixel widths
+      this._setupLayout();
+      window.addEventListener("resize", () => this._setupLayout());
 
       const advance = (dir) => this.goTo(this._index + dir);
       if (this._prevBtn) this._prevBtn.addEventListener("click", (e) => { e.preventDefault(); advance(-1); });
@@ -287,8 +291,23 @@
         startX = null;
       });
 
-      this._mqSmall.addEventListener && this._mqSmall.addEventListener("change", () => this.goTo(this._index));
+      this._mqSmall.addEventListener && this._mqSmall.addEventListener("change", () => { this._setupLayout(); this.goTo(this._index); });
       this.goTo(0);
+    }
+    _setupLayout() {
+      const w = this._wrapper.offsetWidth;
+      const cols = this.columns();
+      const blockW = w / cols;
+      // Container: flex row, total width = all blocks
+      this._container.style.display = "flex";
+      this._container.style.width = `${blockW * this._blocks.length}px`;
+      this._container.style.transition = "transform 0.4s ease";
+      // Each block: explicit width
+      this._blocks.forEach(b => {
+        b.style.width = `${blockW}px`;
+        b.style.flexShrink = "0";
+      });
+      this._blockWidth = blockW;
     }
     columns() {
       return this._mqSmall.matches ? this._mobileCols : this._desktopCols;
@@ -302,7 +321,9 @@
       if (total <= 0) return;
       const idx = Math.max(0, Math.min(total - 1, i));
       this._index = idx;
-      this._container.style.transform = `translateX(-${idx * 100}%)`;
+      const cols = this.columns();
+      const offset = idx * cols * this._blockWidth;
+      this._container.style.transform = `translateX(-${offset}px)`;
       this.style.setProperty("--slide-pos", `-${idx * 100}%`);
       this.setAttribute("data-current-slide", String(idx));
       this.setAttribute("data-first-slide", idx === 0 ? "true" : "false");

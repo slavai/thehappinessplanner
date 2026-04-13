@@ -14,16 +14,16 @@
             </div>
             {{/for}}
           </div>
-          <product-thumbs-element class="product-media--thumbs" data-id="{{ product.id }}">
-            <div class="product-media--thumbs-wrapper">
-              {{#for product.images as |image|}}
-              <div class="product-media--thumb" data-active="{{#if forloop.first}}true{{else}}false{{/if}}" data-id="{{ image.id }}" tabindex="0">
-                <img src="{{ image_url image width=80 }}" alt="{{ default image.alt product.title }}" width="80" height="80" loading="lazy">
-              </div>
-              {{/for}}
-            </div>
-          </product-thumbs-element>
         </div>
+        <product-thumbs-element class="product-media--thumbs" data-id="{{ product.id }}">
+          <div class="product-media--thumbs-wrapper">
+            {{#for product.images as |image|}}
+            <div class="product-media--thumb" data-active="{{#if forloop.first}}true{{else}}false{{/if}}" data-id="{{ image.id }}" tabindex="0">
+              <img src="{{ image_url image width=80 }}" alt="{{ default image.alt product.title }}" width="80" height="80" loading="lazy">
+            </div>
+            {{/for}}
+          </div>
+        </product-thumbs-element>
       </product-media-variants>
     </div>
 

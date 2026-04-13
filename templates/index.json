@@ -70,10 +70,10 @@
       "settings": {
         "product": "16074440842642771216040650",
         "show_vendor": false,
+        "add_to_cart_text": "ФAdd to cart",
         "products": [
           "16074440842642771216040650"
-        ],
-        "add_to_cart_text": "ФAdd to cart"
+        ]
       },
       "blocks": {},
       "custom_css": []
@@ -81,8 +81,16 @@
     "s-09": {
       "disabled": false,
       "type": "home-featured-collection-1",
-      "settings": {},
-      "blocks": {}
+      "settings": {
+        "featured_products": [
+          "16074440842698639345820650",
+          "16074440842642771216040650",
+          "16074440842667937018750650",
+          "16074440842619283091870650"
+        ]
+      },
+      "blocks": {},
+      "custom_css": []
     },
     "s-10": {
       "disabled": false,

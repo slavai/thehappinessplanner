@@ -1,5 +1,16 @@
 {{ assign 'product' (first section.settings.products) }}
 
+<!-- DEBUG START -->
+<div style="background: yellow; padding: 20px; font-family: monospace; font-size: 12px;">
+  <p><strong>DEBUG section.settings.products:</strong> {{ json section.settings.products }}</p>
+  <p><strong>DEBUG (first ...):</strong> {{ json product }}</p>
+  <p><strong>DEBUG product.title:</strong> {{ product.title }}</p>
+  <p><strong>DEBUG product.id:</strong> {{ product.id }}</p>
+  <p><strong>DEBUG typeof products:</strong> {{#if section.settings.products}}HAS VALUE{{else}}EMPTY/NULL{{/if}}</p>
+  <p><strong>DEBUG products.length:</strong> {{ section.settings.products.length }}</p>
+</div>
+<!-- DEBUG END -->
+
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-product">
 {{#if product}}
 <div class="main-product--root" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-handle="{{ product.handle }}" data-background-color="light" data-border="both" data-container-width="4" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="left" style="--text-column-width:375px;--media-gap:8px;--thumbnail-width:80px;">

@@ -91,7 +91,10 @@
 </div>
 
 {{#style}}
-  /* Layout - match reference exactly */
+  /* Section full-width background */
+  #shopline-section-{{ section.id }} {
+    background: #f5f5f3;
+  }
   #shopline-section-{{ section.id }} .main-product--wrapper {
     display: grid;
     grid-template-columns: 1fr 350px;
@@ -99,7 +102,6 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 20px;
-    background: #fff;
   }
   @media (max-width: 900px) {
     #shopline-section-{{ section.id }} .main-product--wrapper {
@@ -127,7 +129,7 @@
     padding: 0;
     border: 1px solid transparent;
     cursor: pointer;
-    background: #f8f8f8;
+    background: transparent;
   }
   #shopline-section-{{ section.id }} .product-media--thumbnail[data-active="true"] {
     border-color: #000;
@@ -140,7 +142,6 @@
   }
   #shopline-section-{{ section.id }} .product-media--main {
     flex: 1;
-    background: #f8f8f8;
   }
   #shopline-section-{{ section.id }} .product-media--image {
     display: none;

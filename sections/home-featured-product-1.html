@@ -1,4 +1,4 @@
-{{ assign 'product' (lookup all_products section.settings.product) }}
+{{ assign 'product' (first section.settings.products) }}
 
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-product">
 {{#if product}}
@@ -250,9 +250,10 @@
   "class": "section--featured-product",
   "settings": [
     {
-      "type": "product_picker",
-      "id": "product",
-      "label": "Product"
+      "type": "product_list",
+      "id": "products",
+      "label": "Product",
+      "limit": 1
     },
     {
       "type": "text",

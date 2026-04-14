@@ -1,19 +1,29 @@
 {{!--
-  home-featured-collection-1 — Phase 3 (CMS-wired + customizable)
+  home-featured-collection-1 — DONE
 
-  Architecture:
-    - Data source: product_list (merchant picks products manually)
-    - Layout: dynamic — rendered count = picked count (up to limit)
-    - Carousel: <product-carousel> (see assets/theme.js)
-    - Variant swatches: preserved verbatim from extracted source
-    - Auto labels: Sold-out (from product.available) + Sale (from compare_at_price)
-    - Custom labels: 3 tag-triggered slots with color pickers
+  Data source (pick one):
+    - Collection  : merchant picks one collection via collection_list.
+                    Products display in the order set in
+                    SHOPLINE admin → Collections → [this collection] → Sort.
+                    The in-section "sort" is intentionally NOT exposed because
+                    collection.products can't be reordered from Handlebars —
+                    the order is a property of the collection itself.
+    - Manual      : fallback when no collection is picked; merchant picks
+                    individual products via product_list.
+
+  Carousel        : <product-carousel> (assets/theme.js)
+  Variant swatches: preserved verbatim from extracted source
+  Auto labels     : Sold-out (product.available) + Sale (compare_at_price)
+  Custom labels   : 3 tag-triggered slots with color pickers
 
   Markup preserved VERBATIM from extracted-sections/home/09-featured_collection.html
   per EXACT TRANSFER rule (mistakes.md #18). Only values replaced with {{ product.X }}.
 --}}
 
-{{#if section.settings.featured_products}}
+{{ assign 'picked_collection' (first section.settings.source_collection) }}
+{{ assign 'src_products' (default picked_collection.products section.settings.featured_products) }}
+
+{{#if src_products}}
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-collection">
   <div class="featured-collection--root" data-section-id="{{ section.id }}" data-background-color="none" data-border="both" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-section-type="index_featured_collection" data-spacing-above="full" data-spacing-below="full">
     <div class="featured-collection--wrapper" data-container="section">
@@ -51,7 +61,7 @@
             </button>
 
             <div class="carousel--container">
-              {{#for section.settings.featured_products as |product|}}
+              {{#for src_products limit=section.settings.products_to_show as |product|}}
                 <div class="carousel--block" data-id="{{ section.id }}--block-{{ forloop.index }}" style="--media-height: 587; --block-height: 650;">
                   <div class="product-card--root" data-handle="{{ product.handle }}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}">
                     <a href="{{ product.url }}" class="product-card--image-wrapper" tabindex="-1">
@@ -298,10 +308,16 @@
       "default": "From",
       "info": "Shown before the price when a product has variants at different prices." },
 
-    { "type": "header",       "content": "Products" },
+    { "type": "header", "content": "Products — pick ONE of the two sources below" },
+    { "type": "collection_list", "id": "source_collection",
+      "label": "Collection", "limit": 1,
+      "info": "If set, the carousel shows this collection's products. Order is inherited from SHOPLINE admin → Collections → [this collection] → Sort. Leave empty to use the manual picker below instead." },
+    { "type": "range", "id": "products_to_show",
+      "label": "Max products to show", "min": 4, "max": 20, "step": 1, "default": 8,
+      "info": "Caps how many products the carousel renders (applies to both Collection and Manual modes)." },
     { "type": "product_list", "id": "featured_products",
-      "label": "Products",    "limit": 20,
-      "info": "Pick the products to show. Order matters. Up to 20." },
+      "label": "Products (manual)", "limit": 20,
+      "info": "Used only when no Collection is picked above. Pick products individually in the order you want them to appear." },
 
     { "type": "header",   "content": "Layout" },
     { "type": "range",    "id": "columns_desktop",

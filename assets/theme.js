@@ -708,13 +708,19 @@
         swatches.forEach((sw) => {
           sw.addEventListener("click", (e) => {
             e.preventDefault();
-            const bg = sw.style.getPropertyValue("--swatch-background");
-            if (bg) {
-              const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
-              if (match) {
-                primaryImg.src = match[1];
-                primaryImg.removeAttribute("srcset");
-              }
+            // Prefer hi-res URL from data attribute (provided by section markup
+            // via {{ image_url variant.image width=1500 }}). Fall back to parsing
+            // the --swatch-background CSS var (which is the 120w thumbnail) only
+            // if the data attr is missing.
+            let newSrc = sw.dataset.variantImage;
+            if (!newSrc) {
+              const bg = sw.style.getPropertyValue("--swatch-background");
+              const match = bg && bg.match(/url\(["']?([^"')]+)["']?\)/);
+              if (match) newSrc = match[1];
+            }
+            if (newSrc) {
+              primaryImg.src = newSrc;
+              primaryImg.removeAttribute("srcset");
             }
             const radio = sw.querySelector("input[type='radio']");
             if (radio) radio.checked = true;

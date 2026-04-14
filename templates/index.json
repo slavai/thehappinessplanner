@@ -101,7 +101,16 @@
     "s-11": {
       "disabled": false,
       "type": "home-featured-product-2",
-      "settings": {},
+      "settings": {
+        "products": [
+          "16074440842642771216040650"
+        ],
+        "badge_text": "The 2026 Planner",
+        "show_vendor": false,
+        "show_description": true,
+        "add_to_cart_text": "Add to cart",
+        "sold_out_text": "Sold out"
+      },
       "blocks": {}
     },
     "s-12": {
@@ -129,13 +138,41 @@
     "s-13": {
       "disabled": false,
       "type": "home-featured-collection-8",
-      "settings": {},
+      "settings": {
+        "heading": "Digital Journals",
+        "heading_url": "/collections/digital-journals",
+        "show_more_url": "/collections/digital-journals",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "light",
+        "featured_products": [
+          "16074440842798295987320650",
+          "16074440841325088655130650",
+          "16074440840306879413120650",
+          "16074440839726052193430650"
+        ]
+      },
       "blocks": {}
     },
     "s-14": {
       "disabled": false,
       "type": "home-featured-collection-2",
-      "settings": {},
+      "settings": {
+        "heading": "Other Bundles",
+        "heading_url": "/collections/bundles",
+        "show_more_url": "/collections/bundles",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "none",
+        "featured_products": [
+          "16074440842798295987320650",
+          "16074440841325088655130650",
+          "16074440840306879413120650",
+          "16074440839726052193430650"
+        ]
+      },
       "blocks": {}
     },
     "s-15": {

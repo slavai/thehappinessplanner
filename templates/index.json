@@ -107,8 +107,24 @@
     "s-12": {
       "disabled": false,
       "type": "home-slideshow-2",
-      "settings": {},
-      "blocks": {}
+      "settings": {
+        "auto_rotate": true,
+        "rotate_frequency": 4,
+        "slide_height": 550
+      },
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "heading": "Digital Workbooks & Journals",
+            "subheading": "Fillable & Print-Ready.",
+            "text_color": "white",
+            "text_x_alignment": "right",
+            "text_y_alignment": "bottom"
+          }
+        }
+      },
+      "block_order": ["slide-1"]
     },
     "s-13": {
       "disabled": false,

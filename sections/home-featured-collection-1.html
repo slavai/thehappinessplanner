@@ -1,15 +1,14 @@
 {{!--
   home-featured-collection-1 — DONE
 
-  Data source (pick one):
+  Data source (pick one in editor):
     - Collection  : merchant picks one collection via collection_list.
-                    Products display in the order set in
-                    SHOPLINE admin → Collections → [this collection] → Sort.
-                    The in-section "sort" is intentionally NOT exposed because
-                    collection.products can't be reordered from Handlebars —
-                    the order is a property of the collection itself.
+                    Products come from {{ picked.products }} and can be
+                    re-sorted at render time via the sort_by select
+                    (uses SHOPLINE handlebars `sort` + `reverse` helpers).
     - Manual      : fallback when no collection is picked; merchant picks
-                    individual products via product_list.
+                    individual products via product_list. sort_by also
+                    applies to manually-picked lists.
 
   Carousel        : <product-carousel> (assets/theme.js)
   Variant swatches: preserved verbatim from extracted source
@@ -21,7 +20,24 @@
 --}}
 
 {{ assign 'picked_collection' (first section.settings.source_collection) }}
-{{ assign 'src_products' (default picked_collection.products section.settings.featured_products) }}
+{{ assign 'raw_products' (default picked_collection.products section.settings.featured_products) }}
+
+{{!-- Sort the array according to sort_by setting. Uses sort + reverse helpers. --}}
+{{#if section.settings.sort_by '==' 'newest'}}
+  {{ assign 'src_products' (reverse (sort raw_products 'published_at')) }}
+{{else if section.settings.sort_by '==' 'oldest'}}
+  {{ assign 'src_products' (sort raw_products 'published_at') }}
+{{else if section.settings.sort_by '==' 'price_asc'}}
+  {{ assign 'src_products' (sort raw_products 'price') }}
+{{else if section.settings.sort_by '==' 'price_desc'}}
+  {{ assign 'src_products' (reverse (sort raw_products 'price')) }}
+{{else if section.settings.sort_by '==' 'title_asc'}}
+  {{ assign 'src_products' (sort raw_products 'title') }}
+{{else if section.settings.sort_by '==' 'title_desc'}}
+  {{ assign 'src_products' (reverse (sort raw_products 'title')) }}
+{{else}}
+  {{ assign 'src_products' raw_products }}
+{{/if}}
 
 {{#if src_products}}
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-collection">
@@ -311,10 +327,26 @@
     { "type": "header", "content": "Products — pick ONE of the two sources below" },
     { "type": "collection_list", "id": "source_collection",
       "label": "Collection", "limit": 1,
-      "info": "If set, the carousel shows this collection's products. Order is inherited from SHOPLINE admin → Collections → [this collection] → Sort. Leave empty to use the manual picker below instead." },
+      "info": "If set, the carousel shows this collection's products. Leave empty to use the manual picker below instead." },
     { "type": "range", "id": "products_to_show",
       "label": "Max products to show", "min": 4, "max": 20, "step": 1, "default": 8,
       "info": "Caps how many products the carousel renders (applies to both Collection and Manual modes)." },
+    {
+      "type":    "select",
+      "id":      "sort_by",
+      "label":   "Sort products by",
+      "default": "manual",
+      "info":    "How to order the products. 'Manual' uses the order from the collection (or manual picker). Other options re-sort at render time.",
+      "options": [
+        { "value": "manual",     "label": "Manual (collection default)" },
+        { "value": "newest",     "label": "Newest first" },
+        { "value": "oldest",     "label": "Oldest first" },
+        { "value": "price_asc",  "label": "Price: Low to High" },
+        { "value": "price_desc", "label": "Price: High to Low" },
+        { "value": "title_asc",  "label": "Title: A → Z" },
+        { "value": "title_desc", "label": "Title: Z → A" }
+      ]
+    },
     { "type": "product_list", "id": "featured_products",
       "label": "Products (manual)", "limit": 20,
       "info": "Used only when no Collection is picked above. Pick products individually in the order you want them to appear." },

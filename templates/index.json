@@ -102,16 +102,17 @@
       "disabled": false,
       "type": "home-featured-product-2",
       "settings": {
-        "products": [
-          "16074440842642771216040650"
-        ],
         "badge_text": "The 2026 Planner",
         "show_vendor": false,
-        "show_description": true,
+        "show_description": false,
         "add_to_cart_text": "Add to cart",
-        "sold_out_text": "Sold out"
+        "sold_out_text": "Sold out",
+        "products": [
+          "16074440842642771216040650"
+        ]
       },
-      "blocks": {}
+      "blocks": {},
+      "custom_css": []
     },
     "s-12": {
       "disabled": false,
@@ -133,7 +134,9 @@
           }
         }
       },
-      "block_order": ["slide-1"]
+      "block_order": [
+        "slide-1"
+      ]
     },
     "s-13": {
       "disabled": false,

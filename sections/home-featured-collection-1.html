@@ -102,7 +102,7 @@
                             <label class="swatch" data-item="swatch" data-shape="square"
                                    aria-label="{{ variant.title }}"
                                    title="{{ variant.title }}"
-                                   {{#if variant.image}}style="--swatch-background: url('{{ image_url variant.image width=120 }}');"{{/if}}>
+                                   {{#if variant.image}}data-variant-image="{{ image_url variant.image width=1500 }}" style="--swatch-background: url('{{ image_url variant.image width=120 }}');"{{/if}}>
                               <input class="swatch--input" type="radio"
                                      name="variant-{{ section.id }}-{{ product.id }}"
                                      value="{{ variant.id }}"

@@ -94,7 +94,7 @@
     },
     "s-10": {
       "disabled": false,
-      "type": "home-featured-video-1",
+      "type": "home-featured-video",
       "settings": {},
       "blocks": {}
     },
@@ -244,8 +244,17 @@
     },
     "s-19": {
       "disabled": false,
-      "type": "home-featured-video-3",
-      "settings": {},
+      "type": "home-featured-video",
+      "settings": {
+        "video_id": "aow6Mf1fBTk",
+        "title_attr": "The Happiness Planner: Planning & Journaling App for Your Personal Development",
+        "background_color": "accent-1",
+        "container_width": "6",
+        "spacing": "none",
+        "mobile_spacing": "none",
+        "full_width": true,
+        "header_overlap_compatible": true
+      },
       "blocks": {}
     },
     "s-20": {
@@ -256,8 +265,16 @@
     },
     "s-21": {
       "disabled": false,
-      "type": "home-featured-video-2",
-      "settings": {},
+      "type": "home-featured-video",
+      "settings": {
+        "video_id": "kBwPWtlvtQk",
+        "title_attr": "Explore Your Inner World: For Happiness & Growth | Guided Journal Set I",
+        "background_color": "light",
+        "container_width": "6",
+        "spacing": "none",
+        "mobile_spacing": "half",
+        "full_width": true
+      },
       "blocks": {}
     },
     "s-22": {

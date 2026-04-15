@@ -1,0 +1,116 @@
+{{!--
+  home-featured-video — DONE (generic)
+
+  ONE component for all YouTube featured-video slots on home: s-10, s-19,
+  s-21. Each slot picks its own video_id, aspect ratios, spacing, bg,
+  full_width, and header overlap flag via settings in templates/index.json.
+
+  Architecture:
+    - <video-component> custom element (theme.js) renders a YouTube iframe
+      with --video-aspect-ratio / --video-mobile-aspect-ratio CSS vars.
+    - data-api="youtube" hardcoded; Vimeo not supported (no live site uses it).
+    - Iframe src emits loop=1&playlist={id}&autoplay=0|1&mute=0|1. The
+      autoplay+mute coupling is mandatory for iOS/Safari muted autoplay.
+    - title_attr is iframe accessibility title — MUST be non-empty.
+    - header_overlap_compatible exposes the data-header-overlap-compatible
+      attribute used by transparent-header pages to allow the video to
+      bleed under the global header.
+--}}
+<div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-video"><div class="featured-video--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="none" data-container-width="{{ section.settings.container_width }}" data-mobile-full-width="true" data-mobile-spacing-above="{{ section.settings.mobile_spacing }}" data-mobile-spacing-below="{{ section.settings.mobile_spacing }}" data-text-color="{{ section.settings.text_color }}" data-spacing-above="{{ section.settings.spacing }}" data-spacing-below="{{ section.settings.spacing }}"{{#if section.settings.header_overlap_compatible}} data-header-overlap-compatible=""{{/if}}><video-component class="video--root" data-api="youtube" data-autoplay="{{ section.settings.autoplay }}" data-overlay-style="darken-bottom" data-display-type="aspect-ratio" data-full-width="{{ section.settings.full_width }}" data-id="{{ section.id }}" data-text-color="{{ section.settings.text_color }}" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-text-position="center" data-x-alignment="center" data-y-alignment="center" data-video-id="{{ section.settings.video_id }}" style="--video-aspect-ratio: {{ section.settings.aspect_ratio_desktop }}; --video-mobile-aspect-ratio: {{ section.settings.aspect_ratio_mobile }}; --natural-aspect-ratio: 1.7778;" id="{{ section.id }}"><div class="video--container"><div class="video--wrapper" tabindex="-1" data-transition-active="true">{{#if section.settings.video_id}}<iframe id="{{ section.id }}-player" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" title="{{ section.settings.title_attr }}" width="640" height="360" src="https://www.youtube.com/embed/{{ section.settings.video_id }}?enablejsapi=1&amp;host=https%3A%2F%2Fwww.youtube.com&amp;loop=1&amp;playlist={{ section.settings.video_id }}&amp;autoplay={{#if section.settings.autoplay}}1{{else}}0{{/if}}&amp;mute={{#if section.settings.autoplay}}1{{else}}0{{/if}}&amp;vf=1"></iframe>{{/if}}</div></div>
+</video-component></div> </div>
+
+{{#schema}}
+{
+  "name": "Home Featured Video",
+  "tag": "section",
+  "class": "section--featured-video",
+  "settings": [
+    { "type": "header",   "content": "Video" },
+    { "type": "text",     "id": "video_id",    "label": "YouTube video ID",
+      "default": "fytv29evcmg",
+      "info": "The 11-character ID from the YouTube URL (after v=)." },
+    { "type": "text",     "id": "title_attr",  "label": "iframe title (accessibility)",
+      "default": "The Happiness Planner®: Mastering Happiness & Success - One Day At A Time" },
+    { "type": "checkbox", "id": "autoplay",    "label": "Autoplay (muted)", "default": true },
+
+    { "type": "header", "content": "Aspect ratio" },
+    { "type": "text",   "id": "aspect_ratio_desktop", "label": "Desktop aspect ratio",
+      "default": "1.7857",
+      "info": "Width/height ratio as a decimal. 1.7857 = 16:9, 1.0 = square." },
+    { "type": "text",   "id": "aspect_ratio_mobile",  "label": "Mobile aspect ratio",
+      "default": "0.7463",
+      "info": "Same format. 0.7463 ≈ 3:4 vertical crop for mobile." },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type":    "select",
+      "id":      "container_width",
+      "label":   "Container width",
+      "default": "4",
+      "options": [
+        { "value": "1", "label": "Narrow" },
+        { "value": "2", "label": "Small" },
+        { "value": "3", "label": "Medium" },
+        { "value": "4", "label": "Large" },
+        { "value": "5", "label": "X-Large" },
+        { "value": "6", "label": "Full width (edge to edge)" }
+      ]
+    },
+    {
+      "type":    "select",
+      "id":      "spacing",
+      "label":   "Desktop spacing above/below",
+      "default": "half",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ]
+    },
+    {
+      "type":    "select",
+      "id":      "mobile_spacing",
+      "label":   "Mobile spacing above/below",
+      "default": "none",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ]
+    },
+    { "type": "checkbox", "id": "full_width",
+      "label": "Full-width video (edge to edge)",
+      "default": false,
+      "info": "Lets the video bleed to the viewport edge regardless of container width." },
+    { "type": "checkbox", "id": "header_overlap_compatible",
+      "label": "Overlap with transparent header",
+      "default": false,
+      "info": "Emits data-header-overlap-compatible so transparent-header templates can bleed over the top of the video." },
+
+    { "type": "header", "content": "Colors" },
+    {
+      "type":    "select",
+      "id":      "background_color",
+      "label":   "Background color",
+      "default": "accent-1",
+      "options": [
+        { "value": "none",     "label": "None" },
+        { "value": "light",    "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" },
+        { "value": "accent-2", "label": "Accent 2" },
+        { "value": "dark",     "label": "Dark" }
+      ]
+    },
+    {
+      "type":    "select",
+      "id":      "text_color",
+      "label":   "Overlay text color",
+      "default": "white",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "black", "label": "Black" }
+      ]
+    }
+  ]
+}
+{{/schema}}

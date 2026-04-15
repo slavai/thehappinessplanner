@@ -286,6 +286,7 @@
     "product-video-element",
     "product-thumbs-element",
     "modal-element",
+    "price-range-element",
   ].forEach((n) => define(n, class extends HTMLElement {}));
 
   // --- Carousel base ----------------------------------------------------
@@ -1126,5 +1127,56 @@
     else if (platform === "pinterest") href = `https://pinterest.com/pin/create/button/?url=${u}&media=${img}&description=${t}`;
     else if (platform === "email") href = `mailto:?subject=${t}&body=${u}`;
     if (href) window.open(href, platform === "email" ? "_self" : "_blank", "noopener");
+  });
+
+  // --- filter drawer behaviors ------------------------------------------
+  // Toggle expand/collapse on .filter--toggle click (CSS hides .filter--menu
+  // when its preceding .filter--toggle has aria-expanded="false")
+  document.addEventListener("click", (e) => {
+    const toggle = e.target.closest(".filter--toggle");
+    if (!toggle) return;
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", expanded ? "false" : "true");
+  });
+
+  // Browse section: clicking a collection radio navigates immediately
+  document.addEventListener("change", (e) => {
+    const input = e.target;
+    if (!(input instanceof HTMLInputElement)) return;
+    const li = input.closest('.filter--link[data-type="browse"]');
+    if (!li) return;
+    if (input.value) window.location.href = input.value;
+  });
+
+  // Apply button: build URLSearchParams from form (excluding `browse`),
+  // navigate to collection URL with filter query string
+  // Reset button: navigate to bare pathname (clears all params)
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".filter--button");
+    if (!btn) return;
+    const form = btn.closest(".filter--form");
+    if (!form) return;
+    const type = btn.getAttribute("data-type");
+    if (type === "reset") {
+      window.location.href = window.location.pathname;
+      return;
+    }
+    if (type !== "apply") return;
+    const params = new URLSearchParams();
+    const sort = form.querySelector('input[name="sort_by"]:checked');
+    if (sort) params.set("sort_by", sort.value);
+    form.querySelectorAll('input[type="checkbox"]:checked').forEach((cb) => {
+      if (cb.name && cb.name !== "browse") params.append(cb.name, cb.value);
+    });
+    const minP = form.querySelector('input[name="filter.v.price.gte"]');
+    const maxP = form.querySelector('input[name="filter.v.price.lte"]');
+    if (minP && minP.value !== "" && Number(minP.value) > Number(minP.min || 0)) {
+      params.set("filter.v.price.gte", minP.value);
+    }
+    if (maxP && maxP.value !== "" && Number(maxP.value) < Number(maxP.max || Infinity)) {
+      params.set("filter.v.price.lte", maxP.value);
+    }
+    const qs = params.toString();
+    window.location.href = window.location.pathname + (qs ? "?" + qs : "");
   });
 })();

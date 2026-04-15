@@ -130,6 +130,59 @@
         {{/if}}
       </div>
     </div>
+
+    <div class="drawer--container" data-view="filter" hidden>
+      <div class="filter--root" data-drawer-scroll-container=""> <div class="filter--wrapper">
+        <form class="filter--form" method="get">
+          {{#if collections}}
+          <div class="filter--category"> <div class="filter--toggle" tabindex="0" data-item="nav-text" aria-expanded="false" aria-controls="browse_filter" role="button">Browse collections <svg class="icon--root icon--chevron-down" data-invertible="true" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"><path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path></svg> </div>
+            <ul class="filter--menu" id="browse_filter" data-item="sub-nav-text" data-transition-item="viewport" data-transition-trigger="custom" data-transition-type="fade-in">
+              {{#each collections as |c|}}
+              <li class="filter--link" data-type="browse"> <input id="{{ c.handle }}-filter_browse" class="filter--input" type="radio" name="browse" value="{{ c.url }}" tabindex="-1"{{#if c.handle '==' collection.handle}} checked{{/if}}> <label class="filter--label" for="{{ c.handle }}-filter_browse" data-item="sub-nav-text" tabindex="0"> <span>{{ c.title }}</span> <svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path></svg> </label> </li>
+              {{/each}}
+            </ul>
+          </div>
+          {{/if}}
+
+          {{#if collection.sort_options}}
+          {{ assign 'active_sort' (default collection.sort_by collection.default_sort_by) }}
+          <div class="filter--category"> <div class="filter--toggle" tabindex="0" data-item="nav-text" aria-expanded="false" aria-controls="sort_filter" role="button">Sort by <svg class="icon--root icon--chevron-down" data-invertible="true" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"><path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path></svg> </div>
+            <ul class="filter--menu" id="sort_filter" role="radiogroup" data-transition-item="viewport" data-transition-trigger="custom" data-transition-type="fade-in">
+              {{#each collection.sort_options as |option|}}
+              <li class="filter--link" data-type="sort"> <input id="{{ option.value }}-filter_sort" class="filter--input" type="radio" name="sort_by" value="{{ option.value }}" data-label="{{ option.name }}" tabindex="-1"{{#if option.value '==' active_sort}} checked{{/if}}> <label class="filter--label" for="{{ option.value }}-filter_sort" data-item="sub-nav-text" tabindex="0"> <span>{{ option.name }}</span> <svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path></svg> </label> </li>
+              {{/each}}
+            </ul>
+          </div>
+          {{/if}}
+
+          {{#each collection.filters as |filter|}}
+          <div class="filter--category"> <div class="filter--toggle" tabindex="0" data-item="nav-text" aria-expanded="false" aria-controls="{{ filter.param_name }}_filter" role="button">{{ filter.label }} <svg class="icon--root icon--chevron-down" data-invertible="true" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"><path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path></svg> </div>
+            {{#if filter.type '==' 'price_range'}}
+            <div class="filter--menu" data-item="sub-nav-text" id="{{ filter.param_name }}_filter" data-transition-item="viewport" data-transition-trigger="custom" data-transition-type="fade-in"> <div class="filter--price--container">
+              <price-range-element> <div class="price-range--wrapper"> <button type="button" class="price-range--button" data-min-price=""><div>&nbsp;</div></button> <div class="price-range--line"><div></div></div> <button type="button" class="price-range--button" data-max-price=""><div>&nbsp;</div></button> </div>
+                <div class="price-range--fields">
+                  <div class="price-range--field"> <span class="price-range--currency">$</span> <input class="price-range--input" name="filter.v.price.gte" id="price_range_min" value="{{ default filter.min_value.value 0 }}" type="number" step="1" min="0" max="{{ filter.range_max }}" data-min-price=""> <label class="price-range--label" for="price_range_min" data-item="hidden-text">from</label> </div>
+                  <div class="price-range--separator">—</div>
+                  <div class="price-range--field"> <span class="price-range--currency">$</span> <input class="price-range--input" name="filter.v.price.lte" id="price_range_max" value="{{ default filter.max_value.value filter.range_max }}" type="number" step="1" min="0" max="{{ filter.range_max }}" data-max-price=""> <label class="price-range--label" for="price_range_max" data-item="hidden-text">to</label> </div>
+                </div>
+              </price-range-element>
+            </div> </div>
+            {{else}}
+            <ul class="filter--menu" id="{{ filter.param_name }}_filter" data-transition-item="viewport" data-transition-trigger="custom" data-transition-type="fade-in">
+              {{#each filter.values as |value|}}
+              <li class="filter--link" data-type="refine"> <input id="{{ filter.param_name }}-{{ value.value }}-filter_refine" class="filter--input" type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" data-label="{{ value.label }}" tabindex="-1"{{#if value.active}} checked{{/if}}> <label class="filter--label" for="{{ filter.param_name }}-{{ value.value }}-filter_refine" tabindex="0"> <span data-item="sub-nav-text">{{ value.label }}</span> <svg class="icon--root icon--cross" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 8.727 17.944.783l1.273 1.273L11.273 10l7.944 7.944-1.273 1.273L10 11.273l-7.944 7.944-1.273-1.273L8.727 10 .783 2.056 2.056.783 10 8.727Z" fill="#000" fill-rule="nonzero"></path></svg> </label> </li>
+              {{/each}}
+            </ul>
+            {{/if}}
+          </div>
+          {{/each}}
+        </form>
+
+        <div class="filter--search"> <button class="filter--search-link" data-drawer-open="top" data-drawer-view="search" aria-label="Search by name" aria-haspopup="true"> <div class="filter--search-icon"> <svg class="icon--root icon--search" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="8.46" cy="8.46" r="5.56" fill="none" stroke="#000" stroke-miterlimit="10"></circle><path fill="none" stroke="#000" stroke-miterlimit="10" d="m14.4 14.4 2.7 2.7"></path></svg> </div> <div class="filter--search-text" data-item="sub-nav-text">Search by name</div> </button> </div>
+      </div>
+      <div class="filter--button-container"> <button class="filter--button" type="button" data-type="apply" data-item="button" data-text="Apply" data-drawer-close="" tabindex="0" data-transition-button=""><span>Apply</span></button> <button class="filter--button" type="button" data-type="reset" data-item="secondary-button" data-text="Reset" tabindex="0" data-transition-button=""><span>Reset</span></button> </div>
+      </div>
+    </div>
   </div>
 </drawer-element>
 </header>

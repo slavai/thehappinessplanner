@@ -41,6 +41,24 @@
     object-fit: cover;
   }
 
+  /* Per-slide text fade-in. Base state is hidden; theme.js marks the
+     active .carousel--block with data-active="true" in goTo(), which
+     toggles the animation on. --transition--delay drives per-item delay
+     so heading and subheading stagger by whatever the schema settings
+     ask for. */
+  #shopline-section-{{ section.id }} .carousel--block [data-transition-item] {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  #shopline-section-{{ section.id }} .carousel--block[data-active="true"] [data-transition-item] {
+    animation: hs2-text-in 600ms ease-out forwards;
+    animation-delay: var(--transition--delay, 0ms);
+  }
+  @keyframes hs2-text-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   /* Dot navigation — custom classes to dodge theme.css .carousel-nav-dot
      collision. Positioned bottom-right over the slide, visible above the
      carousel-wrapper (which has overflow: hidden — so dots MUST live as

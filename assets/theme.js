@@ -400,6 +400,28 @@
     goTo(i) {
       super.goTo(i);
       this._restartActiveDotFill();
+      this._refreshActiveSlideText();
+    }
+    _refreshActiveSlideText() {
+      // Flag the active carousel--block so its [data-transition-item]
+      // children pick up the fade-in animation rule. Blocks that are not
+      // active stay at the base (hidden) state — they fade out instantly
+      // as the slide translates away, which is fine at 0.4s slide speed.
+      if (!this._blocks) return;
+      this._blocks.forEach((block, idx) => {
+        block.setAttribute("data-active", idx === this._index ? "true" : "false");
+      });
+      // Force-restart the animation on every transition-item in the now-
+      // active block so the delay starts fresh per slide change.
+      const active = this._blocks[this._index];
+      if (!active) return;
+      const items = active.querySelectorAll("[data-transition-item]");
+      items.forEach((item) => {
+        item.style.animation = "none";
+        // eslint-disable-next-line no-unused-expressions
+        item.offsetWidth;
+        item.style.animation = "";
+      });
     }
     _restartActiveDotFill() {
       // CSS animations don't restart when an ancestor's [aria-current]

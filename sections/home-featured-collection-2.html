@@ -2,7 +2,19 @@
   home-featured-collection-2 — DONE ("Other Bundles")
 
   Architecture:
-    - Data source: product_list (merchant picks products manually)
+    - Data source: collection_picker — merchant picks ONE collection in the
+      editor; `section.settings.featured_collection` auto-hydrates to a
+      full collection object (.title, .handle, .id, .url, .products, etc.)
+      on the index template. Verified 2026-04-15 via probe section pushed
+      to the live store — see home-collection-probe revert commit 4832907
+      and docs page themes-2-0/architecture/settings/overview.md
+      ("Resource-Based Settings" section).
+    - Sort: applied at render time via `sort` + `reverse` helpers on
+      product.published_at / price / title, controlled by sort_by select.
+      "Collection order" (default) respects the collection's own default
+      sort from SHOPLINE admin (Products → Collections → Sort order), so
+      best-selling / manual / alphabetical are all reachable via that path.
+    - Max products: products_to_show caps how many cards render (4-20).
     - Carousel: <product-carousel> (see assets/theme.js — same recipe as #1)
     - NO variant swatches: the original source markup
       (extracted-sections/home/13-5d5ec4c6-edd2-49a0-a4a7-bdbcb6ecd372.html)
@@ -12,7 +24,26 @@
     - Bleed opt-out via data-container-width="6" (mistake #19)
 --}}
 
-{{#if section.settings.featured_products}}
+{{#if section.settings.featured_collection}}
+{{ assign 'raw_products' section.settings.featured_collection.products }}
+
+{{!-- Sort the array according to sort_by setting. Uses sort + reverse helpers. --}}
+{{#if section.settings.sort_by '==' 'newest'}}
+  {{ assign 'src_products' (reverse (sort raw_products 'published_at')) }}
+{{else if section.settings.sort_by '==' 'oldest'}}
+  {{ assign 'src_products' (sort raw_products 'published_at') }}
+{{else if section.settings.sort_by '==' 'price_asc'}}
+  {{ assign 'src_products' (sort raw_products 'price') }}
+{{else if section.settings.sort_by '==' 'price_desc'}}
+  {{ assign 'src_products' (reverse (sort raw_products 'price')) }}
+{{else if section.settings.sort_by '==' 'title_asc'}}
+  {{ assign 'src_products' (sort raw_products 'title') }}
+{{else if section.settings.sort_by '==' 'title_desc'}}
+  {{ assign 'src_products' (reverse (sort raw_products 'title')) }}
+{{else}}
+  {{ assign 'src_products' raw_products }}
+{{/if}}
+
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-collection">
   <div class="featured-collection--root" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="none" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-section-type="index_featured_collection" data-spacing-above="half" data-spacing-below="half">
     <div class="featured-collection--wrapper" data-container="section">
@@ -51,7 +82,7 @@
             </button>
 
             <div class="carousel--container">
-              {{#for section.settings.featured_products as |product|}}
+              {{#for src_products limit=section.settings.products_to_show as |product|}}
                 <div class="carousel--block" data-id="{{ section.id }}--block-{{ forloop.index }}" style="--media-height: 611; --block-height: 674;">
                   <div class="product-card--root" data-handle="{{ product.handle }}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-transition-item="{{ section.id }}">
                     <a href="{{ product.url }}" class="product-card--image-wrapper" tabindex="-1">
@@ -223,10 +254,32 @@
       "default": "/collections/bundles",
       "info": "Optional: wrap the heading in a link." },
 
-    { "type": "header",       "content": "Products" },
-    { "type": "product_list", "id": "featured_products",
-      "label": "Products", "limit": 20,
-      "info": "Pick the products to show. Order matters. Up to 20." },
+    { "type": "header", "content": "Products" },
+    {
+      "type":  "collection_picker",
+      "id":    "featured_collection",
+      "label": "Collection",
+      "info":  "Pick the collection to feature. All its products become available — cap how many render with \"Max products to show\" below."
+    },
+    { "type": "range", "id": "products_to_show",
+      "label": "Max products to show", "min": 4, "max": 20, "step": 1, "default": 8,
+      "info": "Caps how many cards render in the carousel (takes the first N after sort)." },
+    {
+      "type":    "select",
+      "id":      "sort_by",
+      "label":   "Sort products by",
+      "default": "collection",
+      "info":    "How to order products from the picked collection. 'Collection order' respects the collection's default sort set in SHOPLINE admin (best-selling, manual, alphabetical — whatever the merchant picked there). Other options re-sort at render time using product.published_at / price / title.",
+      "options": [
+        { "value": "collection", "label": "Collection order (admin default)" },
+        { "value": "newest",     "label": "Newest first" },
+        { "value": "oldest",     "label": "Oldest first" },
+        { "value": "price_asc",  "label": "Price: Low to High" },
+        { "value": "price_desc", "label": "Price: High to Low" },
+        { "value": "title_asc",  "label": "Title: A → Z" },
+        { "value": "title_desc", "label": "Title: Z → A" }
+      ]
+    },
 
     { "type": "header", "content": "View collection CTA" },
     { "type": "url",    "id": "show_more_url",  "label": "Button link",

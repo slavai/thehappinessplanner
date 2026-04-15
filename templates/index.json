@@ -169,12 +169,9 @@
         "columns_desktop": 4,
         "columns_mobile": 1,
         "background_color": "none",
-        "featured_products": [
-          "16074440842798295987320650",
-          "16074440841325088655130650",
-          "16074440840306879413120650",
-          "16074440839726052193430650"
-        ]
+        "featured_collection": "bundles",
+        "products_to_show": 8,
+        "sort_by": "collection"
       },
       "blocks": {}
     },

@@ -140,7 +140,7 @@
     },
     "s-13": {
       "disabled": false,
-      "type": "home-featured-collection-8",
+      "type": "home-featured-collection",
       "settings": {
         "heading": "Digital Journals",
         "heading_url": "/collections/digital-journals",
@@ -149,12 +149,9 @@
         "columns_desktop": 4,
         "columns_mobile": 1,
         "background_color": "light",
-        "featured_products": [
-          "16074440842798295987320650",
-          "16074440841325088655130650",
-          "16074440840306879413120650",
-          "16074440839726052193430650"
-        ]
+        "featured_collection": "digital-journals",
+        "products_to_show": 6,
+        "sort_by": "collection"
       },
       "blocks": {}
     },
@@ -183,20 +180,53 @@
     },
     "s-16": {
       "disabled": false,
-      "type": "home-featured-collection-3",
-      "settings": {},
+      "type": "home-featured-collection",
+      "settings": {
+        "heading": "Digital Planners & Agendas",
+        "heading_url": "/collections/digital-planners",
+        "show_more_url": "/collections/digital-planners",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "light",
+        "featured_collection": "digital-planners",
+        "products_to_show": 5,
+        "sort_by": "collection"
+      },
       "blocks": {}
     },
     "s-17": {
       "disabled": false,
-      "type": "home-featured-collection-4",
-      "settings": {},
+      "type": "home-featured-collection",
+      "settings": {
+        "heading": "Standard Printables",
+        "heading_url": "/collections/standard-printables",
+        "show_more_url": "/collections/standard-printables",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "none",
+        "featured_collection": "standard-printables",
+        "products_to_show": 6,
+        "sort_by": "collection"
+      },
       "blocks": {}
     },
     "s-18": {
       "disabled": false,
-      "type": "home-featured-collection-5",
-      "settings": {},
+      "type": "home-featured-collection",
+      "settings": {
+        "heading": "Premium Printables",
+        "heading_url": "/collections/premium-printables-1",
+        "show_more_url": "/collections/premium-printables-1",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "light",
+        "featured_collection": "premium-printables-1",
+        "products_to_show": 12,
+        "sort_by": "collection"
+      },
       "blocks": {}
     },
     "s-19": {
@@ -219,14 +249,36 @@
     },
     "s-22": {
       "disabled": false,
-      "type": "home-featured-collection-6",
-      "settings": {},
+      "type": "home-featured-collection",
+      "settings": {
+        "heading": "Guided Journals (sold out)",
+        "heading_url": "/collections/guided-journals",
+        "show_more_url": "/collections/guided-journals",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "accent-2",
+        "featured_collection": "guided-journals",
+        "products_to_show": 6,
+        "sort_by": "collection"
+      },
       "blocks": {}
     },
     "s-23": {
       "disabled": false,
-      "type": "home-featured-collection-7",
-      "settings": {},
+      "type": "home-featured-collection",
+      "settings": {
+        "heading": "The 100-Day Planner (sold out)",
+        "heading_url": "/collections/100-day-planner",
+        "show_more_url": "/collections/100-day-planner",
+        "show_more_text": "View collection",
+        "columns_desktop": 4,
+        "columns_mobile": 1,
+        "background_color": "light",
+        "featured_collection": "100-day-planner",
+        "products_to_show": 6,
+        "sort_by": "collection"
+      },
       "blocks": {}
     },
     "s-24": {

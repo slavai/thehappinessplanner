@@ -2,14 +2,6 @@
   "name": "index.html",
   "layout": "theme",
   "sections": {
-    "s-01": {
-      "disabled": false,
-      "type": "debug-collection-probes",
-      "settings": {
-        "test_handle": "digital-journals"
-      },
-      "blocks": {}
-    },
     "s-02": {
       "disabled": false,
       "type": "home-slideshow-1",
@@ -254,7 +246,6 @@
     }
   },
   "order": [
-    "s-01",
     "s-02",
     "s-03",
     "s-04",

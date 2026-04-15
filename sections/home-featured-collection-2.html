@@ -24,17 +24,6 @@
     - Bleed opt-out via data-container-width="6" (mistake #19)
 --}}
 
-{{!-- DEBUG: dump raw setting value + hydration attempt (remove after diagnosis) --}}
-<div id="debug-fc2-{{ section.id }}" style="padding:12px; background:#ffe082; border:2px solid #f57f17; margin:8px 0; font-family:monospace; font-size:12px;">
-  <strong>DEBUG home-featured-collection-2:</strong><br>
-  raw setting value = "{{ section.settings.featured_collection }}"<br>
-  .title = "{{ section.settings.featured_collection.title }}"<br>
-  .handle = "{{ section.settings.featured_collection.handle }}"<br>
-  .id = "{{ section.settings.featured_collection.id }}"<br>
-  .products_count = {{ section.settings.featured_collection.products_count }}<br>
-  truthy-branch: {{#if section.settings.featured_collection}}YES{{else}}NO{{/if}}
-</div>
-
 {{#if section.settings.featured_collection}}
 {{ assign 'raw_products' section.settings.featured_collection.products }}
 

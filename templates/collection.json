@@ -2,9 +2,9 @@
   "name": "collection.html",
   "layout": "theme",
   "sections": {
-    "header": { "type": "collection-header", "settings": {} },
-    "nav":    { "type": "collection-navigation", "settings": {} },
-    "main":   { "type": "collection-main", "settings": {} }
+    "collection_header": { "type": "collection-header", "settings": {} },
+    "nav":               { "type": "collection-navigation", "settings": {} },
+    "main":              { "type": "collection-main", "settings": {} }
   },
-  "order": ["header", "nav", "main"]
+  "order": ["collection_header", "nav", "main"]
 }

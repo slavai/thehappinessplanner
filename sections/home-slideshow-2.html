@@ -1,4 +1,4 @@
-<div id="shopline-section-{{ section.id }}" class="shopify-section section--slideshow"><slideshow-carousel class="carousel--root" data-section-id="{{ section.id }}" data-auto-rotate="{{ section.settings.auto_rotate }}" data-background-color="none" data-border="none" data-columns="1" data-container-width="6" data-mobile-full-width="true" data-mobile-columns="1" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-spacing-above="none" data-spacing-around-blocks="false" data-spacing-below="none" data-transition-type="slide" data-header-overlap-compatible="" data-rotate-frequency="{{ section.settings.rotate_frequency }}" style="--blocks-per-slide: 1; --blocks-per-slide-mobile: 1; --total-slides: {{ section.blocks.size }}; --total-slides-mobile: {{ section.blocks.size }}; --total-spaces: {{ section.blocks.size }}; --total-spaces-mobile: {{ section.blocks.size }}; --rotate-frequency: {{ section.settings.rotate_frequency }}s; --slide-height: {{ section.settings.slide_height }}px; --slide-pos: 0%;" data-first-slide="true" data-last-slide="true"> <div class="carousel--wrapper"><div class="carousel--container">{{#for section.blocks as |block|}}<div class="carousel--block" data-id="{{ section.id }}--{{ block.id }}" style="--media-height: {{ section.settings.slide_height }}; --block-height: {{ section.settings.slide_height }};">
+<div id="shopline-section-{{ section.id }}" class="shopify-section section--slideshow"><slideshow-carousel class="carousel--root" data-section-id="{{ section.id }}" data-auto-rotate="{{ section.settings.auto_rotate }}" data-background-color="none" data-border="none" data-columns="1" data-container-width="6" data-mobile-full-width="true" data-mobile-columns="1" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-spacing-above="none" data-spacing-around-blocks="false" data-spacing-below="none" data-transition-type="slide" data-header-overlap-compatible="" data-rotate-frequency="{{ section.settings.rotate_frequency }}" style="--blocks-per-slide: 1; --blocks-per-slide-mobile: 1; --total-slides: {{ section.blocks.size }}; --total-slides-mobile: {{ section.blocks.size }}; --total-spaces: {{ section.blocks.size }}; --total-spaces-mobile: {{ section.blocks.size }}; --rotate-frequency: {{ section.settings.rotate_frequency }}s; --slide-height: {{ section.settings.slide_height }}px; --slide-pos: 0%;" data-first-slide="true" data-last-slide="true"> <div class="carousel--wrapper"><button class="carousel--prev" aria-label="previous" aria-disabled="true" data-mq="medium-large" tabindex="-1"><div class="nav-arrow" data-direction="left"><div></div><div></div><div></div></div></button><div class="carousel--container">{{#for section.blocks as |block|}}<div class="carousel--block" data-id="{{ section.id }}--{{ block.id }}" style="--media-height: {{ section.settings.slide_height }}; --block-height: {{ section.settings.slide_height }};">
 <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="true" data-overlap="" data-text-position="overlay"><div class="featured-content--container" data-background-color="transparent"><div class="featured-content--image"><picture class="image--root " data-background="false" data-display-type="medium" data-full-width="true" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-overlay-style="darken-bottom" data-parallax="" data-overlay-style="darken-bottom" style="--aspect-ratio:1.7857;--mobile-aspect-ratio:1.5345;">{{#if block.settings.image}}<img src="{{ image_url block.settings.image width=1800 }}" alt="{{ default block.settings.image.alt block.settings.heading }}" srcset="{{ image_url block.settings.image width=400 }} 400w, {{ image_url block.settings.image width=600 }} 600w, {{ image_url block.settings.image width=800 }} 800w, {{ image_url block.settings.image width=1000 }} 1000w, {{ image_url block.settings.image width=1200 }} 1200w, {{ image_url block.settings.image width=1400 }} 1400w, {{ image_url block.settings.image width=1600 }} 1600w, {{ image_url block.settings.image width=1800 }} 1800w" width="3069" height="2000" loading="lazy" sizes="(max-width: 767px) 100vw, 100vw" fetchpriority="auto" draggable="false">{{else}}<img src="{{ asset_url 'images/tablet3_b8a344dc-5170-4b38-a752-eae95ea454d6.webp' }}" alt="{{ block.settings.heading }}" width="3069" height="2000" loading="lazy" sizes="(max-width: 767px) 100vw, 100vw" fetchpriority="auto" draggable="false">{{/if}}
 </picture></div><div class="stacked-text--root" data-text-color="{{ block.settings.text_color }}" data-mobile-text-color="{{ block.settings.text_color }}" data-mobile-y-alignment="bottom" data-x-alignment="{{ block.settings.text_x_alignment }}" data-y-alignment="{{ block.settings.text_y_alignment }}"> <div class="stacked-text--wrapper" data-text-style="none" data-text-width="small" data-background-color="transparent" data-translucent="true" data-container="block" data-transition-container="{{ section.id }}--{{ block.id }}" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="{{ section.settings.subheading_delay_ms }}">{{#if block.settings.heading}}<div data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: {{ section.settings.heading_delay_ms }}ms;" data-transition-active="true" data-transition-finished="true">{{#if block.settings.link}} <h2 class="stacked-text--title" data-item="block-heading"><a href="{{ block.settings.link }}"{{#if block.settings.new_tab}} target="_blank" rel="noopener"{{/if}}>{{ block.settings.heading }}</a></h2> {{else}} <h2 class="stacked-text--title" data-item="block-heading">{{ block.settings.heading }}</h2> {{/if}}</div>{{/if}}{{#if block.settings.subheading}}<div class="stacked-text--description" data-item="featured-paragraph" data-mq="medium-large" data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: {{ section.settings.subheading_delay_ms }}ms;" data-transition-active="true" data-transition-finished="true"><p>{{ block.settings.subheading }}</p></div>{{/if}}</div> </div></div></div></div>{{/for}}</div>
 
@@ -17,6 +17,7 @@
 </div>
 {{/if}}
 
+<button class="carousel--next" aria-label="next" aria-disabled="false" data-mq="medium-large" tabindex="0"><div class="nav-arrow" data-direction="right"><div></div><div></div><div></div></div></button>
 </div>
 </slideshow-carousel> </div>
 
@@ -43,6 +44,26 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  /* Arrow navigation — mirrors home-slideshow-1. .nav-arrow class is
+     styled globally in theme.css (three-line chevron). */
+  #shopline-section-{{ section.id }} .carousel--prev,
+  #shopline-section-{{ section.id }} .carousel--next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  #shopline-section-{{ section.id }} .carousel--prev { left: 20px; }
+  #shopline-section-{{ section.id }} .carousel--next { right: 20px; }
+  #shopline-section-{{ section.id }} .carousel--prev[aria-disabled="true"],
+  #shopline-section-{{ section.id }} .carousel--next[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   /* Per-slide text fade-in. Base state is hidden; theme.js marks the

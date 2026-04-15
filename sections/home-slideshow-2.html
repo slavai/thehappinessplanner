@@ -31,22 +31,18 @@
     transition: transform 0.4s ease;
   }
   #shopline-section-{{ section.id }} .carousel--container > .carousel--block {
-    flex: 0 0 100%;
-    width: 100%;
+    /* Let CarouselBase._setupLayout() drive the per-block pixel width via
+       inline `style="width: Npx"`. We must NOT force flex: 0 0 100% here
+       because that pins every block to the full container width (N× the
+       wrapper width when there are N slides), pushing all non-first slides
+       offscreen to the right. Use flex: 0 0 auto so the inline width wins. */
+    flex: 0 0 auto;
     min-width: 0;
   }
   #shopline-section-{{ section.id }} .carousel--block img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  /* theme.css sets `.carousel--block { flex: 0 0 100% }` which overrides the
-     inline `width: 1200px` that CarouselBase._setupLayout() writes, because
-     flex-basis takes precedence over width in flex layouts. Without this
-     override each block expands to 100% of the 2×-wide container (i.e.
-     2400px) and the second slide's text ends up offscreen to the right. */
-  #shopline-section-{{ section.id }} .carousel--block {
-    flex: 0 0 auto;
   }
 
   /* Per-slide text fade-in. Base state is hidden; theme.js marks the

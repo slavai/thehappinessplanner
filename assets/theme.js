@@ -267,6 +267,8 @@
 
   // --- stub custom elements (no behavior needed, just define to silence
   //     upgrade warnings and allow CSS to apply normally) ----------------
+  // Note: product-zoom-element and modal-trigger have real classes registered
+  // later in this file — do NOT stub them here because `define()` is first-wins.
   [
     "header-element",
     "drawer-element",
@@ -282,9 +284,7 @@
     "tabs-element",
     "product-price-element",
     "product-video-element",
-    "product-zoom-element",
     "product-thumbs-element",
-    "modal-trigger",
     "modal-element",
   ].forEach((n) => define(n, class extends HTMLElement {}));
 

@@ -1,6 +1,31 @@
+{{!--
+  home-featured-product — DONE (generic)
+
+  ONE component for home featured-product slots: s-08 (Peace of Mind Journal),
+  s-11 (2026 Planner), s-15 (Confidence eBook), s-20 (App Subscription).
+  Each slot picks its own product, badge text, background color, and
+  border style via settings in templates/index.json.
+
+  Architecture:
+    - Product picked via `product_list` setting with limit=1
+    - {{#form "product" product}} wraps variant picker + quantity + buy
+      buttons. Mandatory for SHOPLINE AJAX cart + variant resolution.
+    - Desktop gallery: thumbnails left column, main image with product-zoom
+    - Variant picker shown only when product has multiple variants
+      ({{#unless product.has_only_default_variant}})
+    - Buy button swaps between active / sold-out states based on
+      product.available
+
+  Inline script:
+    - Thumbnail click → swap main image active state
+    - Variant radio click → toggle is-selected class. Hidden
+      <input name="id"> value update is assumed to be handled by
+      <product-options-element> custom element; flagged as potential
+      risk if theme.js does not implement that element.
+--}}
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--featured-product">
 {{#for section.settings.products limit=1 as |product|}}
-<div class="main-product--root" data-product-id="{{ product.id }}" data-section-id="{{ section.id }}" data-background-color="light" data-border="both" data-container-width="4" data-handle="{{ product.handle }}" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="left" style="--text-column-width:375px;--media-gap:8px;--thumbnail-width:80px;">
+<div class="main-product--root" data-product-id="{{ product.id }}" data-section-id="{{ section.id }}" data-background-color="{{ section.settings.background_color }}" data-border="{{ section.settings.border }}" data-container-width="4" data-handle="{{ product.handle }}" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="left" style="--text-column-width:375px;--media-gap:8px;--thumbnail-width:80px;">
   <div class="main-product--wrapper">
     <div class="main-product--desktop" data-mq="medium-large">
       <product-media-variants class="product-media--variants--root" data-id="{{ product.id }}" data-layout="thumbnails" data-variant-scroll="false">
@@ -154,45 +179,62 @@
 
 {{#schema}}
 {
-  "name": "Home Featured Product 1",
+  "name": "Home Featured Product",
   "tag": "section",
   "class": "section--featured-product",
   "settings": [
+    { "type": "header", "content": "Product" },
     {
-      "type": "product_list",
-      "id": "products",
+      "type":  "product_list",
+      "id":    "products",
       "label": "Product",
-      "limit": 1
+      "limit": 1,
+      "info":  "Pick ONE product to feature. If empty, a placeholder renders in its place."
+    },
+
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "badge_text",
+      "label":   "Badge text (overline)",
+      "default": "",
+      "info":    "Small label above the product heading. Leave empty to hide." },
+    { "type": "checkbox", "id": "show_vendor",
+      "label":   "Show vendor",
+      "default": true },
+    { "type": "checkbox", "id": "show_description",
+      "label":   "Show product description",
+      "default": false },
+    { "type": "text", "id": "add_to_cart_text",
+      "label":   "Add to cart button text",
+      "default": "Add to cart" },
+    { "type": "text", "id": "sold_out_text",
+      "label":   "Sold out button text",
+      "default": "Sold out" },
+
+    { "type": "header", "content": "Section appearance" },
+    {
+      "type":    "select",
+      "id":      "background_color",
+      "label":   "Background color",
+      "default": "light",
+      "options": [
+        { "value": "none",     "label": "None" },
+        { "value": "light",    "label": "Light" },
+        { "value": "accent-1", "label": "Accent 1" },
+        { "value": "accent-2", "label": "Accent 2" },
+        { "value": "dark",     "label": "Dark" }
+      ]
     },
     {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Badge text",
-      "default": "Customers' favorite 💖"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "label": "Show vendor",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_description",
-      "label": "Show description",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "add_to_cart_text",
-      "label": "Add to cart button text",
-      "default": "Add to cart"
-    },
-    {
-      "type": "text",
-      "id": "sold_out_text",
-      "label": "Sold out text",
-      "default": "Sold out"
+      "type":    "select",
+      "id":      "border",
+      "label":   "Section border",
+      "default": "none",
+      "options": [
+        { "value": "none",   "label": "None" },
+        { "value": "top",    "label": "Top only" },
+        { "value": "bottom", "label": "Bottom only" },
+        { "value": "both",   "label": "Top and bottom" }
+      ]
     }
   ]
 }

@@ -83,11 +83,15 @@
     },
     "s-08": {
       "disabled": false,
-      "type": "home-featured-product-1",
+      "type": "home-featured-product",
       "settings": {
-        "product": "16074440842642771216040650",
-        "show_vendor": false,
-        "add_to_cart_text": "ФAdd to cart",
+        "badge_text": "Customers' favorite 💖",
+        "show_vendor": true,
+        "show_description": false,
+        "add_to_cart_text": "Add to cart",
+        "sold_out_text": "Sold out",
+        "background_color": "light",
+        "border": "both",
         "products": [
           "16074440842642771216040650"
         ]
@@ -117,13 +121,15 @@
     },
     "s-11": {
       "disabled": false,
-      "type": "home-featured-product-2",
+      "type": "home-featured-product",
       "settings": {
         "badge_text": "The 2026 Planner",
         "show_vendor": false,
         "show_description": false,
         "add_to_cart_text": "Add to cart",
         "sold_out_text": "Sold out",
+        "background_color": "accent-1",
+        "border": "none",
         "products": [
           "16074440842642771216040650"
         ]
@@ -204,8 +210,17 @@
     },
     "s-15": {
       "disabled": false,
-      "type": "home-featured-product-3",
-      "settings": {},
+      "type": "home-featured-product",
+      "settings": {
+        "badge_text": "",
+        "show_vendor": true,
+        "show_description": false,
+        "add_to_cart_text": "Add to cart",
+        "sold_out_text": "Sold out",
+        "background_color": "none",
+        "border": "none",
+        "products": []
+      },
       "blocks": {}
     },
     "s-16": {
@@ -276,8 +291,17 @@
     },
     "s-20": {
       "disabled": false,
-      "type": "home-featured-product-4",
-      "settings": {},
+      "type": "home-featured-product",
+      "settings": {
+        "badge_text": "Available in multiple languages.",
+        "show_vendor": false,
+        "show_description": false,
+        "add_to_cart_text": "Add to cart",
+        "sold_out_text": "Sold out",
+        "background_color": "light",
+        "border": "none",
+        "products": []
+      },
       "blocks": {}
     },
     "s-21": {

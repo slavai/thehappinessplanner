@@ -2,6 +2,12 @@
   "name": "index.html",
   "layout": "theme",
   "sections": {
+    "s-01-probe": {
+      "disabled": false,
+      "type": "home-collection-probe",
+      "settings": {},
+      "blocks": {}
+    },
     "s-02": {
       "disabled": false,
       "type": "home-slideshow-1",
@@ -246,6 +252,7 @@
     }
   },
   "order": [
+    "s-01-probe",
     "s-02",
     "s-03",
     "s-04",

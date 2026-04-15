@@ -40,6 +40,14 @@
     height: 100%;
     object-fit: cover;
   }
+  /* theme.css sets `.carousel--block { flex: 0 0 100% }` which overrides the
+     inline `width: 1200px` that CarouselBase._setupLayout() writes, because
+     flex-basis takes precedence over width in flex layouts. Without this
+     override each block expands to 100% of the 2×-wide container (i.e.
+     2400px) and the second slide's text ends up offscreen to the right. */
+  #shopline-section-{{ section.id }} .carousel--block {
+    flex: 0 0 auto;
+  }
 
   /* Per-slide text fade-in. Base state is hidden; theme.js marks the
      active .carousel--block with data-active="true" in goTo(), which

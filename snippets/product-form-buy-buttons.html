@@ -1,0 +1,29 @@
+<div class="product-form--block" data-block-type="buy-buttons" data-fit-together="false">
+  <product-buy-buttons-element class="product-buy-buttons--root" data-id="{{ section.id }}_{{ product.id }}" data-cart-type="drawer" data-translations="" data-container="block">
+    <button class="product-buy-buttons--primary" data-enabled="true" aria-busy="false" data-text="Add to cart" data-item="secondary-button" data-transition-button="">
+      <span class="product-buy-buttons--cta-text">Add to cart</span>
+      <span class="product-buy-buttons--spinner">
+        <svg class="icon--root icon--spinner" data-invertible="false">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+        </svg>
+      </span>
+    </button>
+    <div class="product-buy-buttons--smart" aria-hidden="false" data-transition-button=""></div>
+    <div class="product-buy-buttons--drawer" data-background-color="none" data-translucent="true" data-mq="small" aria-hidden="false" tabindex="-1">
+      <div class="product-buy-buttons--drawer-info-container">
+        <div class="product-buy-buttons--drawer-info">
+          <div data-item="paragraph">{{ product.title }}</div>
+        </div>
+      </div>
+      <button class="product-buy-buttons--primary" data-enabled="true" aria-busy="false" data-text="Add to cart" data-item="button" data-transition-button="">
+        <span class="product-buy-buttons--cta-text">Add to cart</span>
+        <span class="product-buy-buttons--spinner">
+          <svg class="icon--root icon--spinner" data-invertible="false">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+          </svg>
+        </span>
+      </button>
+    </div>
+    <input type="hidden" class="product-buy-buttons--input" name="id" data-id="{{ product.selected_or_first_available_variant.id }}" data-sku="{{ product.selected_or_first_available_variant.sku }}" data-management="shopify" data-policy="continue" value="{{ product.selected_or_first_available_variant.id }}">
+  </product-buy-buttons-element>
+</div>

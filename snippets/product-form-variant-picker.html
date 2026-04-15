@@ -1,0 +1,19 @@
+<div class="product-form--block" data-block-type="options" data-fit-together="false">
+  {{#unless product.has_only_default_variant}}
+  <product-options-element class="product-options--root" data-variants-json='{{{ json product.variants }}}'>
+    {{#for product.options_with_values as |option|}}
+    <fieldset class="product-options--fieldset" data-option-index="{{ forloop.index0 }}">
+      <legend class="product-options--legend" data-item="nav-text">{{ option.name }}</legend>
+      <div class="product-options--values">
+        {{#for option.values as |value|}}
+        <label class="product-options--value">
+          <input type="radio" name="options[{{ option.name }}]" value="{{ value }}" data-option-name="{{ option.name }}" data-option-index="{{ forloop.parentloop.index0 }}"{{#if forloop.first}} checked{{/if}}>
+          <span>{{ value }}</span>
+        </label>
+        {{/for}}
+      </div>
+    </fieldset>
+    {{/for}}
+  </product-options-element>
+  {{/unless}}
+</div>

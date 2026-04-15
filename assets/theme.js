@@ -416,18 +416,28 @@
       radios.forEach((r) => r.addEventListener("change", () => this._onChange()));
     }
     _onChange() {
-      const selected = {};
-      this.querySelectorAll("input[type='radio']:checked").forEach((r) => {
-        const key = r.getAttribute("data-option-name") || r.getAttribute("data-option-index");
-        if (key != null) selected[key] = r.value;
-      });
       if (this._variants.length === 0) return;
+      // Collect selected option values indexed by position in product.options_with_values.
+      // Each radio carries data-option-index set from the outer loop (product options).
+      const selected = [];
+      this.querySelectorAll("input[type='radio']:checked").forEach((r) => {
+        const idx = parseInt(r.getAttribute("data-option-index") || "-1", 10);
+        if (idx >= 0) selected[idx] = r.value;
+      });
+      // Determine how many options this product has by inspecting any variant.
+      const optionCount = (this._variants[0] && Array.isArray(this._variants[0].options))
+        ? this._variants[0].options.length
+        : 0;
+      // Require all options to be picked before attempting a match.
+      for (let i = 0; i < optionCount; i++) {
+        if (selected[i] == null) return;
+      }
       const match = this._variants.find((v) => {
-        if (!v || !v.options) return false;
-        return Object.keys(selected).every((k, i) => {
-          const ov = Array.isArray(v.options) ? v.options[i] : v.options[k];
-          return ov === selected[k];
-        });
+        if (!v || !Array.isArray(v.options)) return false;
+        for (let i = 0; i < optionCount; i++) {
+          if (v.options[i] !== selected[i]) return false;
+        }
+        return true;
       });
       if (!match) return;
       const root = this.closest(".main-product--root, .product-form, .featured-product--root, [data-section-id]") || document;
@@ -468,10 +478,11 @@
       const btn = this.querySelector(".product-buy-buttons--primary");
       if (btn) btn.setAttribute("aria-busy", "true");
       try {
-        const r = await fetch("/cart/add.js", {
+        const r = await fetch((window.routes && window.routes.cart_add_url) || "/cart/add", {
           method: "POST",
+          credentials: "same-origin",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ id, quantity }),
+          body: JSON.stringify({ items: [{ id: String(id), quantity: Number(quantity) }] }),
         });
         if (r.ok) {
           const badge = document.querySelector("[data-cart-count]");
@@ -743,4 +754,245 @@
     }
   }
   define("product-carousel", ProductCarousel);
+
+  // --- quantity-selector (+/- on product-form qty input) ----------------
+  class QuantitySelector extends HTMLElement {
+    connectedCallback() {
+      const input = this.querySelector(".quantity-selector--input");
+      if (!input) return;
+      const min = parseInt(input.getAttribute("min") || "1", 10);
+      const setVal = (v) => {
+        const n = Math.max(min, parseInt(v, 10) || min);
+        input.value = n;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      };
+      const minus = this.querySelector(".quantity-selector--minus");
+      const plus = this.querySelector(".quantity-selector--plus");
+      if (minus) minus.addEventListener("click", (e) => { e.preventDefault(); setVal((parseInt(input.value, 10) || min) - 1); });
+      if (plus) plus.addEventListener("click", (e) => { e.preventDefault(); setVal((parseInt(input.value, 10) || min) + 1); });
+      input.addEventListener("blur", () => setVal(input.value));
+    }
+  }
+  define("quantity-selector", QuantitySelector);
+
+  // --- modal-trigger (image lightbox) -----------------------------------
+  class ModalTrigger extends HTMLElement {
+    connectedCallback() {
+      this.style.cursor = "zoom-in";
+      this.addEventListener("click", (e) => {
+        const img = this.querySelector("img");
+        if (!img) return;
+        e.preventDefault();
+        this._openLightbox(img.currentSrc || img.src);
+      });
+    }
+    _openLightbox(src) {
+      let overlay = document.getElementById("__product-lightbox");
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "__product-lightbox";
+        overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;";
+        const bigImg = document.createElement("img");
+        bigImg.style.cssText = "max-width:92vw;max-height:92vh;object-fit:contain;";
+        overlay.appendChild(bigImg);
+        overlay.addEventListener("click", () => overlay.remove());
+        document.addEventListener("keydown", function esc(e) {
+          if (e.key === "Escape") { overlay.remove(); document.removeEventListener("keydown", esc); }
+        });
+        document.body.appendChild(overlay);
+      }
+      overlay.querySelector("img").src = src;
+    }
+  }
+  define("modal-trigger", ModalTrigger);
+
+  // --- product-zoom-element (hover lens zoom on hi-res image) -----------
+  class ProductZoomElement extends HTMLElement {
+    connectedCallback() {
+      const wrapper = this.querySelector(".product-zoom--wrapper");
+      const enlarged = this.querySelector(".product-zoom--enlarged");
+      if (!wrapper || !enlarged) return;
+      const magnify = parseFloat(this.getAttribute("data-magnify") || "1.7");
+      this.style.position = this.style.position || "relative";
+      this.style.overflow = "hidden";
+      enlarged.style.position = "absolute";
+      enlarged.style.display = "none";
+      enlarged.style.pointerEvents = "none";
+      enlarged.style.left = "0";
+      enlarged.style.top = "0";
+      enlarged.style.transformOrigin = "0 0";
+      this.addEventListener("mouseenter", () => {
+        enlarged.style.display = "block";
+        enlarged.style.width = (wrapper.offsetWidth * magnify) + "px";
+        enlarged.style.height = "auto";
+      });
+      this.addEventListener("mouseleave", () => {
+        enlarged.style.display = "none";
+      });
+      this.addEventListener("mousemove", (e) => {
+        const rect = wrapper.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const tx = -x * (enlarged.offsetWidth - wrapper.offsetWidth);
+        const ty = -y * (enlarged.offsetHeight - wrapper.offsetHeight);
+        enlarged.style.transform = `translate(${tx}px,${ty}px)`;
+      });
+    }
+  }
+  define("product-zoom-element", ProductZoomElement);
+
+  // --- product-recommendations-element (AJAX fetch + render) ------------
+  // Documented response shape (verified against SHOPLINE docs):
+  //   { products: [ { id, title, handle, images:[url...], featured_image:url,
+  //                   price:Long /*subunits*/, compare_at_price:Long, sold_out:Boolean, ... } ] }
+  // "url" in the response is unreliable (sample shows image URL) — always build from handle.
+  // Prices are Long in currency subunits and NOT pre-formatted — format client-side.
+  class ProductRecommendationsElement extends HTMLElement {
+    async connectedCallback() {
+      const productId = this.getAttribute("data-product-id");
+      const intent = this.getAttribute("data-intent") || "related";
+      const limit = this.getAttribute("data-max-products") || "4";
+      if (!productId) return;
+      try {
+        const url = `/api/product/recommendations/products.json?product_id=${encodeURIComponent(productId)}&intent=${encodeURIComponent(intent)}&limit=${encodeURIComponent(limit)}`;
+        const r = await fetch(url, {
+          credentials: "same-origin",
+          headers: { Accept: "application/json" },
+        });
+        if (!r.ok) { this.setAttribute("aria-hidden", "true"); return; }
+        const data = await r.json();
+        const products = (data && Array.isArray(data.products)) ? data.products : [];
+        const container = this.querySelector("[data-products-container], .complementary-products--container, .related-products--grid");
+        if (!container) return;
+        if (products.length === 0) { this.setAttribute("aria-hidden", "true"); return; }
+        this.setAttribute("aria-hidden", "false");
+        container.innerHTML = products.map((p) => this._cardHTML(p)).join("");
+      } catch (err) {
+        this.setAttribute("aria-hidden", "true");
+      }
+    }
+    _formatPrice(subunits) {
+      if (typeof subunits !== "number" || !isFinite(subunits)) return "";
+      const whole = (subunits / 100).toFixed(2);
+      // Minimal formatting — shop currency symbol not exposed to JS context.
+      // Sites can override via a global `window.__formatMoney(subunits)` if needed.
+      if (typeof window.__formatMoney === "function") return window.__formatMoney(subunits);
+      return "$" + whole + " USD";
+    }
+    _escape(s) {
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+    _cardHTML(p) {
+      // featured_image and images[0] are strings (CDN URLs) per docs.
+      const img = (typeof p.featured_image === "string" && p.featured_image)
+        || (Array.isArray(p.images) && p.images[0])
+        || "";
+      const handle = p.handle || "";
+      const url = handle ? `/products/${encodeURIComponent(handle)}` : "#";
+      const title = this._escape(p.title);
+      const titleAttr = this._escape(p.title);
+      const price = this._formatPrice(p.price);
+      const comparePrice = (typeof p.compare_at_price === "number" && p.compare_at_price > p.price)
+        ? this._formatPrice(p.compare_at_price)
+        : "";
+      const soldOut = p.sold_out === true;
+      return `<div class="product-card--root" data-handle="${this._escape(handle)}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural">` +
+        `<a href="${url}" class="product-card--image-wrapper" tabindex="-1" aria-label="${titleAttr}">` +
+          (img ? `<img src="${this._escape(img)}" alt="${titleAttr}" class="product-card--image" loading="lazy">` : "") +
+        `</a>` +
+        `<div class="product-card--info" data-container="block">` +
+          `<a href="${url}" class="product-card--title-link"><div class="product-card--title" data-item="paragraph">${title}</div></a>` +
+          (price
+            ? `<div class="product-card--price" data-item="paragraph">` +
+                `<span class="money">${price}</span>` +
+                (comparePrice ? ` <span class="money product-card--compare">${comparePrice}</span>` : "") +
+                (soldOut ? ` <span class="product-card--sold-out">Sold out</span>` : "") +
+              `</div>`
+            : "") +
+        `</div>` +
+      `</div>`;
+    }
+  }
+  define("product-recommendations-element", ProductRecommendationsElement);
+
+  // --- carousel-nav-arrow (mobile main-product-carousel prev/next) ------
+  class CarouselNavArrow extends HTMLElement {
+    connectedCallback() {
+      const id = this.getAttribute("data-id");
+      if (!id) return;
+      const carousel = document.querySelector(`main-product-carousel[data-id="${id}"]`);
+      if (!carousel) return;
+      const blocks = carousel.querySelectorAll(".carousel--block");
+      if (blocks.length === 0) return;
+      const prev = this.querySelector(".carousel-nav-arrow--prev");
+      const next = this.querySelector(".carousel-nav-arrow--next");
+      const cur = this.querySelector(".carousel-nav-arrow--current");
+      const total = this.querySelector(".carousel-nav-arrow--total");
+      if (total) total.setAttribute("data-mobile-value", String(blocks.length));
+      let current = 0;
+      const setIdx = (n) => {
+        current = Math.max(0, Math.min(blocks.length - 1, n));
+        if (cur) cur.setAttribute("data-value", String(current + 1));
+        blocks[current].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+        if (prev) prev.setAttribute("aria-disabled", current === 0 ? "true" : "false");
+        if (next) next.setAttribute("aria-disabled", current === blocks.length - 1 ? "true" : "false");
+      };
+      if (prev) prev.addEventListener("click", () => setIdx(current - 1));
+      if (next) next.addEventListener("click", () => setIdx(current + 1));
+      setIdx(0);
+    }
+  }
+  define("carousel-nav-arrow", CarouselNavArrow);
+
+  // --- share-url (copy URL to clipboard) --------------------------------
+  class ShareUrl extends HTMLElement {
+    connectedCallback() {
+      const spans = this.querySelectorAll(":scope > span[aria-hidden]");
+      this.style.cursor = "pointer";
+      this.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+        } catch (err) { return; }
+        spans.forEach((s) => s.setAttribute("aria-hidden", s.getAttribute("aria-hidden") === "true" ? "false" : "true"));
+        setTimeout(() => {
+          spans.forEach((s) => s.setAttribute("aria-hidden", s.getAttribute("aria-hidden") === "true" ? "false" : "true"));
+        }, 1500);
+      });
+    }
+  }
+  define("share-url", ShareUrl);
+
+  // --- product-pickup-element (no-op stub, container is aria-hidden) ----
+  class ProductPickupElement extends HTMLElement {
+    connectedCallback() { /* placeholder */ }
+  }
+  define("product-pickup-element", ProductPickupElement);
+
+  // --- Delegated social share builder ------------------------------------
+  // Product-main template emits placeholder <a data-share="PLATFORM"> links.
+  // Build the real href at click time so title/url get properly encoded.
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a[data-share]");
+    if (!link) return;
+    e.preventDefault();
+    const platform = link.getAttribute("data-share");
+    const pageUrl = window.location.href;
+    const title = document.title.split(/[–|]/)[0].trim() || document.title;
+    const imgEl = document.querySelector("product-media-variants .product-media--root[data-active='true'] img, product-media-variants .product-media--root img");
+    const imgSrc = imgEl ? (imgEl.currentSrc || imgEl.src) : "";
+    const u = encodeURIComponent(pageUrl);
+    const t = encodeURIComponent(title);
+    const img = encodeURIComponent(imgSrc);
+    let href = "";
+    if (platform === "facebook") href = `https://facebook.com/sharer.php?u=${u}&t=${t}`;
+    else if (platform === "x" || platform === "twitter") href = `https://twitter.com/intent/tweet?text=${encodeURIComponent("Check out this product: ")}${u}`;
+    else if (platform === "pinterest") href = `https://pinterest.com/pin/create/button/?url=${u}&media=${img}&description=${t}`;
+    else if (platform === "email") href = `mailto:?subject=${t}&body=${u}`;
+    if (href) window.open(href, platform === "email" ? "_self" : "_blank", "noopener");
+  });
 })();

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap">
   {{ stylesheet_tag (asset_url 'theme.css') }}
   <script>
-    window.routes = { cart_change_url: "{{ routes.cart_change_url }}", cart_url: "/cart" };
+    window.routes = { cart_add_url: "{{ routes.cart_add_url }}", cart_change_url: "{{ routes.cart_change_url }}", cart_url: "/cart" };
     // Stamped.io auto-resolves credentials from window.Shopify.shop — shim it
     // so Stamped's getappkey call targets the correct registered shop.
     window.Shopify = window.Shopify || {};

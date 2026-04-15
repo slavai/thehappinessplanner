@@ -2,16 +2,18 @@
   <div class="apps--root" data-section-id="{{ section.id }}" data-background-color="none" data-border="none" data-container-width="4" data-mobile-full-width="false" data-mobile-spacing-above="half" data-mobile-spacing-below="half" data-spacing-above="full" data-spacing-below="full" data-text-alignment="center">
     <div class="apps--wrapper">
       <div class="shopify-block shopify-app-block">
+        {{#if section.settings.show_reviews}}
         <div id="stamped-main-widget"
              data-widget-type="standard2"
              data-product-id="{{ product.id }}"
              data-name="{{ product.title }}"
-             data-url="{{ shop.url }}{{ product.url }}"
+             data-url="{{ product.url }}"
              data-image-url="{{ image_url product.featured_image width=600 }}"
              data-description="{{ product.description }}"
-             data-product-sku="{{ product.sku }}"
+             data-product-sku="{{ product.selected_or_first_available_variant.sku }}"
              data-product-title="{{ product.title }}"
              data-product-type="{{ product.type }}"></div>
+        {{/if}}
       </div>
     </div>
   </div>
@@ -24,6 +26,9 @@
 {
   "name": "Product Reviews",
   "tag": "section",
-  "class": "section--apps"
+  "class": "section--apps",
+  "settings": [
+    { "type": "checkbox", "id": "show_reviews", "label": "Show reviews widget", "default": true }
+  ]
 }
 {{/schema}}

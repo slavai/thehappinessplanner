@@ -1,4 +1,4 @@
-<navigation-element class="navigation--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="none" data-spacing-above="half" data-spacing-below="none" data-show-navigation="true" data-storage-name="collection_layout" data-url="/collections/100-day-planner?"> <div class="navigation--wrapper"><div class="navigation--container" data-mq="medium-large"><div class="navigation--filter" data-item="nav-text"><div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="browse_filter" aria-haspopup="menu">
+<navigation-element class="navigation--root" data-section-id="{{ section.id }}" data-background-color="none" data-container-width="5" data-mobile-spacing-above="half" data-mobile-spacing-below="none" data-spacing-above="half" data-spacing-below="none" data-show-navigation="true" data-storage-name="collection_layout" data-url="{{ collection.url }}?"> <div class="navigation--wrapper"><div class="navigation--container" data-mq="medium-large"><div class="navigation--filter" data-item="nav-text"><div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="browse_filter" aria-haspopup="menu">
                 Browse
               </div><div class="navigation--button" tabindex="0" data-drawer-open="right" data-drawer-view="filter" data-toggle-menu="sort_filter" aria-haspopup="menu">
                 Sort by
@@ -10,6 +10,11 @@
 {
   "name": "Collection navigation",
   "tag": "div",
-  "class": "shopify-section section--collection-navigation"
+  "class": "shopify-section section--collection-navigation",
+  "settings": [
+    { "type": "checkbox", "id": "show_browse", "label": "Show Browse button", "default": true },
+    { "type": "checkbox", "id": "show_sort",   "label": "Show Sort button",   "default": true },
+    { "type": "checkbox", "id": "show_refine", "label": "Show Refine button", "default": true }
+  ]
 }
 {{/schema}}

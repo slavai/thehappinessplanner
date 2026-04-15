@@ -120,7 +120,9 @@
       "settings": {
         "auto_rotate": true,
         "rotate_frequency": 4,
-        "slide_height": 550
+        "slide_height": 550,
+        "heading_delay_ms": 1000,
+        "subheading_delay_ms": 2000
       },
       "blocks": {
         "slide-1": {
@@ -132,10 +134,21 @@
             "text_x_alignment": "right",
             "text_y_alignment": "bottom"
           }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Guided Journals & Workbooks",
+            "subheading": "Design the life you want.",
+            "text_color": "white",
+            "text_x_alignment": "left",
+            "text_y_alignment": "bottom"
+          }
         }
       },
       "block_order": [
-        "slide-1"
+        "slide-1",
+        "slide-2"
       ]
     },
     "s-13": {

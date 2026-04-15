@@ -1,6 +1,24 @@
 <div id="shopline-section-{{ section.id }}" class="shopify-section section--slideshow"><slideshow-carousel class="carousel--root" data-section-id="{{ section.id }}" data-auto-rotate="{{ section.settings.auto_rotate }}" data-background-color="none" data-border="none" data-columns="1" data-container-width="6" data-mobile-full-width="true" data-mobile-columns="1" data-mobile-spacing-above="none" data-mobile-spacing-below="none" data-spacing-above="none" data-spacing-around-blocks="false" data-spacing-below="none" data-transition-type="slide" data-header-overlap-compatible="" data-rotate-frequency="{{ section.settings.rotate_frequency }}" style="--blocks-per-slide: 1; --blocks-per-slide-mobile: 1; --total-slides: {{ section.blocks.size }}; --total-slides-mobile: {{ section.blocks.size }}; --total-spaces: {{ section.blocks.size }}; --total-spaces-mobile: {{ section.blocks.size }}; --rotate-frequency: {{ section.settings.rotate_frequency }}s; --slide-height: {{ section.settings.slide_height }}px; --slide-pos: 0%;" data-first-slide="true" data-last-slide="true"> <div class="carousel--wrapper"><div class="carousel--container">{{#for section.blocks as |block|}}<div class="carousel--block" data-id="{{ section.id }}--{{ block.id }}" style="--media-height: {{ section.settings.slide_height }}; --block-height: {{ section.settings.slide_height }};">
 <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="true" data-overlap="" data-text-position="overlay"><div class="featured-content--container" data-background-color="transparent"><div class="featured-content--image"><picture class="image--root " data-background="false" data-display-type="medium" data-full-width="true" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-overlay-style="darken-bottom" data-parallax="" data-overlay-style="darken-bottom" style="--aspect-ratio:1.7857;--mobile-aspect-ratio:1.5345;">{{#if block.settings.image}}<img src="{{ image_url block.settings.image width=1800 }}" alt="{{ default block.settings.image.alt block.settings.heading }}" srcset="{{ image_url block.settings.image width=400 }} 400w, {{ image_url block.settings.image width=600 }} 600w, {{ image_url block.settings.image width=800 }} 800w, {{ image_url block.settings.image width=1000 }} 1000w, {{ image_url block.settings.image width=1200 }} 1200w, {{ image_url block.settings.image width=1400 }} 1400w, {{ image_url block.settings.image width=1600 }} 1600w, {{ image_url block.settings.image width=1800 }} 1800w" width="3069" height="2000" loading="lazy" sizes="(max-width: 767px) 100vw, 100vw" fetchpriority="auto" draggable="false">{{else}}<img src="{{ asset_url 'images/tablet3_b8a344dc-5170-4b38-a752-eae95ea454d6.webp' }}" alt="{{ block.settings.heading }}" width="3069" height="2000" loading="lazy" sizes="(max-width: 767px) 100vw, 100vw" fetchpriority="auto" draggable="false">{{/if}}
-</picture></div><div class="stacked-text--root" data-text-color="{{ block.settings.text_color }}" data-mobile-text-color="{{ block.settings.text_color }}" data-mobile-y-alignment="bottom" data-x-alignment="{{ block.settings.text_x_alignment }}" data-y-alignment="{{ block.settings.text_y_alignment }}"> <div class="stacked-text--wrapper" data-text-style="none" data-text-width="small" data-background-color="transparent" data-translucent="true" data-container="block" data-transition-container="{{ section.id }}--{{ block.id }}" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="500">{{#if block.settings.heading}}<div data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true">{{#if block.settings.link}} <h2 class="stacked-text--title" data-item="block-heading"><a href="{{ block.settings.link }}"{{#if block.settings.new_tab}} target="_blank" rel="noopener"{{/if}}>{{ block.settings.heading }}</a></h2> {{else}} <h2 class="stacked-text--title" data-item="block-heading">{{ block.settings.heading }}</h2> {{/if}}</div>{{/if}}{{#if block.settings.subheading}}<div class="stacked-text--description" data-item="featured-paragraph" data-mq="medium-large" data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: 500ms;" data-transition-active="true" data-transition-finished="true"><p>{{ block.settings.subheading }}</p></div>{{/if}}</div> </div></div></div></div>{{/for}}</div> </div>
+</picture></div><div class="stacked-text--root" data-text-color="{{ block.settings.text_color }}" data-mobile-text-color="{{ block.settings.text_color }}" data-mobile-y-alignment="bottom" data-x-alignment="{{ block.settings.text_x_alignment }}" data-y-alignment="{{ block.settings.text_y_alignment }}"> <div class="stacked-text--wrapper" data-text-style="none" data-text-width="small" data-background-color="transparent" data-translucent="true" data-container="block" data-transition-container="{{ section.id }}--{{ block.id }}" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="{{ section.settings.subheading_delay_ms }}">{{#if block.settings.heading}}<div data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: {{ section.settings.heading_delay_ms }}ms;" data-transition-active="true" data-transition-finished="true">{{#if block.settings.link}} <h2 class="stacked-text--title" data-item="block-heading"><a href="{{ block.settings.link }}"{{#if block.settings.new_tab}} target="_blank" rel="noopener"{{/if}}>{{ block.settings.heading }}</a></h2> {{else}} <h2 class="stacked-text--title" data-item="block-heading">{{ block.settings.heading }}</h2> {{/if}}</div>{{/if}}{{#if block.settings.subheading}}<div class="stacked-text--description" data-item="featured-paragraph" data-mq="medium-large" data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: {{ section.settings.subheading_delay_ms }}ms;" data-transition-active="true" data-transition-finished="true"><p>{{ block.settings.subheading }}</p></div>{{/if}}</div> </div></div></div></div>{{/for}}</div>
+
+{{!-- Dot navigation (scales with block count, hidden for single-slide). --}}
+{{#if section.blocks.size '>' 1}}
+<div class="carousel-nav-dot">
+  <div class="carousel-nav-dot--wrapper">
+    {{#for section.blocks as |block|}}
+      <button class="carousel-nav-dot--index" aria-label="{{ forloop.index }}" aria-current="{{#if forloop.first}}true{{else}}false{{/if}}">
+        <svg class="icon--root icon--circle" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 42 42">
+          <circle cx="17" cy="17" r="15.915"></circle>
+          <circle cx="17" cy="17" r="15.915"></circle>
+        </svg>
+      </button>
+    {{/for}}
+  </div>
+</div>
+{{/if}}
+
+</div>
 </slideshow-carousel> </div>
 
 {{#style}}
@@ -23,6 +41,60 @@
     height: 100%;
     object-fit: cover;
   }
+
+  /* Dot navigation — positioned bottom-right over the slide. Scales with block count. */
+  #shopline-section-{{ section.id }} .carousel-nav-dot {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    z-index: 3;
+    pointer-events: auto;
+  }
+  #shopline-section-{{ section.id }} .carousel-nav-dot--wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  #shopline-section-{{ section.id }} .carousel-nav-dot--index {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopline-section-{{ section.id }} .icon--circle {
+    width: 18px;
+    height: 18px;
+    overflow: visible;
+  }
+  /* Base (unfilled) background ring + empty foreground. */
+  #shopline-section-{{ section.id }} .icon--circle circle {
+    fill: none;
+    stroke-width: 3;
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+  #shopline-section-{{ section.id }} .icon--circle circle:nth-child(1) {
+    stroke: rgba(255, 255, 255, 0.45);
+  }
+  #shopline-section-{{ section.id }} .icon--circle circle:nth-child(2) {
+    stroke: #fff;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  /* Active dot — second circle fills over the rotate-frequency period. */
+  #shopline-section-{{ section.id }} .carousel-nav-dot--index[aria-current="true"] .icon--circle circle:nth-child(2) {
+    animation: slideshow-dot-fill var(--rotate-frequency, 4s) linear forwards;
+  }
+  @keyframes slideshow-dot-fill {
+    from { stroke-dashoffset: 100; }
+    to   { stroke-dashoffset: 0; }
+  }
 {{/style}}
 
 {{#schema}}
@@ -35,7 +107,17 @@
     { "type": "header",   "content": "Behavior" },
     { "type": "checkbox", "id": "auto_rotate",       "label": "Auto-rotate slides", "default": true },
     { "type": "range",    "id": "rotate_frequency",  "label": "Rotation speed (seconds)", "min": 2, "max": 10, "step": 1, "default": 4 },
-    { "type": "range",    "id": "slide_height",      "label": "Slide height (px)", "min": 300, "max": 900, "step": 10, "default": 550 }
+    { "type": "range",    "id": "slide_height",      "label": "Slide height (px)", "min": 300, "max": 900, "step": 10, "default": 550 },
+
+    { "type": "header", "content": "Text timing" },
+    { "type": "range", "id": "heading_delay_ms",
+      "label": "Heading delay after slide appears (ms)",
+      "min": 0, "max": 3000, "step": 100, "default": 1000,
+      "info": "How long to wait after the slide appears before the heading fades in." },
+    { "type": "range", "id": "subheading_delay_ms",
+      "label": "Subheading delay after slide appears (ms)",
+      "min": 0, "max": 5000, "step": 100, "default": 2000,
+      "info": "How long to wait after the slide appears before the subheading fades in." }
   ],
   "blocks": [
     {

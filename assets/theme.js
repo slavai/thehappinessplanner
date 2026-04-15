@@ -385,6 +385,7 @@
     connectedCallback() {
       super.connectedCallback();
       if (!this._container) return;
+      this._restartActiveDotFill();
       const auto = this.getAttribute("data-auto-rotate") === "true";
       const freq = parseFloat(this.getAttribute("data-rotate-frequency") || "5") || 5;
       if (!auto || this.pageCount() <= 1) return;
@@ -395,6 +396,24 @@
       this._timer = setInterval(tick, freq * 1000);
       this.addEventListener("mouseenter", () => { if (this._timer) { clearInterval(this._timer); this._timer = null; } });
       this.addEventListener("mouseleave", () => { if (!this._timer) this._timer = setInterval(tick, freq * 1000); });
+    }
+    goTo(i) {
+      super.goTo(i);
+      this._restartActiveDotFill();
+    }
+    _restartActiveDotFill() {
+      // CSS animations don't restart when an ancestor's [aria-current]
+      // flips — the matching selector changes but the keyframe timeline
+      // on the inner <circle> carries over from the previous dot. Force
+      // a restart by clearing the animation, forcing reflow, clearing.
+      const circle = this.querySelector(
+        '.carousel-nav-dot--index[aria-current="true"] .icon--circle circle:nth-child(2)'
+      );
+      if (!circle) return;
+      circle.style.animation = "none";
+      // eslint-disable-next-line no-unused-expressions
+      circle.offsetWidth;
+      circle.style.animation = "";
     }
     disconnectedCallback() {
       if (this._timer) { clearInterval(this._timer); this._timer = null; }

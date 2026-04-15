@@ -51,8 +51,12 @@
     },
     "s-06": {
       "disabled": false,
-      "type": "home-image-with-text-1",
+      "type": "home-image-with-text",
       "settings": {
+        "layout_variant": "wide",
+        "heading": "The Art of Designing the Life You Want",
+        "body": "<p><strong>There's a difference between living your life and shaping it.</strong></p><p>Most people don't consciously design how they think, feel, or show up. They fall into patterns, building routines without really questioning them. Over time, that becomes their life.</p><p>But what if one day you wake up and realize that you're done with those patterns? You want something different. You want to change your life.</p><p>Real change doesn't happen the moment you decide it. Although that decision is the first leap… the one you have to take before anything else can shift.</p>",
+        "button_label": "Read the article",
         "button_url": "shopline://home"
       },
       "blocks": {},
@@ -60,8 +64,21 @@
     },
     "s-07": {
       "disabled": false,
-      "type": "home-image-with-text-2",
-      "settings": {},
+      "type": "home-image-with-text",
+      "settings": {
+        "layout_variant": "portrait",
+        "background_color": "dark",
+        "text_color": "white",
+        "spacing_above": "half",
+        "spacing_below": "half",
+        "heading": "The Mindful Life Design Lab | Cohort #2",
+        "overline": "Starting April 12!",
+        "body": "<p>The Mindful Life Design Lab is a 3-month guided experience to help you gain clarity, overcome internal blocks, and move forward with intention.</p><p>Instead of pushing harder or doing more, you'll learn how to work with your mind, quieting mental noise, releasing limiting patterns, and taking consistent action without burnout or perfectionism.</p><p>You bring something that matters to you.</p><p>And step by step, you learn how to move it forward in a way that feels aligned, sustainable, and true to who you are.</p><p>By the end of the journey, you won't just have made progress. You'll have built a new way of thinking, choosing, and showing up in your life.</p>",
+        "button_label": "More Info",
+        "button_url": "/products/the-mindful-life-design-lab",
+        "product_handle": "the-mindful-life-design-lab",
+        "image_alt": "The Mindful Life Design Lab | Cohort #2"
+      },
       "blocks": {}
     },
     "s-08": {

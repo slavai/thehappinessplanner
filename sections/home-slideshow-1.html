@@ -2,7 +2,22 @@
 </div>
 </button><div class="carousel--container">{{#for section.blocks as |block|}}{{#if block.settings.image}}<div class="carousel--block" data-id="{{ section.id }}--{{ block.id }}" style="--media-height: 750; --block-height: 750;">
 <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="true" data-overlap="" data-text-position="overlay">{{#if block.settings.link}}<a href="{{ block.settings.link }}" aria-label=""{{#unless forloop.first}} tabindex="-1"{{/unless}}{{#if block.settings.new_tab}} target="_blank"{{/if}}>{{/if}}<div class="featured-content--container" data-background-color="transparent"><div class="featured-content--image"><picture class="image--root " data-background="false" data-display-type="x-large" data-full-width="true" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-overlay-style="darken-bottom" data-parallax="" data-overlay-style="darken-bottom" style="--aspect-ratio:4.1667;--mobile-aspect-ratio:1.5;"><img src="{{ image_url block.settings.image width=1800 }}" alt="{{ default block.settings.image.alt '' }}" srcset="{{ image_url block.settings.image width=200 }} 200w, {{ image_url block.settings.image width=300 }} 300w, {{ image_url block.settings.image width=400 }} 400w, {{ image_url block.settings.image width=500 }} 500w, {{ image_url block.settings.image width=600 }} 600w, {{ image_url block.settings.image width=700 }} 700w, {{ image_url block.settings.image width=800 }} 800w, {{ image_url block.settings.image width=900 }} 900w, {{ image_url block.settings.image width=1000 }} 1000w, {{ image_url block.settings.image width=1200 }} 1200w, {{ image_url block.settings.image width=1400 }} 1400w, {{ image_url block.settings.image width=1600 }} 1600w, {{ image_url block.settings.image width=1800 }} 1800w" width="1800" height="1132" {{#if forloop.first}}loading="eager" fetchpriority="high"{{else}}loading="lazy" fetchpriority="auto"{{/if}} sizes="(max-width: 767px) 100vw, 100vw" draggable="false">
-</picture></div></div>{{#if block.settings.link}}</a>{{/if}}</div></div>{{/if}}{{/for}}</div><div class="carousel-nav-dot"> <div class="carousel-nav-dot--wrapper">{{#for section.blocks as |block|}}{{#if block.settings.image}}<button class="carousel-nav-dot--index" aria-label="{{ forloop.index }}" aria-current="{{#if forloop.first}}true{{else}}false{{/if}}"><svg class="icon--root icon--circle" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 42 42"> <circle cx="17" cy="17" r="15.915"></circle> <circle cx="17" cy="17" r="15.915"></circle> </svg></button>{{/if}}{{/for}}</div> </div><button class="carousel--next" aria-label="next" aria-disabled="false" data-mq="medium-large" tabindex="0"><div class="nav-arrow" data-direction="right"> <div></div> <div></div> <div></div>
+</picture></div></div>{{#if block.settings.link}}</a>{{/if}}</div></div>{{/if}}{{/for}}</div>{{!-- Dot navigation — custom .hs1-dots classes to avoid theme.css
+     .carousel-nav-dot collision (outer collapses to 0x0 + overflow hidden).
+     Kept .carousel-nav-dot--index on the button so theme.js CarouselBase
+     wires click + aria-current. Hero has auto-rotate=false so no progress
+     fill animation; just static active/inactive state. --}}
+{{#if section.blocks.size '>' 1}}
+<div class="hs1-dots">
+  {{#for section.blocks as |block|}}
+    {{#if block.settings.image}}
+    <button class="carousel-nav-dot--index hs1-dots__dot" aria-label="{{ forloop.index }}" aria-current="{{#if forloop.first}}true{{else}}false{{/if}}">
+      <span class="hs1-dots__fill"></span>
+    </button>
+    {{/if}}
+  {{/for}}
+</div>
+{{/if}}<button class="carousel--next" aria-label="next" aria-disabled="false" data-mq="medium-large" tabindex="0"><div class="nav-arrow" data-direction="right"> <div></div> <div></div> <div></div>
 </div>
 </button></div>
 </slideshow-carousel> </div>
@@ -33,6 +48,50 @@
   }
   #shopline-section-{{ section.id }} .carousel--next {
     right: 20px;
+  }
+
+  /* Dot navigation — custom classes, centered at bottom of hero. */
+  #shopline-section-{{ section.id }} .hs1-dots {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    pointer-events: auto;
+  }
+  #shopline-section-{{ section.id }} .hs1-dots__dot {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: visible;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  #shopline-section-{{ section.id }} .hs1-dots__dot:hover,
+  #shopline-section-{{ section.id }} .hs1-dots__dot[aria-current="true"] {
+    border-color: #fff;
+  }
+  #shopline-section-{{ section.id }} .hs1-dots__fill {
+    display: block;
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    background: #fff;
+    transform: scale(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+  }
+  #shopline-section-{{ section.id }} .hs1-dots__dot[aria-current="true"] .hs1-dots__fill {
+    transform: scale(1);
   }
 {{/style}}
 

@@ -1129,6 +1129,28 @@
     if (href) window.open(href, platform === "email" ? "_self" : "_blank", "noopener");
   });
 
+  // --- filter drawer default-checked state -----------------------------
+  // Handlebars '==' subexpression for equality doesn't reliably render
+  // `checked` attributes in SHOPLINE — fall back to JS on page load:
+  //   - match input[name="sort_by"] to ?sort_by= URL param
+  //   - match browse radio whose value matches current pathname
+  function syncFilterDefaults() {
+    const params = new URLSearchParams(window.location.search);
+    const sortBy = params.get("sort_by");
+    if (sortBy) {
+      const sortInput = document.querySelector(`input[name="sort_by"][value="${sortBy}"]`);
+      if (sortInput) sortInput.checked = true;
+    }
+    const path = window.location.pathname;
+    const browseInputs = document.querySelectorAll('input[name="browse"]');
+    browseInputs.forEach((i) => { if (i.value === path) i.checked = true; });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncFilterDefaults);
+  } else {
+    syncFilterDefaults();
+  }
+
   // --- filter drawer behaviors ------------------------------------------
   // Toggle expand/collapse on .filter--toggle click (CSS hides .filter--menu
   // when its preceding .filter--toggle has aria-expanded="false")

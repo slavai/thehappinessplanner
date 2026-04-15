@@ -1154,7 +1154,8 @@
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".filter--button");
     if (!btn) return;
-    const form = btn.closest(".filter--form");
+    const container = btn.closest(".filter--root") || document;
+    const form = container.querySelector(".filter--form");
     if (!form) return;
     const type = btn.getAttribute("data-type");
     if (type === "reset") {

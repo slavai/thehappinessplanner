@@ -1062,7 +1062,12 @@
     e.preventDefault();
     const platform = link.getAttribute("data-share");
     const pageUrl = window.location.href;
-    const title = document.title.split(/[–|]/)[0].trim() || document.title;
+    // Product title: prefer the on-page heading (exact product title), fall back
+    // to document.title split at em-dash only (NOT pipe — products may contain "|").
+    const headingEl = document.querySelector(".product-form--block--heading");
+    const title = (headingEl && headingEl.textContent.trim())
+      || document.title.split("–")[0].trim()
+      || document.title;
     const imgEl = document.querySelector("product-media-variants .product-media--root[data-active='true'] img, product-media-variants .product-media--root img");
     const imgSrc = imgEl ? (imgEl.currentSrc || imgEl.src) : "";
     const u = encodeURIComponent(pageUrl);

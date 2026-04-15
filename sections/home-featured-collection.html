@@ -1,5 +1,14 @@
 {{!--
-  home-featured-collection-2 — DONE ("Other Bundles")
+  home-featured-collection — DONE (generic)
+
+  ONE component for all simple featured-collection carousels on home:
+  s-13 (Digital Journals), s-14 (Other Bundles), s-16 (Digital Planners),
+  s-17 (Standard Printables), s-18 (Premium Printables), s-22 (Guided
+  Journals), s-23 (The 100-Day Planner). Each slot in templates/index.json
+  picks its own collection handle + heading + background + products cap.
+
+  home-featured-collection-1 stays separate — it has variant swatches and
+  a different data-source convention for the 100-Day Planner lineup.
 
   Architecture:
     - Data source: collection_picker — merchant picks ONE collection in the
@@ -15,12 +24,11 @@
       sort from SHOPLINE admin (Products → Collections → Sort order), so
       best-selling / manual / alphabetical are all reachable via that path.
     - Max products: products_to_show caps how many cards render (4-20).
-    - Carousel: <product-carousel> (see assets/theme.js — same recipe as #1)
-    - NO variant swatches: the original source markup
-      (extracted-sections/home/13-5d5ec4c6-edd2-49a0-a4a7-bdbcb6ecd372.html)
-      renders simple product cards without swatches, so EXACT TRANSFER applies.
+    - Carousel: <product-carousel> (see assets/theme.js)
+    - NO variant swatches: simple product cards (swatches live in
+      home-featured-collection-1 only).
     - Labels: auto sold-out + auto sale + 3 tag-triggered custom slots
-    - "View collection" CTA after carousel (from source markup)
+    - "View collection" CTA after carousel (hidden if show_more_url empty)
     - Bleed opt-out via data-container-width="6" (mistake #19)
 --}}
 
@@ -243,15 +251,15 @@
 
 {{#schema}}
 {
-  "name": "Home Featured Collection 2",
+  "name": "Home Featured Collection",
   "tag": "section",
   "class": "section--featured-collection",
   "settings": [
     { "type": "header",   "content": "Content" },
     { "type": "text",     "id": "heading",     "label": "Heading",
-      "default": "Other Bundles" },
+      "default": "Featured collection" },
     { "type": "url",      "id": "heading_url", "label": "Heading link",
-      "default": "/collections/bundles",
+      "default": "",
       "info": "Optional: wrap the heading in a link." },
 
     { "type": "header", "content": "Products" },
@@ -283,7 +291,7 @@
 
     { "type": "header", "content": "View collection CTA" },
     { "type": "url",    "id": "show_more_url",  "label": "Button link",
-      "default": "/collections/bundles",
+      "default": "",
       "info": "Leave empty to hide the button below the carousel." },
     { "type": "text",   "id": "show_more_text", "label": "Button text",
       "default": "View collection" },

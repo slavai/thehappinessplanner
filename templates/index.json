@@ -160,7 +160,7 @@
     },
     "s-14": {
       "disabled": false,
-      "type": "home-featured-collection-2",
+      "type": "home-featured-collection",
       "settings": {
         "heading": "Other Bundles",
         "heading_url": "/collections/bundles",

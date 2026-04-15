@@ -12,6 +12,19 @@
   const define = (name, ctor) => {
     if (!customElements.get(name)) customElements.define(name, ctor);
   };
+  // SHOPLINE returns prices as Long in currency subunits (e.g. 2699 for $26.99).
+  // Sites can override via `window.__formatMoney(subunits)`.
+  const formatMoney = (subunits) => {
+    if (typeof subunits !== "number" || !isFinite(subunits)) return "";
+    if (typeof window.__formatMoney === "function") return window.__formatMoney(subunits);
+    return "$" + (subunits / 100).toFixed(2) + " USD";
+  };
+  const escapeHTML = (s) =>
+    String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
 
   // --- drawer controller -------------------------------------------------
   const Drawer = {
@@ -116,37 +129,66 @@
   }
   define("x-menu-element", XMenuElement);
 
-  // --- disclosure-element (country selector, footer expanders) -----------
+  // --- disclosure-element (country selector, footer expanders, option picker) ---
+  // data-type switches behavior:
+  //   (default / country-selector): on option click, update input + submit parent form
+  //   option-picker: on option click, update input + current-option text + aria-current,
+  //                  close dropdown, dispatch `change` event for ProductOptionsElement.
+  //                  Does NOT submit form.
   class DisclosureElement extends HTMLElement {
     connectedCallback() {
       const toggle = $(".disclosure--toggle", this);
       const form = $(".disclosure--form", this);
       if (!toggle || !form) return;
 
+      const type = this.getAttribute("data-type");
+      const isOptionPicker = type === "option-picker";
+
+      const closeForm = () => {
+        form.setAttribute("aria-hidden", "true");
+        form.setAttribute("data-transition-active", "false");
+        toggle.setAttribute("aria-expanded", "false");
+      };
+      const openForm = () => {
+        form.setAttribute("aria-hidden", "false");
+        form.setAttribute("data-transition-active", "true");
+        toggle.setAttribute("aria-expanded", "true");
+      };
+
       toggle.addEventListener("click", (e) => {
         e.preventDefault();
         const isOpen = form.getAttribute("aria-hidden") === "false";
-        form.setAttribute("aria-hidden", isOpen ? "true" : "false");
-        form.setAttribute("data-transition-active", isOpen ? "false" : "true");
-        toggle.setAttribute("aria-expanded", isOpen ? "false" : "true");
+        if (isOpen) closeForm(); else openForm();
       });
+
+      const input = $(".disclosure--input", this);
+      const currentEl = $(".disclosure--current-option", this);
 
       $$(".disclosure--option", this).forEach((opt) => {
         opt.addEventListener("click", (e) => {
           e.preventDefault();
           const value = opt.getAttribute("data-value");
-          const input = $(".disclosure--input", this);
-          const parentForm = this.closest("form");
-          if (input && value) input.value = value;
-          if (parentForm) parentForm.submit();
+          if (!value) return;
+          if (input) input.value = value;
+
+          if (isOptionPicker) {
+            // Mirror selection into the toggle display and aria-current state.
+            if (currentEl) currentEl.textContent = value;
+            $$(".disclosure--option", this).forEach((o) => {
+              o.setAttribute("aria-current", o === opt ? "true" : "false");
+            });
+            closeForm();
+            if (input) input.dispatchEvent(new Event("change", { bubbles: true }));
+          } else {
+            const parentForm = this.closest("form");
+            if (parentForm) parentForm.submit();
+          }
         });
       });
 
       document.addEventListener("click", (e) => {
         if (!this.contains(e.target) && form.getAttribute("aria-hidden") === "false") {
-          form.setAttribute("aria-hidden", "true");
-          form.setAttribute("data-transition-active", "false");
-          toggle.setAttribute("aria-expanded", "false");
+          closeForm();
         }
       });
     }
@@ -401,36 +443,43 @@
   }
   define("video-component", VideoComponent);
 
-  // --- product-options-element (variant radios → variant id) -------------
-  // Reads data-variants-json off the element (an array of {id, options:[]})
-  // and on radio change collects the current option values, finds the
-  // matching variant, updates the sibling product-buy-buttons-element's
-  // <input name="id">, and refreshes the price display.
+  // --- product-options-element (disclosure pickers → variant id) ---------
+  // Reads all variants from a child <script class="product-options--variants-json">
+  // (written by product-form-variant-picker.html snippet via {{{ json product.variants }}}).
+  // Listens for `change` events on child <input class="disclosure--input">, collects
+  // current option values indexed by data-option-index, finds the matching variant,
+  // updates the buy-buttons id input + price display + button state.
   class ProductOptionsElement extends HTMLElement {
     connectedCallback() {
       let variants = [];
-      try { variants = JSON.parse(this.getAttribute("data-variants-json") || "[]"); } catch (e) { variants = []; }
+      const jsonEl = this.querySelector("script.product-options--variants-json, script[type='application/json'][data-variants]");
+      try {
+        if (jsonEl) variants = JSON.parse(jsonEl.textContent || "[]");
+        else variants = JSON.parse(this.getAttribute("data-variants-json") || "[]");
+      } catch (e) { variants = []; }
       this._variants = Array.isArray(variants) ? variants : [];
-      const radios = Array.from(this.querySelectorAll("input[type='radio'][data-option-name], input[type='radio'][data-option-index]"));
-      if (radios.length === 0) return;
-      radios.forEach((r) => r.addEventListener("change", () => this._onChange()));
+      // Disclosure-pattern pickers emit `change` events on the hidden input.
+      // We bind at the element level so new/replaced inputs still work.
+      this.addEventListener("change", (e) => {
+        const t = e.target;
+        if (!t || !t.classList || !t.classList.contains("disclosure--input")) return;
+        this._onChange();
+      });
     }
     _onChange() {
       if (this._variants.length === 0) return;
-      // Collect selected option values indexed by position in product.options_with_values.
-      // Each radio carries data-option-index set from the outer loop (product options).
+      // Collect selected option values indexed by data-option-index.
       const selected = [];
-      this.querySelectorAll("input[type='radio']:checked").forEach((r) => {
-        const idx = parseInt(r.getAttribute("data-option-index") || "-1", 10);
-        if (idx >= 0) selected[idx] = r.value;
+      this.querySelectorAll("input.disclosure--input[data-option-index]").forEach((inp) => {
+        const idx = parseInt(inp.getAttribute("data-option-index") || "-1", 10);
+        if (idx >= 0) selected[idx] = inp.value;
       });
-      // Determine how many options this product has by inspecting any variant.
+      // Determine option count from any variant.
       const optionCount = (this._variants[0] && Array.isArray(this._variants[0].options))
         ? this._variants[0].options.length
         : 0;
-      // Require all options to be picked before attempting a match.
       for (let i = 0; i < optionCount; i++) {
-        if (selected[i] == null) return;
+        if (selected[i] == null || selected[i] === "") return;
       }
       const match = this._variants.find((v) => {
         if (!v || !Array.isArray(v.options)) return false;
@@ -442,9 +491,12 @@
       if (!match) return;
       const root = this.closest(".main-product--root, .product-form, .featured-product--root, [data-section-id]") || document;
       const idInput = root.querySelector("product-buy-buttons-element input[name='id'], input.product-buy-buttons--input");
-      if (idInput) idInput.value = match.id;
+      if (idInput) idInput.value = String(match.id);
       const priceEl = root.querySelector("product-price-element .product-price--original .money, .product-price--root .money");
-      if (priceEl && match.price_formatted) priceEl.textContent = match.price_formatted;
+      if (priceEl) {
+        const formatted = match.price_formatted || formatMoney(match.price);
+        if (formatted) priceEl.textContent = formatted;
+      }
       const buyBtn = root.querySelector("product-buy-buttons-element .product-buy-buttons--primary");
       if (buyBtn) {
         const available = match.available !== false;
@@ -871,50 +923,78 @@
         this.setAttribute("aria-hidden", "true");
       }
     }
-    _formatPrice(subunits) {
-      if (typeof subunits !== "number" || !isFinite(subunits)) return "";
-      const whole = (subunits / 100).toFixed(2);
-      // Minimal formatting — shop currency symbol not exposed to JS context.
-      // Sites can override via a global `window.__formatMoney(subunits)` if needed.
-      if (typeof window.__formatMoney === "function") return window.__formatMoney(subunits);
-      return "$" + whole + " USD";
-    }
-    _escape(s) {
-      return String(s == null ? "" : s)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-    }
     _cardHTML(p) {
-      // featured_image and images[0] are strings (CDN URLs) per docs.
-      const img = (typeof p.featured_image === "string" && p.featured_image)
-        || (Array.isArray(p.images) && p.images[0])
-        || "";
+      // SHOPLINE recommendations API shape:
+      //   featured_image: String URL, images: String[] URLs, brand: String,
+      //   price/price_min/price_max: Long (subunits), price_varies: Boolean,
+      //   compare_at_price: Long|null, sold_out: Boolean,
+      //   options: [{ name, values: String[], values_images: { value: url } }]
+      const images = Array.isArray(p.images) ? p.images : [];
+      const primaryImg = (typeof p.featured_image === "string" && p.featured_image) || images[0] || "";
+      const hoverImg = images[1] || "";
       const handle = p.handle || "";
       const url = handle ? `/products/${encodeURIComponent(handle)}` : "#";
-      const title = this._escape(p.title);
-      const titleAttr = this._escape(p.title);
-      const price = this._formatPrice(p.price);
-      const comparePrice = (typeof p.compare_at_price === "number" && p.compare_at_price > p.price)
-        ? this._formatPrice(p.compare_at_price)
+      const title = escapeHTML(p.title);
+      const vendor = escapeHTML(p.brand || "");
+      const primaryPrice = formatMoney(typeof p.price_min === "number" ? p.price_min : p.price);
+      const showFrom = p.price_varies === true;
+      const compareAtPrice = (typeof p.compare_at_price === "number" && p.compare_at_price > (p.price_min || p.price))
+        ? formatMoney(p.compare_at_price)
         : "";
       const soldOut = p.sold_out === true;
-      return `<div class="product-card--root" data-handle="${this._escape(handle)}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural">` +
-        `<a href="${url}" class="product-card--image-wrapper" tabindex="-1" aria-label="${titleAttr}">` +
-          (img ? `<img src="${this._escape(img)}" alt="${titleAttr}" class="product-card--image" loading="lazy">` : "") +
-        `</a>` +
-        `<div class="product-card--info" data-container="block">` +
-          `<a href="${url}" class="product-card--title-link"><div class="product-card--title" data-item="paragraph">${title}</div></a>` +
-          (price
-            ? `<div class="product-card--price" data-item="paragraph">` +
-                `<span class="money">${price}</span>` +
-                (comparePrice ? ` <span class="money product-card--compare">${comparePrice}</span>` : "") +
-                (soldOut ? ` <span class="product-card--sold-out">Sold out</span>` : "") +
-              `</div>`
-            : "") +
-        `</div>` +
-      `</div>`;
+
+      // Find the first option whose values have swatch images (typically "Color").
+      let swatchesHTML = "";
+      let swatchOptionPos = "1";
+      const visualOption = (Array.isArray(p.options) ? p.options : []).find((o) => {
+        if (!o || !o.values_images) return false;
+        return Object.values(o.values_images).some((u) => u && u.length);
+      });
+      if (visualOption) {
+        const optName = escapeHTML((visualOption.name || "").toLowerCase());
+        const labelId = `related-products--${handle}-${optName}`;
+        const buildSwatches = (view) => {
+          const groupId = `${view}-${labelId}`;
+          const labels = (visualOption.values || []).map((v) => {
+            const img = (visualOption.values_images && visualOption.values_images[v]) || "";
+            const valSlug = String(v).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+            const inputId = `${groupId}-${valSlug}`;
+            const valAttr = escapeHTML(v);
+            const bg = img ? `style="--swatch-background:url(${escapeHTML(img)});"` : "";
+            return `<label for="${inputId}" class="swatch" data-item="swatch" data-shape="square" aria-label="${valAttr}" ${bg}><input class="swatch--input" type="radio" id="${inputId}" name="${groupId}" value="${valAttr}" data-option-name="${optName}" data-item="radio"></label>`;
+          }).join("");
+          return `<div class="swatches--container" role="radiogroup" aria-labelledby="${groupId}">${labels}</div>`;
+        };
+        const horizontal = `<div class="product-card--swatches--horizontal-view">${buildSwatches("x-view")}</div>`;
+        const column = `<div class="product-card--swatches--column-view">${buildSwatches("y-view")}</div>`;
+        swatchesHTML = { horizontal, column };
+      }
+
+      const vendorHTML = vendor ? `<div class="product-card--vendor" data-item="sub-nav-text">${vendor}</div>` : "";
+      const titleHTML = `<a href="${url}" class="product-card--title-link"><p class="product-card--title" data-item="paragraph">${title}</p></a>`;
+      const priceInner = primaryPrice
+        ? (showFrom ? `<span class="product--from" data-item="nav-text">From</span>` : "") +
+          `<span class="product--price" data-item="nav-text"><span class="money">${primaryPrice}</span></span>` +
+          (compareAtPrice ? `<s class="product--compare-at-price" data-item="nav-text"><span class="money">${compareAtPrice}</span></s>` : "") +
+          (soldOut ? `<span class="product--sold-out" data-item="nav-text">Sold out</span>` : "")
+        : "";
+      const priceBlock = `<div class="product--price-container"><div class="product--price-wrapper">${priceInner}</div></div>`;
+
+      const imagesHTML =
+        (primaryImg ? `<img src="${escapeHTML(primaryImg)}" alt="${title}" class="product-card--image" loading="lazy">` : "") +
+        (hoverImg ? `<img src="${escapeHTML(hoverImg)}" alt="${title}" class="product-card--hover-image" loading="lazy">` : "");
+
+      const detailsWrapper =
+        `<div class="product-card--details-wrapper">` +
+          vendorHTML +
+          titleHTML +
+          (swatchesHTML ? swatchesHTML.horizontal : "") +
+        `</div>`;
+
+      return `<product-card class="product-card--root" data-handle="${escapeHTML(handle)}" data-product-item="" data-text-layout="left" data-container="block" data-aspect-ratio="natural" data-swatch-option-position="${swatchOptionPos}">` +
+        `<a href="${url}" class="product-card--image-wrapper" tabindex="-1">${imagesHTML}</a>` +
+        `<div class="product-card--details">${detailsWrapper}${priceBlock}${swatchesHTML ? swatchesHTML.column : ""}</div>` +
+      `</product-card>`;
     }
   }
   define("product-recommendations-element", ProductRecommendationsElement);

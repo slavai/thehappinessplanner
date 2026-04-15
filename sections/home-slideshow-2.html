@@ -2,19 +2,18 @@
 <div class="featured-content--root" data-full-width="true" data-mobile-full-width="true" data-mobile-overlay="true" data-overlap="" data-text-position="overlay"><div class="featured-content--container" data-background-color="transparent"><div class="featured-content--image"><picture class="image--root " data-background="false" data-display-type="medium" data-full-width="true" data-mobile-display-type="original" data-mobile-full-width="true" data-mobile-overlay-style="darken-bottom" data-parallax="" data-overlay-style="darken-bottom" style="--aspect-ratio:1.7857;--mobile-aspect-ratio:1.5345;">{{#if block.settings.image}}<img src="{{ image_url block.settings.image width=1800 }}" alt="{{ default block.settings.image.alt block.settings.heading }}" srcset="{{ image_url block.settings.image width=400 }} 400w, {{ image_url block.settings.image width=600 }} 600w, {{ image_url block.settings.image width=800 }} 800w, {{ image_url block.settings.image width=1000 }} 1000w, {{ image_url block.settings.image width=1200 }} 1200w, {{ image_url block.settings.image width=1400 }} 1400w, {{ image_url block.settings.image width=1600 }} 1600w, {{ image_url block.settings.image width=1800 }} 1800w" width="3069" height="2000" loading="lazy" sizes="(max-width: 767px) 100vw, 100vw" fetchpriority="auto" draggable="false">{{else}}<img src="{{ asset_url 'images/tablet3_b8a344dc-5170-4b38-a752-eae95ea454d6.webp' }}" alt="{{ block.settings.heading }}" width="3069" height="2000" loading="lazy" sizes="(max-width: 767px) 100vw, 100vw" fetchpriority="auto" draggable="false">{{/if}}
 </picture></div><div class="stacked-text--root" data-text-color="{{ block.settings.text_color }}" data-mobile-text-color="{{ block.settings.text_color }}" data-mobile-y-alignment="bottom" data-x-alignment="{{ block.settings.text_x_alignment }}" data-y-alignment="{{ block.settings.text_y_alignment }}"> <div class="stacked-text--wrapper" data-text-style="none" data-text-width="small" data-background-color="transparent" data-translucent="true" data-container="block" data-transition-container="{{ section.id }}--{{ block.id }}" data-transition-type="slide-in" data-transition-cascade="vertical" data-transition-cascade-interval="{{ section.settings.subheading_delay_ms }}">{{#if block.settings.heading}}<div data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: {{ section.settings.heading_delay_ms }}ms;" data-transition-active="true" data-transition-finished="true">{{#if block.settings.link}} <h2 class="stacked-text--title" data-item="block-heading"><a href="{{ block.settings.link }}"{{#if block.settings.new_tab}} target="_blank" rel="noopener"{{/if}}>{{ block.settings.heading }}</a></h2> {{else}} <h2 class="stacked-text--title" data-item="block-heading">{{ block.settings.heading }}</h2> {{/if}}</div>{{/if}}{{#if block.settings.subheading}}<div class="stacked-text--description" data-item="featured-paragraph" data-mq="medium-large" data-transition-item="{{ section.id }}--{{ block.id }}" style="--transition--delay: {{ section.settings.subheading_delay_ms }}ms;" data-transition-active="true" data-transition-finished="true"><p>{{ block.settings.subheading }}</p></div>{{/if}}</div> </div></div></div></div>{{/for}}</div>
 
-{{!-- Dot navigation (scales with block count, hidden for single-slide). --}}
+{{!-- Dot navigation (scales with block count, hidden for single-slide).
+     Custom class names (hs2-dots*) to avoid collision with theme.css
+     .carousel-nav-dot rules which collapse the outer wrapper to 0x0 and
+     clip everything with overflow:hidden. We keep .carousel-nav-dot--index
+     on the button so theme.js CarouselBase still wires click + aria-current. --}}
 {{#if section.blocks.size '>' 1}}
-<div class="carousel-nav-dot">
-  <div class="carousel-nav-dot--wrapper">
-    {{#for section.blocks as |block|}}
-      <button class="carousel-nav-dot--index" aria-label="{{ forloop.index }}" aria-current="{{#if forloop.first}}true{{else}}false{{/if}}">
-        <svg class="icon--root icon--circle" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 42 42">
-          <circle cx="17" cy="17" r="15.915"></circle>
-          <circle cx="17" cy="17" r="15.915"></circle>
-        </svg>
-      </button>
-    {{/for}}
-  </div>
+<div class="hs2-dots">
+  {{#for section.blocks as |block|}}
+    <button class="carousel-nav-dot--index hs2-dots__dot" aria-label="{{ forloop.index }}" aria-current="{{#if forloop.first}}true{{else}}false{{/if}}">
+      <span class="hs2-dots__fill"></span>
+    </button>
+  {{/for}}
 </div>
 {{/if}}
 
@@ -42,58 +41,58 @@
     object-fit: cover;
   }
 
-  /* Dot navigation — positioned bottom-right over the slide. Scales with block count. */
-  #shopline-section-{{ section.id }} .carousel-nav-dot {
+  /* Dot navigation — custom classes to dodge theme.css .carousel-nav-dot
+     collision. Positioned bottom-right over the slide, visible above the
+     carousel-wrapper (which has overflow: hidden — so dots MUST live as
+     direct children of slideshow-carousel, not the wrapper). */
+  #shopline-section-{{ section.id }} .hs2-dots {
     position: absolute;
-    bottom: 24px;
-    right: 24px;
-    z-index: 3;
+    bottom: 32px;
+    right: 32px;
+    z-index: 10;
+    display: flex;
+    gap: 12px;
+    align-items: center;
     pointer-events: auto;
   }
-  #shopline-section-{{ section.id }} .carousel-nav-dot--wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  #shopline-section-{{ section.id }} .carousel-nav-dot--index {
+  #shopline-section-{{ section.id }} .hs2-dots__dot {
+    position: relative;
     width: 18px;
     height: 18px;
     padding: 0;
     margin: 0;
     background: transparent;
-    border: none;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #shopline-section-{{ section.id }} .icon--circle {
-    width: 18px;
-    height: 18px;
     overflow: visible;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
   }
-  /* Base (unfilled) background ring + empty foreground. */
-  #shopline-section-{{ section.id }} .icon--circle circle {
-    fill: none;
-    stroke-width: 3;
-    transform: rotate(-90deg);
+  #shopline-section-{{ section.id }} .hs2-dots__dot:hover {
+    border-color: #fff;
+  }
+  #shopline-section-{{ section.id }} .hs2-dots__dot[aria-current="true"] {
+    border-color: #fff;
+  }
+  /* Inner fill — progresses from scale(0) to scale(1) over rotate-frequency.
+     Uses a real <span> child (not ::before) so theme.js can force-restart
+     the animation via inline-style toggle on slide change. */
+  #shopline-section-{{ section.id }} .hs2-dots__fill {
+    display: block;
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: #fff;
+    transform: scale(0);
     transform-origin: center;
   }
-  #shopline-section-{{ section.id }} .icon--circle circle:nth-child(1) {
-    stroke: rgba(255, 255, 255, 0.45);
+  #shopline-section-{{ section.id }} .hs2-dots__dot[aria-current="true"] .hs2-dots__fill {
+    animation: hs2-dot-fill var(--rotate-frequency, 4s) linear forwards;
   }
-  #shopline-section-{{ section.id }} .icon--circle circle:nth-child(2) {
-    stroke: #fff;
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-  }
-  /* Active dot — second circle fills over the rotate-frequency period. */
-  #shopline-section-{{ section.id }} .carousel-nav-dot--index[aria-current="true"] .icon--circle circle:nth-child(2) {
-    animation: slideshow-dot-fill var(--rotate-frequency, 4s) linear forwards;
-  }
-  @keyframes slideshow-dot-fill {
-    from { stroke-dashoffset: 100; }
-    to   { stroke-dashoffset: 0; }
+  @keyframes hs2-dot-fill {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
   }
 {{/style}}
 

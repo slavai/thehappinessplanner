@@ -404,16 +404,22 @@
     _restartActiveDotFill() {
       // CSS animations don't restart when an ancestor's [aria-current]
       // flips — the matching selector changes but the keyframe timeline
-      // on the inner <circle> carries over from the previous dot. Force
+      // on the inner element carries over from the previous dot. Force
       // a restart by clearing the animation, forcing reflow, clearing.
-      const circle = this.querySelector(
-        '.carousel-nav-dot--index[aria-current="true"] .icon--circle circle:nth-child(2)'
-      );
-      if (!circle) return;
-      circle.style.animation = "none";
+      //
+      // Supports two dot-nav patterns:
+      //   1. .hs2-dots__fill — home-slideshow-2 div-based progress fill
+      //   2. svg circle:last-child — theme.css carousel-timer SVG fill
+      //      (used by home-slideshow-1's reference markup once its
+      //      overflow/width clipping bug is fixed)
+      const active = this.querySelector('.carousel-nav-dot--index[aria-current="true"]');
+      if (!active) return;
+      const target = active.querySelector('.hs2-dots__fill, svg circle:last-child, .icon--circle circle:nth-child(2)');
+      if (!target) return;
+      target.style.animation = "none";
       // eslint-disable-next-line no-unused-expressions
-      circle.offsetWidth;
-      circle.style.animation = "";
+      target.offsetWidth;
+      target.style.animation = "";
     }
     disconnectedCallback() {
       if (this._timer) { clearInterval(this._timer); this._timer = null; }

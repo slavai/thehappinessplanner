@@ -236,11 +236,14 @@
   }
 
   document.addEventListener("click", (e) => {
-    const item = e.target.closest(".cart--drawer-item");
+    const item = e.target.closest("[data-cart-row], .cart--drawer-item");
     if (!item) return;
     const key = item.dataset.key;
-    const qtyEl = item.querySelector("[data-qty-value]");
-    const current = parseInt(qtyEl && qtyEl.textContent, 10) || 0;
+    const qtyEl = item.querySelector("[data-qty-value]") || item.querySelector("[data-qty-input]");
+    const current = parseInt(
+      qtyEl && (qtyEl.textContent || qtyEl.value),
+      10
+    ) || 0;
     if (e.target.closest("[data-qty-inc]")) {
       e.preventDefault();
       cartChange(key, current + 1);

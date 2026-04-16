@@ -1,13 +1,388 @@
-<cart-element class="cart--root" data-section-id="{{ section.id }}" data-background-color="none" data-view="desktop" data-container-width="3" data-transition-container="cart-desktop" data-transition-type="fade-in" data-transition-cascade="vertical" data-transition-cascade-interval="250"> <form class="cart--form" action="/cart" method="post" novalidate=""> <div class="cart--wrapper"> <div class="cart--header"> <h2 class="cart--title" data-item="section-heading" data-transition-item="cart-desktop" data-transition-type="slide-in" style="--transition--delay: 0ms;" data-transition-active="true" data-transition-finished="true">Your Cart</h2> </div><div class="cart--shipping"> <div class="cart--shipping-message" data-item="paragraph">You are <span class="money">$100.00 USD</span> from free shipping.</div> <div class="cart--shipping-bar" data-transition-item="cart-desktop" data-transition-type="custom" style="--progress-percent: 0.0%; --transition--delay: 250ms;" data-transition-active="true"></div> </div><div class="cart--body"><div class="cart--headings" data-item="nav-text"> <div class="cart--heading--image"></div> <div class="cart--heading--title"></div> <div class="cart--heading--price">Price</div> <div class="cart--heading--quantity">Quantity</div> <div class="cart--heading--total">Total</div> </div></div><div class="cart--footer" data-transition-item="cart-desktop" style="--transition--delay: 500ms;" data-transition-active="true"><div class="cart--notes"> <label for="desktop-cart_note" class="cart--notes--heading">Leave a note with your order</label> <textarea class="cart--notes--textarea" id="desktop-cart_note" name="note"></textarea> </div><div class="cart--summary"> <div class="cart--totals"><div class="cart--total"> <div data-item="block-heading">Subtotal:
-        </div> <div class="cart--total-price money" data-item="nav-text"><span class="money">$0.00 USD</span></div> </div> <div class="cart--tax-info" data-item="paragraph">Taxes and shipping calculated at checkout</div> </div> <button type="submit" name="checkout" class="cart--checkout-button" data-item="button" data-text="Checkout" data-transition-button=""> <span class="cart-button--text">Checkout</span> <span class="cart-button--spinner"><svg class="icon--root icon--spinner" data-invertible="false"> <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use> </svg></span> </button> </div></div><div class="cart--empty" data-text-alignment="center"> <div class="cart--empty-text" data-item="paragraph"><span data-item="rte-content">Your cart is currently empty.<br> <a href="/collections/all">Click here to continue shopping</a>.</span></div></div> </div></form>
-</cart-element><cart-element class="cart--root" data-section-id="{{ section.id }}" data-background-color="none" data-view="mobile" data-container-width="3" data-transition-container="cart-mobile" data-transition-type="fade-in" data-transition-cascade="vertical" data-transition-cascade-interval="250"> <form class="cart--form" action="/cart" method="post" novalidate=""> <div class="cart--wrapper"> <div class="cart--header"> <h2 class="cart--title" data-item="section-heading" data-transition-item="cart-mobile" data-transition-type="slide-in" style="--transition--delay: 0ms;">Your Cart</h2> </div><div class="cart--shipping"> <div class="cart--shipping-message" data-item="paragraph">You are <span class="money">$100.00 USD</span> from free shipping.</div> <div class="cart--shipping-bar" data-transition-item="cart-mobile" data-transition-type="custom" style="--progress-percent: 0.0%; --transition--delay: 250ms;"></div> </div><div class="cart--body"></div><div class="cart--notes"> <label for="mobile-cart_note" class="cart--notes--heading">Leave a note with your order</label> <textarea class="cart--notes--textarea" id="mobile-cart_note" name="note"></textarea> </div><div class="cart--empty" data-text-alignment="center"> <div class="cart--empty-text" data-item="paragraph"><span data-item="rte-content">Your cart is currently empty.<br> <a href="/collections/all">Click here to continue shopping</a>.</span></div></div> </div><div class="cart--summary"> <div class="cart--totals"><div class="cart--total"> <div data-item="block-heading">Subtotal:
-        </div> <div class="cart--total-price money" data-item="nav-text"><span class="money">$0.00 USD</span></div> </div> <div class="cart--tax-info" data-item="paragraph">Taxes and shipping calculated at checkout</div> </div> <button type="submit" name="checkout" class="cart--checkout-button" data-item="button" data-text="Checkout" data-transition-button=""> <span class="cart-button--text">Checkout</span> <span class="cart-button--spinner"><svg class="icon--root icon--spinner" data-invertible="false"> <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use> </svg></span> </button> </div></form>
+{{!--
+  cart-main — DONE
+
+  Full /cart page: dynamic line items (cart.items), subtotal, shipping
+  progress bar, order note, checkout button. Structure preserved from
+  extracted-sections/cart/02-main.html (desktop + mobile cart-element
+  variants, .cart--root/.cart--form/.cart--wrapper/.cart--header/
+  .cart--shipping/.cart--body/.cart--footer/.cart--summary).
+
+  Dynamic wiring:
+  - {{#if cart.empty}} → .cart--empty block with continue-shopping link
+  - {{#for cart.items}} → rows with image, title, variant, qty, price,
+    line total, remove anchor
+  - cart.items_subtotal_price rendered via money helper
+  - Shipping progress bar computed client-side from subtotal vs
+    free_shipping_threshold setting (SHOPLINE subunit = cents)
+
+  JS contract:
+  - qty +/- buttons + remove share same data-cart-row / data-qty-dec /
+    data-qty-inc / data-remove / data-qty-value attrs as the cart
+    drawer. theme.js handler (extended with [data-cart-row]) issues
+    POST /cart/change with {id: item.key, quantity: n}, then reloads.
+  - Remove anchor uses {{ item.url_to_remove }} as native fallback
+    if JS is disabled.
+
+  Schema covers: free_shipping_threshold, show_shipping_bar,
+  show_order_note, show_continue_shopping link target.
+--}}
+<div class="shopify-section section--cart">
+
+{{!-- ================ DESKTOP VIEW ================ --}}
+<cart-element class="cart--root"
+              data-section-id="{{ section.id }}"
+              data-background-color="none"
+              data-view="desktop"
+              data-container-width="{{ section.settings.container_width }}"
+              data-transition-container="cart-desktop"
+              data-transition-type="fade-in"
+              data-transition-cascade="vertical"
+              data-transition-cascade-interval="250">
+  {{#form "cart" class="cart--form"}}
+    <div class="cart--wrapper">
+      <div class="cart--header">
+        <h2 class="cart--title" data-item="section-heading"
+            data-transition-item="cart-desktop" data-transition-type="slide-in"
+            style="--transition--delay: 0ms;"
+            data-transition-active="true" data-transition-finished="true">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+
+      {{#if section.settings.show_shipping_bar}}
+      <div class="cart--shipping"
+           data-subtotal="{{ cart.items_subtotal_price }}"
+           data-threshold-cents="{{ section.settings.free_shipping_threshold_cents }}"
+           data-message-success="{{ section.settings.shipping_message_success }}"
+           data-message-template="{{ section.settings.shipping_message_template }}">
+        <div class="cart--shipping-message" data-item="paragraph">
+          <span data-shipping-progress-text>{{ section.settings.shipping_message_default }}</span>
+        </div>
+        <div class="cart--shipping-bar"
+             data-transition-item="cart-desktop" data-transition-type="custom"
+             style="--progress-percent: 0%; --transition--delay: 250ms;"
+             data-transition-active="true"></div>
+      </div>
+      {{/if}}
+
+      {{#if cart.empty}}
+        <div class="cart--empty" data-text-alignment="center">
+          <div class="cart--empty-text" data-item="paragraph">
+            <span data-item="rte-content">
+              {{{ section.settings.empty_cart_text }}}
+            </span>
+          </div>
+        </div>
+      {{else}}
+        <div class="cart--body">
+          <div class="cart--headings" data-item="nav-text">
+            <div class="cart--heading--image"></div>
+            <div class="cart--heading--title"></div>
+            <div class="cart--heading--price">{{ section.settings.heading_price }}</div>
+            <div class="cart--heading--quantity">{{ section.settings.heading_quantity }}</div>
+            <div class="cart--heading--total">{{ section.settings.heading_total }}</div>
+          </div>
+
+          {{#for cart.items as |item|}}
+          <div class="cart--item" data-cart-row data-key="{{ item.key }}">
+            <div class="cart--item--image">
+              <a href="{{ item.url }}">
+                <img src="{{ image_url item.image width=240 }}"
+                     alt="{{ item.product.title }}"
+                     width="120" height="120" loading="lazy">
+              </a>
+            </div>
+            <div class="cart--item--title">
+              <a class="cart--item--title-link" href="{{ item.url }}">{{ item.product.title }}</a>
+              {{#if item.variant.title}}
+              <p class="cart--item--variant" data-item="paragraph">{{ item.variant.title }}</p>
+              {{/if}}
+              <a class="cart--item--remove" href="{{ item.url_to_remove }}"
+                 data-remove data-item="nav-text" aria-label="Remove {{ item.product.title }}">
+                {{ section.settings.remove_label }}
+              </a>
+            </div>
+            <div class="cart--item--price money" data-item="nav-text">
+              <span class="money">{{ money item.final_price }}</span>
+            </div>
+            <div class="cart--item--quantity">
+              <button type="button" class="cart--qty-btn" data-qty-dec
+                      aria-label="Decrease quantity">−</button>
+              <span class="cart--qty-value" data-qty-value>{{ item.quantity }}</span>
+              <button type="button" class="cart--qty-btn" data-qty-inc
+                      aria-label="Increase quantity">+</button>
+            </div>
+            <div class="cart--item--total money" data-item="nav-text">
+              <span class="money">{{ money item.final_line_price }}</span>
+            </div>
+          </div>
+          {{/for}}
+        </div>
+
+        <div class="cart--footer"
+             data-transition-item="cart-desktop"
+             style="--transition--delay: 500ms;"
+             data-transition-active="true">
+          {{#if section.settings.show_order_note}}
+          <div class="cart--notes">
+            <label for="desktop-cart_note" class="cart--notes--heading">
+              {{ section.settings.order_note_label }}
+            </label>
+            <textarea class="cart--notes--textarea" id="desktop-cart_note" name="note">{{ cart.note }}</textarea>
+          </div>
+          {{/if}}
+          <div class="cart--summary">
+            <div class="cart--totals">
+              <div class="cart--total">
+                <div data-item="block-heading">{{ section.settings.subtotal_label }}</div>
+                <div class="cart--total-price money" data-item="nav-text">
+                  <span class="money">{{ money cart.items_subtotal_price }}</span>
+                </div>
+              </div>
+              <div class="cart--tax-info" data-item="paragraph">
+                {{ section.settings.tax_info_text }}
+              </div>
+            </div>
+            <button type="submit" name="checkout" class="cart--checkout-button"
+                    data-item="button" data-text="{{ section.settings.checkout_label }}"
+                    data-transition-button="">
+              <span class="cart-button--text">{{ section.settings.checkout_label }}</span>
+              <span class="cart-button--spinner">
+                <svg class="icon--root icon--spinner" data-invertible="false">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  {{/form}}
 </cart-element>
+
+{{!-- ================ MOBILE VIEW ================ --}}
+<cart-element class="cart--root"
+              data-section-id="{{ section.id }}"
+              data-background-color="none"
+              data-view="mobile"
+              data-container-width="{{ section.settings.container_width }}"
+              data-transition-container="cart-mobile"
+              data-transition-type="fade-in"
+              data-transition-cascade="vertical"
+              data-transition-cascade-interval="250">
+  {{#form "cart" class="cart--form"}}
+    <div class="cart--wrapper">
+      <div class="cart--header">
+        <h2 class="cart--title" data-item="section-heading"
+            data-transition-item="cart-mobile" data-transition-type="slide-in"
+            style="--transition--delay: 0ms;">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+
+      {{#if section.settings.show_shipping_bar}}
+      <div class="cart--shipping"
+           data-subtotal="{{ cart.items_subtotal_price }}"
+           data-threshold-cents="{{ section.settings.free_shipping_threshold_cents }}"
+           data-message-success="{{ section.settings.shipping_message_success }}"
+           data-message-template="{{ section.settings.shipping_message_template }}">
+        <div class="cart--shipping-message" data-item="paragraph">
+          <span data-shipping-progress-text>{{ section.settings.shipping_message_default }}</span>
+        </div>
+        <div class="cart--shipping-bar"
+             data-transition-item="cart-mobile" data-transition-type="custom"
+             style="--progress-percent: 0%; --transition--delay: 250ms;"></div>
+      </div>
+      {{/if}}
+
+      {{#if cart.empty}}
+        <div class="cart--body"></div>
+        {{#if section.settings.show_order_note}}
+        <div class="cart--notes">
+          <label for="mobile-cart_note" class="cart--notes--heading">
+            {{ section.settings.order_note_label }}
+          </label>
+          <textarea class="cart--notes--textarea" id="mobile-cart_note" name="note">{{ cart.note }}</textarea>
+        </div>
+        {{/if}}
+        <div class="cart--empty" data-text-alignment="center">
+          <div class="cart--empty-text" data-item="paragraph">
+            <span data-item="rte-content">
+              {{{ section.settings.empty_cart_text }}}
+            </span>
+          </div>
+        </div>
+      {{else}}
+        <div class="cart--body">
+          {{#for cart.items as |item|}}
+          <div class="cart--item" data-cart-row data-key="{{ item.key }}">
+            <div class="cart--item--image">
+              <a href="{{ item.url }}">
+                <img src="{{ image_url item.image width=200 }}"
+                     alt="{{ item.product.title }}"
+                     width="100" height="100" loading="lazy">
+              </a>
+            </div>
+            <div class="cart--item--title">
+              <a class="cart--item--title-link" href="{{ item.url }}">{{ item.product.title }}</a>
+              {{#if item.variant.title}}
+              <p class="cart--item--variant" data-item="paragraph">{{ item.variant.title }}</p>
+              {{/if}}
+              <div class="cart--item--price money" data-item="nav-text">
+                <span class="money">{{ money item.final_price }}</span>
+              </div>
+              <div class="cart--item--quantity">
+                <button type="button" class="cart--qty-btn" data-qty-dec
+                        aria-label="Decrease quantity">−</button>
+                <span class="cart--qty-value" data-qty-value>{{ item.quantity }}</span>
+                <button type="button" class="cart--qty-btn" data-qty-inc
+                        aria-label="Increase quantity">+</button>
+              </div>
+              <a class="cart--item--remove" href="{{ item.url_to_remove }}"
+                 data-remove data-item="nav-text"
+                 aria-label="Remove {{ item.product.title }}">
+                {{ section.settings.remove_label }}
+              </a>
+              <div class="cart--item--total money" data-item="nav-text">
+                <span class="money">{{ money item.final_line_price }}</span>
+              </div>
+            </div>
+          </div>
+          {{/for}}
+        </div>
+        {{#if section.settings.show_order_note}}
+        <div class="cart--notes">
+          <label for="mobile-cart_note" class="cart--notes--heading">
+            {{ section.settings.order_note_label }}
+          </label>
+          <textarea class="cart--notes--textarea" id="mobile-cart_note" name="note">{{ cart.note }}</textarea>
+        </div>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{#unless cart.empty}}
+    <div class="cart--summary">
+      <div class="cart--totals">
+        <div class="cart--total">
+          <div data-item="block-heading">{{ section.settings.subtotal_label }}</div>
+          <div class="cart--total-price money" data-item="nav-text">
+            <span class="money">{{ money cart.items_subtotal_price }}</span>
+          </div>
+        </div>
+        <div class="cart--tax-info" data-item="paragraph">
+          {{ section.settings.tax_info_text }}
+        </div>
+      </div>
+      <button type="submit" name="checkout" class="cart--checkout-button"
+              data-item="button" data-text="{{ section.settings.checkout_label }}"
+              data-transition-button="">
+        <span class="cart-button--text">{{ section.settings.checkout_label }}</span>
+        <span class="cart-button--spinner">
+          <svg class="icon--root icon--spinner" data-invertible="false">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+          </svg>
+        </span>
+      </button>
+    </div>
+    {{/unless}}
+  {{/form}}
+</cart-element>
+
+{{#if section.settings.show_shipping_bar}}
+<script>
+  (function() {
+    document.querySelectorAll('.cart--shipping').forEach(function(el) {
+      var subtotal  = parseInt(el.dataset.subtotal, 10)      || 0;
+      var threshold = parseInt(el.dataset.thresholdCents, 10) || 0;
+      if (!threshold) return;
+      var remaining = Math.max(0, threshold - subtotal);
+      var percent   = Math.min(100, Math.round((subtotal / threshold) * 100));
+      var bar = el.querySelector('.cart--shipping-bar');
+      if (bar) bar.style.setProperty('--progress-percent', percent + '%');
+      var text = el.querySelector('[data-shipping-progress-text]');
+      if (!text) return;
+      if (remaining === 0) {
+        text.textContent = el.dataset.messageSuccess || "You qualify for free shipping!";
+      } else {
+        var template = el.dataset.messageTemplate || "You are {remaining} USD from free shipping.";
+        var amount   = '$' + (remaining / 100).toFixed(2);
+        text.textContent = template.replace('{remaining}', amount);
+      }
+    });
+  })();
+</script>
+{{/if}}
+
+</div>
 
 {{#schema}}
 {
   "name": "Cart main",
   "tag": "div",
-  "class": "shopify-section section--cart"
+  "class": "shopify-section section--cart",
+  "settings": [
+    { "type": "header", "content": "Headings" },
+    { "type": "text", "id": "title",
+      "label": "Page title", "default": "Your Cart" },
+    { "type": "text", "id": "heading_price",
+      "label": "Column — price", "default": "Price" },
+    { "type": "text", "id": "heading_quantity",
+      "label": "Column — quantity", "default": "Quantity" },
+    { "type": "text", "id": "heading_total",
+      "label": "Column — total", "default": "Total" },
+    { "type": "text", "id": "subtotal_label",
+      "label": "Subtotal label", "default": "Subtotal:" },
+    { "type": "text", "id": "tax_info_text",
+      "label": "Tax / shipping info line",
+      "default": "Taxes and shipping calculated at checkout" },
+    { "type": "text", "id": "checkout_label",
+      "label": "Checkout button label", "default": "Checkout" },
+    { "type": "text", "id": "remove_label",
+      "label": "Remove link label", "default": "Remove" },
+
+    { "type": "header", "content": "Empty cart" },
+    { "type": "richtext", "id": "empty_cart_text",
+      "label": "Empty state message",
+      "default": "<p>Your cart is currently empty.<br><a href=\"/collections/all\">Click here to continue shopping</a>.</p>" },
+
+    { "type": "header", "content": "Order note" },
+    { "type": "checkbox", "id": "show_order_note",
+      "label": "Show order note textarea", "default": true },
+    { "type": "text", "id": "order_note_label",
+      "label": "Note label", "default": "Leave a note with your order" },
+
+    { "type": "header", "content": "Free shipping progress bar" },
+    { "type": "checkbox", "id": "show_shipping_bar",
+      "label": "Show progress bar", "default": true },
+    { "type": "number", "id": "free_shipping_threshold_cents",
+      "label": "Free shipping threshold (cents)",
+      "default": 10000,
+      "info": "Amount in currency subunit (e.g. 10000 = $100.00)." },
+    { "type": "text", "id": "shipping_message_default",
+      "label": "Default progress message (empty cart)",
+      "default": "You are $100.00 USD from free shipping." },
+    { "type": "text", "id": "shipping_message_template",
+      "label": "Progress message template",
+      "default": "You are {remaining} USD from free shipping.",
+      "info": "Use {remaining} as a placeholder for the amount left." },
+    { "type": "text", "id": "shipping_message_success",
+      "label": "Threshold reached message",
+      "default": "You qualify for free shipping!" },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select", "id": "container_width",
+      "label": "Container width", "default": "3",
+      "options": [
+        { "value": "1", "label": "Narrow" },
+        { "value": "2", "label": "Small" },
+        { "value": "3", "label": "Medium" },
+        { "value": "4", "label": "Large" },
+        { "value": "5", "label": "X-Large" },
+        { "value": "6", "label": "Full width" }
+      ]
+    }
+  ]
 }
 {{/schema}}

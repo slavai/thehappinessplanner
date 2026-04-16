@@ -53,35 +53,134 @@
 
   <div class="drawer--side" data-side="left" aria-expanded="false">
     <div class="drawer--container" data-view="y-menu" hidden>
-      <div class="mobile-nav--wrapper">
-        <button class="drawer--close" data-drawer-close aria-label="Close menu">&times;</button>
-        <nav class="mobile-nav--menu">
-          <ul class="mobile-nav--list">
-            {{#each main_menu.links as |link|}}
-              <li class="mobile-nav--item">
-                <a href="{{ link.url }}"{{#if (contains link.url "http")}} target="_blank"{{/if}}>{{ link.title }}</a>
+      <div class="mobile-nav">
+        <div class="mobile-nav--header" data-mq="small">
+          <div class="mobile-nav--search" data-item="nav-text">
+            <button class="header--search" data-drawer-open="top" data-drawer-view="search" data-item="nav-text" aria-label="Search" tabindex="0">
+              <svg class="icon--root icon--search" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <circle cx="8.46" cy="8.46" r="5.56" fill="none" stroke="#000" stroke-miterlimit="10"></circle>
+                <path fill="none" stroke="#000" stroke-miterlimit="10" d="m14.4 14.4 2.7 2.7"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="mobile-nav--account" data-item="nav-text">
+            <a class="header--account" href="/account" aria-label="Account">
+              <svg class="icon--root icon--account" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <circle cx="9.99" cy="5.96" r="3.07" fill="none" stroke="#000" stroke-miterlimit="10"></circle>
+                <path fill="none" stroke="#000" stroke-miterlimit="10" d="M4.5 17.11c0-3.04 2.46-5.5 5.5-5.5s5.5 2.46 5.5 5.5"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <nav class="mobile-nav--menu" data-item="nav-text">
+          <y-menu-element class="y-menu" style="--highlight-color:#d02e2e;">
+            <ul class="y-menu--level-1--container" id="y-menu" aria-current="true"
+                data-transition-container="y-menu" data-transition-cascade="vertical"
+                data-transition-cascade-interval="100" data-transition-type="slide-right">
+              {{#each main_menu.links as |link|}}
                 {{#if (size link.links) > 0}}
-                  <ul class="mobile-nav--sublist">
-                    {{#each link.links as |child|}}
-                      <li><a href="{{ child.url }}"{{#if (contains child.url "http")}} target="_blank"{{/if}}>{{ child.title }}</a></li>
-                    {{/each}}
-                  </ul>
+                  <li class="y-menu--level-1--link" data-item="nav-text" data-depth="2">
+                    <button data-item="nav-text" aria-haspopup="true" aria-expanded="false"
+                            aria-controls="y-menu_{{ @index }}"
+                            data-transition-item="y-menu"
+                            style="--transition--delay: {{ @index }}00ms;">{{ link.title }}<svg class="icon--root icon--chevron-right--small" data-invertible="true" width="8" height="14" viewBox="0 0 8 14" xmlns="http://www.w3.org/2000/svg"> <path d="M6.274 7.202.408 1.336l.707-.707 6.573 6.573-.096.096-6.573 6.573-.707-.707 5.962-5.962Z" fill="#000" fill-rule="nonzero"></path> </svg></button>
+                    <ul class="y-menu--level-2--container" data-depth="2"
+                        id="y-menu_{{ @index }}" aria-current="false"
+                        data-transition-container="y-menu_{{ @index }}"
+                        data-transition-cascade="vertical"
+                        data-transition-cascade-interval="100"
+                        data-transition-type="slide-right">
+                      <li class="y-menu--back-link">
+                        <button data-item="nav-text" aria-controls="y-menu"
+                                data-transition-item="y-menu_{{ @index }}"
+                                style="--transition--delay: 0ms;"><svg class="icon--root icon--chevron-left--small" data-invertible="true" width="8" height="14" viewBox="0 0 8 14" xmlns="http://www.w3.org/2000/svg"> <path d="m1.726 7.298 5.866 5.866-.707.707L.312 7.298l.096-.096L6.981.629l.707.707-5.962 5.962Z" fill="#000" fill-rule="nonzero"></path> </svg> Back</button>
+                      </li>
+                      <li class="y-menu--parent-link">
+                        <a href="{{ link.url }}"
+                           data-transition-item="y-menu_{{ @index }}"
+                           style="--transition--delay: 100ms;">{{ link.title }}</a>
+                      </li>
+                      {{#each link.links as |child|}}
+                        <li class="y-menu--level-2--link" data-item="nav-text">
+                          <a href="{{ child.url }}" data-item="nav-text"
+                             data-transition-item="y-menu_{{ @../index }}"
+                             style="--transition--delay: {{ @index }}00ms;"
+                             {{#if (contains child.url "http")}}target="_blank"{{/if}}>{{ child.title }}</a>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  </li>
+                {{else}}
+                  <li class="y-menu--level-1--link" data-item="nav-text" data-depth="1">
+                    <a href="{{ link.url }}" data-item="nav-text"
+                       data-transition-item="y-menu"
+                       style="--transition--delay: {{ @index }}00ms;"
+                       {{#if (contains link.url "http")}}target="_blank"{{/if}}>{{ link.title }}</a>
+                  </li>
                 {{/if}}
-              </li>
-            {{/each}}
-          </ul>
+              {{/each}}
+            </ul>
+          </y-menu-element>
         </nav>
+
+        <div class="mobile-nav--footer" data-mq="small">
+          <div class="mobile-nav--social-icons">
+            <div class="social-icons--root" data-type="follow" data-hover-color="brand" data-alignment="left" data-mobile-alignment="left">
+              <div class="social-icons--items">
+                {{#if section.settings.social_facebook}}<a class="social-facebook--link" rel="noreferrer" target="_blank" href="{{ section.settings.social_facebook }}" aria-label="facebook"><svg class="icon--root icon--facebook icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18.896 0H1.104C.494 0 0 .494 0 1.104v17.793C0 19.506.494 20 1.104 20h9.58v-7.745H8.076V9.237h2.606V7.01c0-2.583 1.578-3.99 3.883-3.99 1.104 0 2.052.082 2.329.119v2.7h-1.598c-1.254 0-1.496.597-1.496 1.47v1.928h2.989l-.39 3.018h-2.6V20h5.098c.608 0 1.102-.494 1.102-1.104V1.104C20 .494 19.506 0 18.896 0Z" fill="#000" fill-rule="evenodd"></path></svg></a>{{/if}}
+                {{#if section.settings.social_instagram}}<a class="social-instagram--link" rel="noreferrer" target="_blank" href="{{ section.settings.social_instagram }}" aria-label="instagram"><svg class="icon--root icon--instagram icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M15.33 5.87a1.208 1.208 0 0 1-1.2-1.197 1.215 1.215 0 0 1 1.207-1.212c.649.002 1.198.55 1.202 1.2.005.659-.547 1.21-1.21 1.209Zm-5.332 9.273c-2.828 0-5.128-2.297-5.14-5.134-.013-2.83 2.31-5.148 5.148-5.138a5.126 5.126 0 0 1 5.124 5.137 5.14 5.14 0 0 1-5.133 5.135Zm-.01-1.808a3.343 3.343 0 0 0 3.342-3.324 3.348 3.348 0 0 0-3.325-3.34 3.343 3.343 0 0 0-3.34 3.324 3.34 3.34 0 0 0 3.324 3.34ZM1.787 9.997h.038c0 1.052-.018 2.104.007 3.154.015.652.048 1.311.16 1.953.259 1.484 1.12 2.454 2.597 2.845.737.195 1.492.215 2.243.222 2.11.016 4.219.017 6.328-.002a11.723 11.723 0 0 0 1.952-.162c1.483-.265 2.451-1.13 2.834-2.61.214-.821.218-1.663.225-2.5.018-1.931.02-3.863-.002-5.793-.008-.725-.042-1.458-.16-2.171-.25-1.502-1.116-2.488-2.614-2.878-.82-.213-1.663-.218-2.5-.225-1.93-.018-3.861-.02-5.793.002-.724.008-1.456.047-2.17.16-1.4.224-2.388 1-2.81 2.382a6.122 6.122 0 0 0-.247 1.519c-.056 1.367-.062 2.736-.088 4.104ZM20 7.143v5.715c-.01.104-.024.208-.031.313-.044.658-.056 1.32-.137 1.975-.117.95-.44 1.833-1.019 2.607-1.072 1.433-2.57 2.03-4.296 2.164-.446.035-.895.055-1.343.083H6.786c-.092-.01-.183-.028-.274-.034-.473-.03-.95-.04-1.421-.092-1.032-.114-1.998-.424-2.84-1.051C.812 17.748.215 16.247.084 14.514c-.033-.419-.056-.84-.083-1.26V6.746c.014-.157.025-.314.04-.47.067-.63.08-1.27.21-1.887C.638 2.56 1.686 1.245 3.44.532c.932-.379 1.919-.46 2.913-.49.263-.008.526-.028.79-.042h5.714c.09.01.183.024.274.03.671.045 1.347.054 2.014.14 1.044.133 2.002.507 2.823 1.191 1.31 1.094 1.833 2.555 1.948 4.202.037.526.056 1.053.084 1.58Z" fill="#000" fill-rule="evenodd"></path></svg></a>{{/if}}
+                {{#if section.settings.social_pinterest}}<a class="social-pinterest--link" rel="noreferrer" target="_blank" href="{{ section.settings.social_pinterest }}" aria-label="pinterest"><svg class="icon--root icon--pinterest icon--social-media" data-invertible="false" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M.079 11.203c.026.217.059.433.099.646.018.095.034.19.055.285.053.24.113.475.183.708.015.053.027.108.044.161.088.28.19.554.301.823.033.078.07.154.104.23a10.234 10.234 0 0 0 .418.835c.104.186.215.367.33.545.045.068.086.138.132.205.16.235.331.463.511.684.045.054.094.106.14.16a10.227 10.227 0 0 0 .655.698c.146.14.296.276.45.409.07.059.137.12.208.177.222.18.45.354.688.514.027.019.057.035.085.054.214.142.435.276.66.401.082.045.165.087.247.13.185.096.373.187.563.272.086.037.17.076.257.111.048.02.097.035.145.053-.087-.79-.164-2 .036-2.86.182-.78 1.173-4.971 1.173-4.971s-.3-.6-.3-1.485c0-1.39.806-2.429 1.81-2.429.853 0 1.265.641 1.265 1.41 0 .857-.546 2.14-.828 3.329-.236.995.5 1.807 1.48 1.807 1.778 0 3.144-1.874 3.144-4.58 0-2.394-1.72-4.068-4.177-4.068-2.845 0-4.515 2.134-4.515 4.34 0 .86.331 1.781.744 2.282a.3.3 0 0 1 .07.287L5.977 13.5c-.043.182-.144.222-.334.134-1.249-.582-2.03-2.408-2.03-3.875 0-3.154 2.293-6.05 6.608-6.05 3.469 0 6.165 2.471 6.165 5.775 0 3.446-2.174 6.22-5.19 6.22-1.013 0-1.965-.527-2.291-1.149 0 0-.502 1.91-.623 2.378-.226.868-.835 1.956-1.243 2.62.278.087.562.157.85.219.086.019.175.034.263.05.217.04.436.074.657.1.09.011.18.023.271.031.303.028.609.047.92.047 5.523 0 10-4.477 10-10a9.99 9.99 0 0 0-4.41-8.292A9.922 9.922 0 0 0 12.016.203 10.052 10.052 0 0 0 10 0C4.477 0 0 4.477 0 10c0 .313.018.62.046.925.009.094.021.186.033.277" fill="#000" fill-rule="evenodd"></path></svg></a>{{/if}}
+                {{#if section.settings.social_youtube}}<a class="social-youtube--link" rel="noreferrer" target="_blank" href="{{ section.settings.social_youtube }}" aria-label="youtube"><svg class="icon--root icon--youtube icon--social-media" data-invertible="false" width="29" height="20" viewBox="0 0 29 20" xmlns="http://www.w3.org/2000/svg"><path d="M28.166 3.123c.596 2.228.596 6.877.596 6.877s0 4.649-.596 6.877a3.577 3.577 0 0 1-2.522 2.526C23.419 20 14.5 20 14.5 20s-8.92 0-11.145-.597a3.575 3.575 0 0 1-2.521-2.526C.238 14.649.238 10 .238 10s0-4.649.596-6.877A3.574 3.574 0 0 1 3.355.597C5.58 0 14.5 0 14.5 0s8.92 0 11.144.597a3.576 3.576 0 0 1 2.522 2.526ZM11.583 14.221 19.038 10l-7.455-4.221v8.442Z" fill="#000" fill-rule="evenodd"></path></svg></a>{{/if}}
+                {{#if section.settings.social_tiktok}}<a class="social-tiktok--link" rel="noreferrer" target="_blank" href="{{ section.settings.social_tiktok }}" aria-label="tiktok"><svg class="icon--root icon--tiktok icon--social-media" data-invertible="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2859 3333"><path d="M2081 0c55 473 319 755 778 785v532c-266 26-499-61-770-225v995c0 1264-1378 1659-1932 753-356-583-138-1606 1004-1647v561c-87 14-180 36-265 65-254 86-398 247-358 531 77 544 1075 705 992-358V1h551z"></path></svg></a>{{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="drawer--side" data-side="top" aria-expanded="false">
+  <div class="drawer--side" data-side="top" data-focus-id="search_input" aria-expanded="false">
     <div class="drawer--container" data-view="search" hidden>
-      <form action="/search" method="get" role="search" class="search--drawer-form">
-        <button class="drawer--close" data-drawer-close aria-label="Close search" type="button">&times;</button>
-        <input type="search" name="q" placeholder="Search..." aria-label="Search" autofocus>
-        <button type="submit" aria-label="Submit">Search</button>
-      </form>
+      <predictive-search-element class="search--root" data-loading="false">
+        <form action="/search" method="get" role="search">
+          <div class="search--bar-wrapper">
+            <div class="search--bar">
+              <div class="search--icon">
+                <svg class="icon--root icon--search" data-invertible="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <circle cx="8.46" cy="8.46" r="5.56" fill="none" stroke="#000" stroke-miterlimit="10"></circle>
+                  <path fill="none" stroke="#000" stroke-miterlimit="10" d="m14.4 14.4 2.7 2.7"></path>
+                </svg>
+                <svg class="icon--root icon--spinner" data-invertible="false">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+                </svg>
+              </div>
+              <label for="search_input" data-item="hidden-text">{{ section.settings.search_placeholder }}</label>
+              <input id="search_input" class="search--textbox" type="search" name="q" value=""
+                     placeholder="{{ section.settings.search_placeholder }}"
+                     data-item="paragraph" role="combobox"
+                     aria-owns="predictive_search_results_list"
+                     aria-controls="predictive_search_results_list"
+                     aria-autocomplete="list" autocorrect="off"
+                     autocomplete="off" autocapitalize="off" spellcheck="false">
+              <div class="search--clear" tabindex="0" aria-label="clear" aria-hidden="true">
+                <svg class="icon--root icon--x-mark" data-invertible="true" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.997 0c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998C4.48 19.995 0 15.515 0 9.997 0 4.48 4.48 0 9.997 0Zm0 8.933L7.276 6.211a.749.749 0 1 0-1.062 1.061l2.722 2.722-2.728 2.728a.75.75 0 1 0 1.061 1.062l2.728-2.728 2.729 2.728a.75.75 0 0 0 1.06-1.062l-2.727-2.728 2.717-2.717a.75.75 0 0 0-.531-1.281.746.746 0 0 0-.531.22L9.997 8.933Z" fill="#222"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="search--cancel" data-item="block-link" tabindex="0" data-drawer-close="">
+              <div>Cancel</div>
+            </div>
+          </div>
+          <div class="search--results" id="predictive_search_results_list"
+               data-transition-container="search"
+               data-transition-type="fade-in"
+               data-transition-cascade="horizontal"
+               data-transition-cascade-interval="200"></div>
+        </form>
+      </predictive-search-element>
     </div>
   </div>
 
@@ -199,6 +298,13 @@
     { "type": "range", "id": "logo_mobile_width", "label": "Mobile width (px)", "min": 80, "max": 600, "step": 1, "unit": "px", "default": 305 },
     { "type": "header", "content": "Navigation" },
     { "type": "menu_picker", "id": "main_menu_link_list", "label": "Main menu", "default": "main-menu" },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder text", "default": "Search here..." },
+    { "type": "header", "content": "Social links (mobile drawer footer)" },
+    { "type": "url", "id": "social_facebook",  "label": "Facebook URL" },
+    { "type": "url", "id": "social_instagram", "label": "Instagram URL" },
+    { "type": "url", "id": "social_pinterest", "label": "Pinterest URL" },
+    { "type": "url", "id": "social_youtube",   "label": "YouTube URL" },
+    { "type": "url", "id": "social_tiktok",    "label": "TikTok URL" },
     { "type": "header", "content": "Appearance" },
     {
       "type": "select",

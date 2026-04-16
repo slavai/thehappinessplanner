@@ -77,9 +77,11 @@
         "button_label": "More Info",
         "button_url": "/products/the-mindful-life-design-lab",
         "product_handle": "the-mindful-life-design-lab",
-        "image_alt": "The Mindful Life Design Lab | Cohort #2"
+        "image_alt": "The Mindful Life Design Lab | Cohort #2",
+        "image": null
       },
-      "blocks": {}
+      "blocks": {},
+      "custom_css": []
     },
     "s-08": {
       "disabled": false,

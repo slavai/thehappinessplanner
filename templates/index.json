@@ -16,18 +16,18 @@
           },
           "custom_css": []
         },
-        "slide-2": {
+        "1776358722552067df2c": {
           "type": "slide",
           "settings": {
-            "link": "/",
-            "image": "shopline://shop_images/Screenshot_2026-03-11_at_12.54.26_PM.png"
+            "new_tab": false,
+            "image": "shopline://shop_images/100grn19_b01380b4-6d16-4dff-912b-42f66fed8560.jpg"
           },
           "custom_css": []
         }
       },
       "block_order": [
-        "slide-1",
-        "slide-2"
+        "1776358722552067df2c",
+        "slide-1"
       ],
       "custom_css": []
     },

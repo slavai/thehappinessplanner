@@ -38,7 +38,7 @@
             <div class="featured-grid--item--container">
               <div class="featured-grid--item--media" data-transition-item="" data-transition-type="zoom-in" data-transition-trigger="hover">
                 <picture class="image--root " data-background="false" data-display-type="fill-available" data-full-width="false" data-mobile-display-type="original" data-mobile-full-width="" data-mobile-overlay-style="none" data-parallax="" data-overlay-style="none" style="--aspect-ratio:{{ block.settings.aspect_ratio }};--mobile-aspect-ratio:{{ block.settings.aspect_ratio }};">
-                  <img src="{{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}}" alt="{{ block.settings.alt }}" srcset="{{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}} 200w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}} 300w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}} 400w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}} 500w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}} 600w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ asset_url block.settings.fallback_image }}{{/if}} 700w" width="720" height="660" loading="lazy" sizes="(max-width: 767px) calc(100vw - 32px), 400px" draggable="false">
+                  <img src="{{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}}" alt="{{ block.settings.alt }}" srcset="{{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}} 200w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}} 300w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}} 400w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}} 500w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}} 600w, {{#if block.settings.image}}{{ image_url block.settings.image width=700 }}{{else}}{{ image_url block.settings.image width=700 }}{{/if}} 700w" width="720" height="660" loading="lazy" sizes="(max-width: 767px) calc(100vw - 32px), 400px" draggable="false">
                 </picture>
               </div>
             </div>
@@ -133,11 +133,7 @@
       "settings": [
         { "type": "image_picker", "id": "image",
           "label": "Image",
-          "info":  "Falls back to the bundled theme image when empty." },
-        { "type": "text", "id": "fallback_image",
-          "label":   "Fallback image filename",
-          "default": "",
-          "info":    "Name of a file under theme/assets/images/ (e.g. foo.webp). Used only when the Image picker is empty." },
+          "info":  "Upload or select an image from the media library." },
         { "type": "text", "id": "alt",
           "label":   "Image alt / aria-label",
           "default": "" },

@@ -371,107 +371,113 @@
         "item-1": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.36.46_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/overthinking",
             "alt": "Overthinking",
             "new_tab": true,
             "aspect_ratio": "1.0593",
-            "delay_ms": 0
+            "delay_ms": 0,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.36.46_PM.webp"
           }
         },
         "item-2": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.31.45_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/leading-your-life",
             "alt": "Leading your life",
             "new_tab": true,
             "aspect_ratio": "1.0948",
-            "delay_ms": 200
+            "delay_ms": 200,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.31.45_PM.webp"
           }
         },
         "item-3": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.32.46_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/The-neuroscience-of-stress-what-you-need-to-know",
             "alt": "The neuroscience of stress",
             "new_tab": true,
             "aspect_ratio": "1.0915",
-            "delay_ms": 400
+            "delay_ms": 400,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.32.46_PM.webp"
           }
         },
         "item-4": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.26.44_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/Trauma-masterclass-down-regulating-the-nervous-system-and-trauma-response",
             "alt": "Trauma masterclass",
             "new_tab": true,
             "aspect_ratio": "1.0942",
-            "delay_ms": 0
+            "delay_ms": 0,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.26.44_PM.webp"
           }
         },
         "item-5": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.33.51_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/Breaking-through-the-vicious-cycle-of-anxiety",
             "alt": "Breaking the vicious cycle of anxiety",
             "new_tab": true,
             "aspect_ratio": "1.0948",
-            "delay_ms": 200
+            "delay_ms": 200,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.33.51_PM.webp"
           }
         },
         "item-6": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.37.47_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/connect-with-your-purpose",
             "alt": "Connect with your purpose",
             "new_tab": true,
             "aspect_ratio": "1.0651",
-            "delay_ms": 400
+            "delay_ms": 400,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.37.47_PM.webp"
           }
         },
         "item-7": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.41.04_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/Regulate-your-nervous-system-unlearn-childhood-survival-responses",
             "alt": "Regulate your nervous system",
             "new_tab": true,
             "aspect_ratio": "1.1084",
-            "delay_ms": 0
+            "delay_ms": 0,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.41.04_PM.webp"
           }
         },
         "item-8": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.42.31_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/vision-board-to-achieve-your-dreams",
             "alt": "Vision board to achieve your dreams",
             "new_tab": true,
             "aspect_ratio": "1.1012",
-            "delay_ms": 200
+            "delay_ms": 200,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.42.31_PM.webp"
           }
         },
         "item-9": {
           "type": "grid_item",
           "settings": {
-            "fallback_image": "images/Screen_Shot_2023-04-29_at_1.44.15_PM.webp",
             "link": "https://www.thehappinessplanner.io/workshops/rewiring-unhelpful-thinking",
             "alt": "Rewiring unhelpful thinking",
             "new_tab": true,
             "aspect_ratio": "1.0979",
-            "delay_ms": 400
+            "delay_ms": 400,
+            "image": "shopline://shop_images/Screen_Shot_2023-04-29_at_1.44.15_PM.webp"
           }
         }
       },
       "block_order": [
-        "item-1", "item-2", "item-3",
-        "item-4", "item-5", "item-6",
-        "item-7", "item-8", "item-9"
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6",
+        "item-7",
+        "item-8",
+        "item-9"
       ]
     },
     "s-25": {

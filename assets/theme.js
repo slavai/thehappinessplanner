@@ -509,12 +509,16 @@
   }
   define("video-component", VideoComponent);
 
-  // --- product-options-element (disclosure pickers → variant id) ---------
+  // --- product-options-element (disclosure OR radio pickers → variant id) ----
   // Reads all variants from a child <script class="product-options--variants-json">
-  // (written by product-form-variant-picker.html snippet via {{{ json product.variants }}}).
-  // Listens for `change` events on child <input class="disclosure--input">, collects
-  // current option values indexed by data-option-index, finds the matching variant,
-  // updates the buy-buttons id input + price display + button state.
+  // (written by product-form-variant-picker.html or home-featured-product.html
+  // via {{{ json product.variants }}}).
+  // Listens for `change` events on either:
+  //   - <input class="disclosure--input" data-option-index="N">  (product page)
+  //   - <input class="radios--input"     data-option-index="N">  (home featured product)
+  // Collects current option values indexed by data-option-index, finds the
+  // matching variant, and updates: the buy-buttons id input, the visible price
+  // + compare-at price, and the buy-button availability state.
   class ProductOptionsElement extends HTMLElement {
     connectedCallback() {
       let variants = [];
@@ -524,19 +528,27 @@
         else variants = JSON.parse(this.getAttribute("data-variants-json") || "[]");
       } catch (e) { variants = []; }
       this._variants = Array.isArray(variants) ? variants : [];
-      // Disclosure-pattern pickers emit `change` events on the hidden input.
-      // We bind at the element level so new/replaced inputs still work.
+      // Disclosure pickers emit `change` on the hidden input; radio labels emit
+      // `change` on the <input type=radio>. Bind at the element level so
+      // new/replaced inputs still work.
       this.addEventListener("change", (e) => {
         const t = e.target;
-        if (!t || !t.classList || !t.classList.contains("disclosure--input")) return;
+        if (!t || !t.classList) return;
+        if (!t.classList.contains("disclosure--input") && !t.classList.contains("radios--input")) return;
         this._onChange();
       });
     }
     _onChange() {
       if (this._variants.length === 0) return;
       // Collect selected option values indexed by data-option-index.
+      // Prefer disclosure inputs (always have current value); fall back to
+      // the checked radio in each radios-element group.
       const selected = [];
       this.querySelectorAll("input.disclosure--input[data-option-index]").forEach((inp) => {
+        const idx = parseInt(inp.getAttribute("data-option-index") || "-1", 10);
+        if (idx >= 0) selected[idx] = inp.value;
+      });
+      this.querySelectorAll("input.radios--input[data-option-index]:checked").forEach((inp) => {
         const idx = parseInt(inp.getAttribute("data-option-index") || "-1", 10);
         if (idx >= 0) selected[idx] = inp.value;
       });
@@ -558,10 +570,30 @@
       const root = this.closest(".main-product--root, .product-form, .featured-product--root, [data-section-id]") || document;
       const idInput = root.querySelector("product-buy-buttons-element input[name='id'], input.product-buy-buttons--input");
       if (idInput) idInput.value = String(match.id);
-      const priceEl = root.querySelector("product-price-element .product-price--original .money, .product-price--root .money");
+      const priceEl = root.querySelector("product-price-element .product-price--original .money, .product-price--root .product-price--original .money");
       if (priceEl) {
         const formatted = match.price_formatted || formatMoney(match.price);
         if (formatted) priceEl.textContent = formatted;
+      }
+      // Compare-at price: show original <s>-style only when strictly greater
+      // than current price. SHOPLINE returns 0 (not null) when unset.
+      const compareWrap = root.querySelector(".product-price--compare");
+      if (compareWrap) {
+        const cap = typeof match.compare_at_price === "number" ? match.compare_at_price : 0;
+        if (cap > match.price) {
+          let compareMoney = compareWrap.querySelector(".money");
+          if (!compareMoney) {
+            compareMoney = document.createElement("span");
+            compareMoney.className = "money";
+            compareWrap.appendChild(compareMoney);
+          }
+          compareMoney.textContent = formatMoney(cap);
+          compareWrap.removeAttribute("aria-hidden");
+          compareWrap.hidden = false;
+        } else {
+          compareWrap.setAttribute("aria-hidden", "true");
+          compareWrap.hidden = true;
+        }
       }
       const buyBtn = root.querySelector("product-buy-buttons-element .product-buy-buttons--primary");
       if (buyBtn) {

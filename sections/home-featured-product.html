@@ -73,12 +73,14 @@
         <product-price-element class="product-price--root" data-id="{{ product.id }}">
           <div class="product-price--wrapper">
             <div class="product-price--original" data-item="nav-text">
-              <span class="money">{{ money product.price }} USD</span>
+              <span class="money">{{ money_with_currency product.first_available_variant.price }}</span>
             </div>
-            {{#if product.compare_at_price}}
+            {{#if product.first_available_variant.compare_at_price '>' product.first_available_variant.price}}
             <div class="product-price--compare" data-item="nav-text" data-text-color="gray">
-              <span class="money">{{ money product.compare_at_price }} USD</span>
+              <span class="money">{{ money_with_currency product.first_available_variant.compare_at_price }}</span>
             </div>
+            {{else}}
+            <div class="product-price--compare" data-item="nav-text" data-text-color="gray" aria-hidden="true" hidden></div>
             {{/if}}
           </div>
         </product-price-element>
@@ -102,12 +104,13 @@
               {{#for option.values as |value|}}
               <label class="radios--value-button {{#if forloop.first}}is-selected{{/if}}" data-item="secondary-button" data-text="{{ value }}" data-option-name="{{ option.name }}">
                 <div>{{ value }}</div>
-                <input class="radios--input" type="radio" name="{{ section.id }}-{{ option.name }}" value="{{ value }}" {{#if forloop.first}}checked{{/if}} data-option-name="{{ option.name }}" data-item="radio">
+                <input class="radios--input" type="radio" name="{{ section.id }}-{{ option.name }}" value="{{ value }}" {{#if forloop.first}}checked{{/if}} data-option-name="{{ option.name }}" data-option-index="{{ forloop.parentloop.index0 }}" data-item="radio">
               </label>
               {{/for}}
             </div>
           </radios-element>
           {{/for}}
+          <script type="application/json" class="product-options--variants-json">{{{ json product.variants }}}</script>
         </product-options-element>
       </div>
       {{/unless}}

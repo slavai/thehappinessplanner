@@ -1,0 +1,202 @@
+<div id="shopline-section-{{ section.id }}" class="shopify-section section--apps section--reviews-sticky-tab">
+  {{#if section.settings.enabled}}
+  <div id="stamped-reviews-widget-drawer"
+       data-widget-type="drawer"
+       data-show-avatar="true"
+       data-position="left"
+       data-text=""
+       data-title=""
+       data-link=""
+       data-link-text=""
+       data-background-color=""
+       data-style-color-button-text=""
+       data-style-color-star=""
+       data-style-color-text=""
+       data-style-color-link=""
+       data-review-ids=""
+       data-product-ids=""
+       data-product-category=""
+       data-product-brand=""
+       data-tags=""
+       data-limit-words=""
+       data-min-rating="{{ section.settings.min_rating }}"
+       data-fill-empty="false"
+       data-random="false"
+       data-with-photos="false"
+       data-element-id="2"
+       data-lang="en">
+    <div id="stamped-widget-drawer" class="stamped-widget-drawer">
+      <div class="stamped-drawer-content">
+        <div class="stamped-drawer-title" data-count=""></div>
+        <ul class="stamped-drawer-tabs">
+          <li id="product-reviews" class="active" onclick="StampedWidgetDrawerFn && StampedWidgetDrawerFn.switchTab('product-reviews')"><span>Product Reviews</span></li>
+          <li id="site-reviews" onclick="StampedWidgetDrawerFn && StampedWidgetDrawerFn.switchTab('site-reviews')"><span>Site Reviews</span></li>
+        </ul>
+        <div class="stamped-drawer-footer">
+          <div class="stamped-drawer-link-wrapper">
+            <a href="" class="stamped-drawer-link stamped-style-color-link"><span class="stamped-drawer-link-text"></span></a>
+          </div>
+        </div>
+      </div>
+      <div class="stamped-widget-button" onclick="(function(d){d.classList.toggle('open');})(document.getElementById('stamped-widget-drawer'))">
+        <div class="vertical-text">{{ section.settings.button_label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="//cdn1.stamped.io/files/widget.min.css">
+  <script async src="https://cdn1.stamped.io/files/widget.min.js"></script>
+  {{/if}}
+</div>
+
+{{#style}}
+#shopline-section-{{ section.id }} .stamped-widget-drawer {
+  font-size: 14px;
+  color: #000;
+  position: fixed;
+  top: 30%;
+  left: -350px;
+  height: 350px;
+  transition: left 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+  box-sizing: border-box;
+  z-index: 99999;
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer a { text-decoration: none; }
+#shopline-section-{{ section.id }} .stamped-widget-drawer .fa-star { color: gold; }
+#shopline-section-{{ section.id }} .stamped-widget-drawer .stamped-drawer-content {
+  background: #fff;
+  float: left;
+  width: 350px;
+  padding-top: 0;
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer.open .stamped-drawer-content {
+  box-shadow: 0px 0px 30px -2px #ccc;
+  padding: 0px;
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer .scroll {
+  height: 350px;
+  padding: 0 20px;
+  padding-top: 20px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer .stamped-widget-button {
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  background: {{ section.settings.button_bg }};
+  color: {{ section.settings.button_color }};
+  width: 130px;
+  height: auto;
+  cursor: pointer;
+  margin-top: 43px;
+  line-height: initial;
+  font-style: normal;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  margin-right: -130px;
+  -webkit-transform-origin: 0% 50%;
+  -webkit-transform: rotate(-90deg) translate(-50%, 50%);
+  -moz-transform-origin: 0% 50%;
+  -moz-transform: rotate(-90deg) translate(-50%, 50%);
+  -ms-transform-origin: 0% 50%;
+  -ms-transform: rotate(-90deg) translate(-50%, 50%);
+  -o-transform-origin: 0% 50%;
+  -o-transform: rotate(-90deg) translate(-50%, 50%);
+  transition: box-shadow 0.1s ease-in-out;
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer:not(.open) .stamped-widget-button:hover {
+  box-shadow: 0 0 35px 2px rgba(0,0,0,.24);
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer .vertical-text {
+  font-size: 1em;
+  background: none;
+  pointer-events: none;
+  padding: 12px 22px;
+  white-space: nowrap;
+}
+#shopline-section-{{ section.id }} .stamped-widget-drawer .vertical-text:before { content: '\2605  '; }
+#shopline-section-{{ section.id }} .stamped-widget-drawer.open { left: 0; }
+#shopline-section-{{ section.id }} .stamped-drawer-title {
+  padding: 15px 20px 10px 20px;
+  font-weight: bold;
+}
+#shopline-section-{{ section.id }} .stamped-drawer-title:empty:before {
+  content: "Reviews";
+}
+#shopline-section-{{ section.id }} ul.stamped-drawer-tabs {
+  display: none;
+  margin: 0;
+  padding: 5px 0 6px 20px;
+  text-align: center;
+}
+#shopline-section-{{ section.id }} ul.stamped-drawer-tabs li {
+  padding: 0;
+  display: inline;
+  margin-right: 10px;
+  padding-right: 15px;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+#shopline-section-{{ section.id }} ul.stamped-drawer-tabs li:first-child {
+  border-right: 1px solid #ccc;
+}
+#shopline-section-{{ section.id }} ul.stamped-drawer-tabs li.active span {
+  border-bottom: 3px solid #000;
+  padding-bottom: 5px;
+  font-weight: bold;
+}
+#shopline-section-{{ section.id }} .stamped-drawer-footer { min-height: 10px; }
+#shopline-section-{{ section.id }} .stamped-drawer-link-wrapper {
+  display: none;
+  text-align: center;
+  padding: 10px;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+}
+@media only screen and (max-width: 480px) {
+  #shopline-section-{{ section.id }} .stamped-widget-drawer div.stamped-widget-button {
+    width: 115px !important;
+    margin-right: -116px;
+    margin-left: -33px !important;
+    left: 0 !important;
+    right: auto !important;
+  }
+  #shopline-section-{{ section.id }} .stamped-widget-drawer .vertical-text {
+    font-size: 0.9em !important;
+    padding: 8px 20px !important;
+  }
+  #shopline-section-{{ section.id }} div.stamped-widget-drawer {
+    left: auto !important;
+    right: -300px !important;
+    transition: right 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94) !important;
+  }
+  #shopline-section-{{ section.id }} .stamped-widget-drawer .stamped-drawer-content {
+    width: 300px;
+  }
+  #shopline-section-{{ section.id }} .stamped-widget-drawer.open {
+    right: 0 !important;
+    left: auto !important;
+  }
+  #shopline-section-{{ section.id }} .stamped-widget-drawer { top: 20% !important; }
+}
+@media (min-width: 1200px) {
+  #shopline-section-{{ section.id }} .stamped-widget-drawer .scroll { height: 360px !important; }
+}
+{{/style}}
+
+{{#schema}}
+{
+  "name": "Home Reviews Sticky Tab",
+  "tag": "section",
+  "class": "section--apps section--reviews-sticky-tab",
+  "settings": [
+    { "type": "checkbox", "id": "enabled",      "label": "Enable sticky reviews tab",   "default": true },
+    { "type": "text",     "id": "button_label", "label": "Sticky tab label",             "default": "REVIEWS" },
+    { "type": "color",    "id": "button_bg",    "label": "Tab background color",         "default": "#C00" },
+    { "type": "color",    "id": "button_color", "label": "Tab text color",               "default": "#ffffff" },
+    { "type": "range",    "id": "min_rating",   "label": "Minimum review rating to show", "min": 1, "max": 5, "step": 1, "default": 4 }
+  ]
+}
+{{/schema}}

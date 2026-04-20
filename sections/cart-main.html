@@ -52,13 +52,23 @@
   variants, .cart--root/.cart--form/.cart--wrapper/.cart--header/
   .cart--shipping/.cart--body/.cart--footer/.cart--summary).
 
+  Empty-state contract (matches original rendered output):
+  In the original capture the site hides everything inside
+  `.cart--wrapper` except `.cart--header` + `.cart--empty` via
+  `.layout--viewport[data-cart-empty=true] ...` CSS. Since our
+  theme.html layout does not set `data-cart-empty`, we mirror the
+  same semantics directly in Handlebars: when `cart.empty`, render
+  ONLY the header + empty message (no shipping bar, no headings,
+  no notes, no subtotal / checkout button).
+
   Dynamic wiring:
   - {{#if cart.empty}} → .cart--empty block with continue-shopping link
   - {{#for cart.items}} → rows with image, title, variant, qty, price,
     line total, remove anchor
   - cart.items_subtotal_price rendered via money helper
   - Shipping progress bar computed client-side from subtotal vs
-    free_shipping_threshold setting (SHOPLINE subunit = cents)
+    free_shipping_threshold setting (SHOPLINE subunit = cents).
+    Shown only when cart is non-empty.
 
   JS contract:
   - qty +/- buttons + remove share same data-cart-row / data-qty-dec /
@@ -94,22 +104,6 @@
         </h2>
       </div>
 
-      {{#if section.settings.show_shipping_bar}}
-      <div class="cart--shipping"
-           data-subtotal="{{ cart.items_subtotal_price }}"
-           data-threshold-cents="{{ section.settings.free_shipping_threshold_cents }}"
-           data-message-success="{{ section.settings.shipping_message_success }}"
-           data-message-template="{{ section.settings.shipping_message_template }}">
-        <div class="cart--shipping-message" data-item="paragraph">
-          <span data-shipping-progress-text>{{ section.settings.shipping_message_default }}</span>
-        </div>
-        <div class="cart--shipping-bar"
-             data-transition-item="cart-desktop" data-transition-type="custom"
-             style="--progress-percent: 0%; --transition--delay: 250ms;"
-             data-transition-active="true"></div>
-      </div>
-      {{/if}}
-
       {{#if cart.empty}}
         <div class="cart--empty" data-text-alignment="center">
           <div class="cart--empty-text" data-item="paragraph">
@@ -119,6 +113,22 @@
           </div>
         </div>
       {{else}}
+        {{#if section.settings.show_shipping_bar}}
+        <div class="cart--shipping"
+             data-subtotal="{{ cart.items_subtotal_price }}"
+             data-threshold-cents="{{ section.settings.free_shipping_threshold_cents }}"
+             data-message-success="{{ section.settings.shipping_message_success }}"
+             data-message-template="{{ section.settings.shipping_message_template }}">
+          <div class="cart--shipping-message" data-item="paragraph">
+            <span data-shipping-progress-text>{{ section.settings.shipping_message_default }}</span>
+          </div>
+          <div class="cart--shipping-bar"
+               data-transition-item="cart-desktop" data-transition-type="custom"
+               style="--progress-percent: 0%; --transition--delay: 250ms;"
+               data-transition-active="true"></div>
+        </div>
+        {{/if}}
+
         <div class="cart--body">
           <div class="cart--headings" data-item="nav-text">
             <div class="cart--heading--image"></div>
@@ -226,31 +236,7 @@
         </h2>
       </div>
 
-      {{#if section.settings.show_shipping_bar}}
-      <div class="cart--shipping"
-           data-subtotal="{{ cart.items_subtotal_price }}"
-           data-threshold-cents="{{ section.settings.free_shipping_threshold_cents }}"
-           data-message-success="{{ section.settings.shipping_message_success }}"
-           data-message-template="{{ section.settings.shipping_message_template }}">
-        <div class="cart--shipping-message" data-item="paragraph">
-          <span data-shipping-progress-text>{{ section.settings.shipping_message_default }}</span>
-        </div>
-        <div class="cart--shipping-bar"
-             data-transition-item="cart-mobile" data-transition-type="custom"
-             style="--progress-percent: 0%; --transition--delay: 250ms;"></div>
-      </div>
-      {{/if}}
-
       {{#if cart.empty}}
-        <div class="cart--body"></div>
-        {{#if section.settings.show_order_note}}
-        <div class="cart--notes">
-          <label for="mobile-cart_note" class="cart--notes--heading">
-            {{ section.settings.order_note_label }}
-          </label>
-          <textarea class="cart--notes--textarea" id="mobile-cart_note" name="note">{{ cart.note }}</textarea>
-        </div>
-        {{/if}}
         <div class="cart--empty" data-text-alignment="center">
           <div class="cart--empty-text" data-item="paragraph">
             <span data-item="rte-content">
@@ -259,6 +245,21 @@
           </div>
         </div>
       {{else}}
+        {{#if section.settings.show_shipping_bar}}
+        <div class="cart--shipping"
+             data-subtotal="{{ cart.items_subtotal_price }}"
+             data-threshold-cents="{{ section.settings.free_shipping_threshold_cents }}"
+             data-message-success="{{ section.settings.shipping_message_success }}"
+             data-message-template="{{ section.settings.shipping_message_template }}">
+          <div class="cart--shipping-message" data-item="paragraph">
+            <span data-shipping-progress-text>{{ section.settings.shipping_message_default }}</span>
+          </div>
+          <div class="cart--shipping-bar"
+               data-transition-item="cart-mobile" data-transition-type="custom"
+               style="--progress-percent: 0%; --transition--delay: 250ms;"></div>
+        </div>
+        {{/if}}
+
         <div class="cart--body">
           {{#for cart.items as |item|}}
           <div class="cart--item" data-cart-row data-key="{{ item.key }}">
@@ -406,7 +407,7 @@
       "default": 10000,
       "info": "Amount in currency subunit (e.g. 10000 = $100.00)." },
     { "type": "text", "id": "shipping_message_default",
-      "label": "Default progress message (empty cart)",
+      "label": "Default progress message (pre-JS)",
       "default": "You are $100.00 USD from free shipping." },
     { "type": "text", "id": "shipping_message_template",
       "label": "Progress message template",

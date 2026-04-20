@@ -52,6 +52,17 @@
       });
       document.body.classList.add("drawer-open");
       document.documentElement.style.overflow = "hidden";
+      // Trigger cascade animation on items inside the now-visible view.
+      // CSS hides [data-transition-item] by default; they fade/slide in only
+      // when data-transition-active="true" is set (with per-item --transition--delay).
+      const visibleContainer = sideEl.querySelector(`.drawer--container[data-view="${view}"]`);
+      if (visibleContainer) {
+        requestAnimationFrame(() => {
+          visibleContainer.querySelectorAll("[data-transition-item]").forEach((item) => {
+            item.setAttribute("data-transition-active", "true");
+          });
+        });
+      }
     },
     close() {
       const drawer = $("drawer-element.drawer--root");
@@ -60,6 +71,10 @@
       $$(".drawer--side", drawer).forEach((el) => {
         el.setAttribute("aria-expanded", "false");
         el.style.removeProperty("transform");
+      });
+      // Reset transition state so a re-open replays the cascade animation.
+      drawer.querySelectorAll("[data-transition-item][data-transition-active='true']").forEach((item) => {
+        item.setAttribute("data-transition-active", "false");
       });
       document.body.classList.remove("drawer-open");
       document.documentElement.style.overflow = "";

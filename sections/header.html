@@ -144,7 +144,7 @@
   <div class="drawer--side" data-side="top" data-focus-id="search_input" aria-expanded="false">
     <div class="drawer--container" data-view="search" hidden>
       <predictive-search-element class="search--root" data-loading="false">
-        <form action="/search" method="get" role="search">
+        <form action="{{ routes.search_url }}" method="get" role="search">
           <div class="search--bar-wrapper">
             <div class="search--bar">
               <div class="search--icon">
@@ -157,7 +157,7 @@
                 </svg>
               </div>
               <label for="search_input" data-item="hidden-text">{{ section.settings.search_placeholder }}</label>
-              <input id="search_input" class="search--textbox" type="search" name="q" value=""
+              <input id="search_input" class="search--textbox" type="search" name="keyword" value="{{ search.terms }}"
                      placeholder="{{ section.settings.search_placeholder }}"
                      data-item="paragraph" role="combobox"
                      aria-owns="predictive_search_results_list"

@@ -716,6 +716,29 @@
       this.style.setProperty("--blocks-per-slide", this._columns);
       this.style.setProperty("--blocks-per-slide-mobile", this._columnsMobile);
       this.style.setProperty("--total-blocks", this._count);
+      this._applyImageHeightVar();
+    }
+
+    // Measure first card's image-wrapper and publish --right-image-height /
+    // --left-image-height so .carousel--prev / .carousel--next (original theme.css
+    // rule: top = var(--right-image-height)/2 - var(--spacing--item)) center on
+    // the product IMAGE, not on the whole card (which also contains title,
+    // vendor, price). Re-runs on resize and once images have loaded.
+    _applyImageHeightVar() {
+      const firstWrap = this.querySelector(".product-card--image-wrapper");
+      if (!firstWrap) return;
+      const h = firstWrap.getBoundingClientRect().height;
+      if (!h) return;
+      const px = `${h}px`;
+      this.style.setProperty("--right-image-height", px);
+      this.style.setProperty("--left-image-height", px);
+      // Images are lazy-loaded; recompute once the first image has loaded so
+      // the var reflects the final rendered height (intrinsic ratio kicks in).
+      const img = firstWrap.querySelector("img.product-card--image");
+      if (img && !img.complete && !img._carouselImgBound) {
+        img._carouselImgBound = true;
+        img.addEventListener("load", () => this._applyImageHeightVar(), { once: true });
+      }
     }
 
     _scrollByBlocks(delta) {

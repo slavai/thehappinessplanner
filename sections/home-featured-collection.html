@@ -214,11 +214,17 @@
       max-width: calc((100% - 16px * (var(--blocks-per-slide-mobile, 1) - 1)) / var(--blocks-per-slide-mobile, 1));
     }
   }
+  /* Arrows: center on product IMAGE, not full card.
+     Vertical positioning comes from original theme.css
+     (.carousel--prev/.carousel--next { top: calc(var(--right-image-height)/2 -
+     var(--spacing--item)) }). product-carousel JS publishes
+     --right-image-height from the first card's .product-card--image-wrapper
+     height so the rule resolves correctly. Only horizontal offset + z-index
+     are scoped here. Do NOT restore the old `top: 50%` override — it centers
+     on card (image + title + vendor + price) and drops the arrow ~34px
+     below image center. */
   #shopline-section-{{ section.id }} product-carousel .carousel--prev,
   #shopline-section-{{ section.id }} product-carousel .carousel--next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     z-index: 3;
   }
   #shopline-section-{{ section.id }} product-carousel .carousel--prev { left: 0; }

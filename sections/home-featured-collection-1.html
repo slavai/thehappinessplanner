@@ -231,11 +231,10 @@
      Original design (3-div .nav-arrow structure + SVG chevrons in sibling
      .carousel-nav-arrow header-nav block) comes from theme.css and is
      preserved verbatim from extracted-sections. Do NOT redesign here. */
+  /* Arrows: center on product IMAGE, not full card. See home-featured-collection.html
+     for the full explanation. --right-image-height is published by product-carousel JS. */
   #shopline-section-{{ section.id }} product-carousel .carousel--prev,
   #shopline-section-{{ section.id }} product-carousel .carousel--next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     z-index: 3;
   }
   #shopline-section-{{ section.id }} product-carousel .carousel--prev { left: 0; }

@@ -59,7 +59,16 @@
   height: 350px;
   transition: left 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
   box-sizing: border-box;
-  z-index: 99999;
+  /* Stay BELOW the header drawer (z-index 9999) so an open menu/search/cart
+     drawer isn't overlapped by the REVIEWS tab. Use 9000 so we still sit
+     above normal page content. */
+  z-index: 9000;
+}
+/* Hide the sticky tab entirely while any header drawer is open — prevents
+   the left-edge button from peeking through the menu drawer (which opens
+   from the left) and avoids competing click targets. */
+body.drawer-open #shopline-section-{{ section.id }} .stamped-widget-drawer {
+  display: none !important;
 }
 #shopline-section-{{ section.id }} .stamped-widget-drawer a { text-decoration: none; }
 #shopline-section-{{ section.id }} .stamped-widget-drawer .fa-star { color: gold; }

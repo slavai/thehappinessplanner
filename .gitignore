@@ -1,0 +1,4 @@
+# Local QA / debug artifacts — do NOT sync with SHOPLINE
+.playwright-mcp/
+docs/superpowers/
+tmp/

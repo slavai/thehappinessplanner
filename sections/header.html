@@ -7,7 +7,10 @@
      the original theme.css which has strong defaults on .drawer--*. */
   drawer-element.drawer--root { position: fixed !important; inset: 0 !important; pointer-events: none; z-index: 9999 !important; display: block !important; }
   drawer-element.drawer--root[data-drawer-status="open"] { pointer-events: auto; }
-  drawer-element.drawer--root .drawer--overlay { position: absolute !important; inset: 0 !important; background: rgba(0,0,0,.45) !important; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+  /* Overlay must sit BELOW drawer--side (which is z-index:2) so clicks on
+     menu items go to the menu, and clicks on the dimmed area close the
+     drawer. theme.css ships overlay with z-index:98 — override. */
+  drawer-element.drawer--root .drawer--overlay { position: absolute !important; inset: 0 !important; background: rgba(0,0,0,.45) !important; opacity: 0; transition: opacity .25s ease; pointer-events: none; z-index: 1 !important; }
   drawer-element.drawer--root[data-drawer-status="open"] .drawer--overlay { opacity: 1; pointer-events: auto; }
   drawer-element.drawer--root .drawer--side { position: absolute !important; background: #fff !important; box-shadow: 0 0 20px rgba(0,0,0,.12) !important; transition: transform .3s ease !important; overflow: auto !important; z-index: 2 !important; }
   /* y-menu drawer matches original: beige surface spans the whole side,
@@ -18,7 +21,8 @@
   drawer-element.drawer--root[data-drawer-status="open"] .drawer--side[aria-expanded="true"] { transform: none !important; }
   drawer-element.drawer--root .drawer--container { display: block !important; height: 100% !important; }
   drawer-element.drawer--root .drawer--container[hidden] { display: none !important; }
-  drawer-element.drawer--root .drawer--close { position: absolute !important; top: 12px !important; right: 16px !important; background: none !important; border: 0 !important; font-size: 28px !important; line-height: 1 !important; cursor: pointer !important; z-index: 3; }
+  drawer-element.drawer--root .drawer--close { position: absolute !important; top: 12px !important; right: 16px !important; background: none !important; border: 0 !important; font-size: 28px !important; line-height: 1 !important; cursor: pointer !important; z-index: 3; transition: transform .3s ease; }
+  drawer-element.drawer--root .drawer--close:hover { transform: rotate(90deg); }
   drawer-element.drawer--root .mobile-nav--wrapper { padding: 48px 20px 20px !important; height: 100%; box-sizing: border-box; }
   drawer-element.drawer--root .mobile-nav--list,
   drawer-element.drawer--root .mobile-nav--sublist { list-style: none !important; padding: 0 !important; margin: 0 !important; }
@@ -55,6 +59,7 @@
 
   <div class="drawer--side" data-side="left" aria-expanded="false">
     <div class="drawer--container" data-view="y-menu" hidden>
+      <button class="drawer--close" data-drawer-close aria-label="Close menu" type="button">&times;</button>
       <div class="mobile-nav">
         <div class="mobile-nav--header" data-mq="small">
           <div class="mobile-nav--search" data-item="nav-text">

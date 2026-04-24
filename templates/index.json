@@ -514,7 +514,7 @@
       "blocks": {}
     },
     "s-26": {
-      "disabled": false,
+      "disabled": true,
       "type": "home-reviews-sticky-tab",
       "settings": {},
       "blocks": {}

@@ -38,23 +38,121 @@
   drawer-element.drawer--root .search--drawer-form { display: flex !important; gap: 8px; align-items: center; max-width: 800px; margin: 0 auto; padding-right: 48px; position: relative; }
   drawer-element.drawer--root .search--drawer-form input[type="search"] { flex: 1; padding: 12px 14px; font-size: 16px; border: 1px solid #ddd; border-radius: 2px; }
   drawer-element.drawer--root .search--drawer-form button[type="submit"] { padding: 12px 20px; background: #000; color: #fff; border: 0; font-size: 14px; letter-spacing: .5px; cursor: pointer; }
-  drawer-element.drawer--root .cart--drawer-wrapper { padding: 56px 20px 20px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
-  drawer-element.drawer--root .cart--drawer-title { font-size: 18px; font-weight: 700; letter-spacing: .5px; margin: 0 0 16px; text-transform: uppercase; }
-  drawer-element.drawer--root .cart--drawer-items { flex: 1; overflow-y: auto; list-style: none; padding: 0; margin: 0; }
-  drawer-element.drawer--root .cart--drawer-item { display: grid; grid-template-columns: 72px 1fr auto; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eee; align-items: start; }
-  drawer-element.drawer--root .cart--drawer-item img { width: 72px; height: 72px; object-fit: cover; background: #f5f5f5; }
-  drawer-element.drawer--root .cart--drawer-item-title { font-size: 14px; line-height: 1.4; margin: 0 0 4px; color: inherit; text-decoration: none; display: block; }
-  drawer-element.drawer--root .cart--drawer-item-variant { font-size: 12px; color: #666; margin: 0 0 8px; }
-  drawer-element.drawer--root .cart--drawer-qty { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-  drawer-element.drawer--root .cart--drawer-qty button { width: 24px; height: 24px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-size: 14px; line-height: 1; }
-  drawer-element.drawer--root .cart--drawer-remove { background: none; border: 0; font-size: 12px; color: #888; text-decoration: underline; cursor: pointer; padding: 4px 0 0; }
-  drawer-element.drawer--root .cart--drawer-price { font-size: 14px; font-weight: 600; white-space: nowrap; }
-  drawer-element.drawer--root .cart--drawer-footer { padding-top: 16px; border-top: 1px solid #eee; margin-top: 8px; }
-  drawer-element.drawer--root .cart--drawer-subtotal { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-  drawer-element.drawer--root .cart--drawer-checkout { width: 100%; padding: 14px; background: #000; color: #fff; border: 0; font-size: 14px; letter-spacing: .5px; text-transform: uppercase; cursor: pointer; }
-  drawer-element.drawer--root .cart--drawer-checkout:hover { opacity: .9; }
-  drawer-element.drawer--root .cart--drawer-empty { text-align: center; padding: 40px 20px; color: #888; font-size: 14px; }
-  drawer-element.drawer--root .cart--drawer-empty a { color: #000; }
+  /* Cart drawer scoped styles. Replicates the original captured layout
+     (large product image, Playfair title, beige body fill, free-shipping
+     bar above the items, note textarea, sticky summary). Most class
+     names are the same as cart-main.html — we just rebind the layout
+     under a drawer-specific selector so it doesn't depend on the
+     .section--cart wrapper. */
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] {
+    background: var(--bg-color--body, #f1efe9) !important;
+    height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
+    padding: 0 !important;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--root {
+    display: flex; flex-direction: column; height: 100%; min-height: 0;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--form {
+    display: flex; flex-direction: column; height: 100%; min-height: 0;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--wrapper {
+    flex: 1; overflow-y: auto; padding: 56px 24px 16px; box-sizing: border-box;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--header { text-align: center; }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--title {
+    font-family: var(--font--heading--family, "Playfair Display", serif);
+    font-size: 28px; font-weight: 400; margin: 0 0 16px; line-height: 1.1;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--shipping {
+    text-align: center; margin: 0 0 20px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--shipping-message {
+    font-size: 14px; margin: 0 0 8px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--shipping-bar {
+    height: 6px; background: rgba(0,0,0,.15); border-radius: 3px; position: relative; overflow: hidden;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--shipping-bar::before {
+    content: ""; position: absolute; inset: 0 auto 0 0;
+    width: var(--progress-percent, 0%);
+    background: linear-gradient(90deg, #444 0%, #111 100%);
+    transition: width 500ms ease;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--body {
+    border-top: 1px solid rgba(0,0,0,.1); padding-top: 16px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item {
+    display: grid; grid-template-columns: 140px 1fr; gap: 16px;
+    padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,.08);
+    align-items: start;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item--image img {
+    display: block; width: 100%; height: auto; max-width: 140px; object-fit: cover;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item--title-link {
+    font-family: var(--font--heading--family, "Playfair Display", serif);
+    font-size: 16px; line-height: 1.25; color: inherit; text-decoration: none; display: block;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item--variant {
+    margin: 4px 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(0,0,0,.6);
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item--price {
+    font-size: 14px; margin: 4px 0 12px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item--quantity {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--qty-btn {
+    width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(0,0,0,.4); background: transparent; cursor: pointer; font-size: 14px;
+    line-height: 1; padding: 0; border-radius: 0;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--qty-btn:hover { background: rgba(0,0,0,.04); }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--qty-value {
+    min-width: 32px; text-align: center; display: inline-block; font-size: 14px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--item--remove {
+    display: inline-block; margin-top: 8px; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.06em; text-decoration: underline;
+    color: inherit; cursor: pointer; background: none; border: none; padding: 0;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--notes {
+    margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,.08);
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--notes--heading {
+    display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0 0 8px; text-align: center;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--notes--textarea {
+    width: 100%; min-height: 80px; padding: 12px; border: 1px solid rgba(0,0,0,.2);
+    background: #fff; box-sizing: border-box; font: inherit; resize: vertical;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--empty {
+    padding: 40px 20px; text-align: center;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--summary {
+    padding: 20px 24px 24px; border-top: 1px solid rgba(0,0,0,.08); background: var(--bg-color--body, #f1efe9);
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--total {
+    display: flex; justify-content: center; align-items: baseline; gap: 12px; font-size: 18px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--total > div:first-child {
+    font-family: var(--font--heading--family, "Playfair Display", serif); font-weight: 400;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--total-price {
+    font-size: 22px; font-weight: 600;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--tax-info {
+    text-align: center; font-size: 12px; color: rgba(0,0,0,.55); margin: 8px 0 16px;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button {
+    width: 100%; padding: 16px; background: var(--button--bg-color, #191919); color: var(--button--color, #fff);
+    border: 1px solid var(--button--bdr-color, #191919); border-radius: var(--button--radius, 7px);
+    font-family: var(--font--nav--family, Roboto, sans-serif); font-size: var(--button--size, 14px);
+    text-transform: var(--font--button--uppercase, uppercase); letter-spacing: 0.5px;
+    cursor: pointer; transition: opacity .2s ease;
+  }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button:hover { opacity: .9; }
   body.drawer-open { overflow: hidden; }
   x-menu-element li[data-depth="2"] > .x-menu--level-2--container[aria-hidden="false"] { display: block; }
 </style>
@@ -200,47 +298,108 @@
   <div class="drawer--side" data-side="right" aria-expanded="false">
     <div class="drawer--container" data-view="cart-drawer" hidden>
       <button class="drawer--close" data-drawer-close aria-label="Close cart" type="button">&times;</button>
-      <div class="cart--drawer-wrapper">
-        <h2 class="cart--drawer-title">Your cart ({{ cart.item_count }})</h2>
-        {{#if cart.empty}}
-          <div class="cart--drawer-empty">
-            <p>Your cart is empty.</p>
-            <p><a href="/collections">Continue shopping</a></p>
-          </div>
-        {{else}}
-          {{#form "cart" class="cart--drawer-form"}}
-            <ul class="cart--drawer-items">
-              {{#for cart.items as |item|}}
-                <li class="cart--drawer-item" data-key="{{ item.key }}">
-                  <a href="{{ item.url }}">
-                    <img src="{{ image_url item.image width=144 }}" alt="{{ item.product.title }}" width="72" height="72" loading="lazy">
-                  </a>
-                  <div>
-                    <a class="cart--drawer-item-title" href="{{ item.url }}">{{ item.product.title }}</a>
-                    {{#if item.variant.title}}
-                      <p class="cart--drawer-item-variant">{{ item.variant.title }}</p>
-                    {{/if}}
-                    <div class="cart--drawer-qty">
-                      <button type="button" data-qty-dec aria-label="Decrease">−</button>
-                      <span data-qty-value>{{ item.quantity }}</span>
-                      <button type="button" data-qty-inc aria-label="Increase">+</button>
-                    </div>
-                    <button type="button" class="cart--drawer-remove" data-remove>Remove</button>
-                  </div>
-                  <div class="cart--drawer-price">{{ money item.final_line_price }}</div>
-                </li>
-              {{/for}}
-            </ul>
-            <div class="cart--drawer-footer">
-              <div class="cart--drawer-subtotal">
-                <span>Subtotal</span>
-                <span>{{ money cart.items_subtotal_price }}</span>
-              </div>
-              <button type="submit" name="checkout" class="cart--drawer-checkout">Checkout</button>
+
+      <cart-element class="cart--root"
+                    data-background-color="none"
+                    data-view="drawer"
+                    data-container-width="3"
+                    data-transition-container="cart-drawer"
+                    data-transition-type="fade-in"
+                    data-transition-cascade="vertical"
+                    data-transition-cascade-interval="250"
+                    style="--summary-height: 0px;">
+        {{#form "cart" class="cart--form"}}
+          <div class="cart--wrapper">
+            <div class="cart--header">
+              <h2 class="cart--title" data-item="section-heading"
+                  data-transition-item="cart-drawer" data-transition-type="slide-in"
+                  style="--transition--delay: 0ms;"
+                  data-transition-active="true" data-transition-finished="true">{{ section.settings.cart_title }}</h2>
             </div>
-          {{/form}}
-        {{/if}}
-      </div>
+
+            {{#if cart.empty}}
+              <div class="cart--empty" data-text-alignment="center">
+                <div class="cart--empty-text" data-item="paragraph">
+                  <span data-item="rte-content">{{{ section.settings.cart_empty_text }}}</span>
+                </div>
+              </div>
+            {{else}}
+              {{#if section.settings.cart_show_shipping_bar}}
+              <div class="cart--shipping"
+                   data-subtotal="{{ cart.items_subtotal_price }}"
+                   data-threshold-cents="{{ section.settings.cart_free_shipping_threshold_cents }}"
+                   data-message-success="{{ section.settings.cart_shipping_message_success }}"
+                   data-message-template="{{ section.settings.cart_shipping_message_template }}">
+                <div class="cart--shipping-message" data-item="paragraph">
+                  <span data-shipping-progress-text>{{ section.settings.cart_shipping_message_default }}</span>
+                </div>
+                <div class="cart--shipping-bar"
+                     data-transition-item="cart-drawer" data-transition-type="custom"
+                     style="--progress-percent: 0%; --transition--delay: 250ms;"
+                     data-transition-active="true"></div>
+              </div>
+              {{/if}}
+
+              <div class="cart--body">
+                {{#for cart.items as |item|}}
+                <div class="cart--item" data-cart-row data-key="{{ item.key }}">
+                  <div class="cart--item--image">
+                    <a href="{{ item.url }}">
+                      <img src="{{ image_url item.image width=520 }}"
+                           alt="{{ item.product.title }}"
+                           width="260" height="260" loading="lazy">
+                    </a>
+                  </div>
+                  <div class="cart--item--title">
+                    <a class="cart--item--title-link" href="{{ item.url }}">{{ item.product.title }}</a>
+                    {{#if item.variant.title}}
+                    <p class="cart--item--variant" data-item="paragraph">{{ item.variant.title }}</p>
+                    {{/if}}
+                    <div class="cart--item--price money" data-item="nav-text">
+                      <span class="money">{{ money item.final_price }}</span>
+                    </div>
+                    <div class="cart--item--quantity">
+                      <button type="button" class="cart--qty-btn" data-qty-dec aria-label="Decrease quantity">−</button>
+                      <span class="cart--qty-value" data-qty-value>{{ item.quantity }}</span>
+                      <button type="button" class="cart--qty-btn" data-qty-inc aria-label="Increase quantity">+</button>
+                    </div>
+                    <a class="cart--item--remove" href="{{ item.url_to_remove }}"
+                       data-remove data-item="nav-text" aria-label="Remove {{ item.product.title }}">{{ section.settings.cart_remove_label }}</a>
+                  </div>
+                </div>
+                {{/for}}
+              </div>
+
+              {{#if section.settings.cart_show_order_note}}
+              <div class="cart--notes" data-transition-item="cart-drawer" style="--transition--delay: 500ms;">
+                <label for="drawer-cart_note" class="cart--notes--heading">{{ section.settings.cart_order_note_label }}</label>
+                <textarea class="cart--notes--textarea" id="drawer-cart_note" name="note">{{ cart.note }}</textarea>
+              </div>
+              {{/if}}
+            {{/if}}
+          </div>
+
+          {{#unless cart.empty}}
+          <div class="cart--summary">
+            <div class="cart--totals">
+              <div class="cart--total">
+                <div data-item="block-heading">{{ section.settings.cart_subtotal_label }}</div>
+                <div class="cart--total-price money" data-item="nav-text">
+                  <span class="money">{{ money cart.items_subtotal_price }}</span>
+                </div>
+              </div>
+              <div class="cart--tax-info" data-item="paragraph">{{ section.settings.cart_tax_info_text }}</div>
+            </div>
+            <button type="submit" name="checkout" class="cart--checkout-button" data-item="button" data-text="{{ section.settings.cart_checkout_label }}" data-transition-button="">
+              <span class="cart-button--text">{{ section.settings.cart_checkout_label }}</span>
+              <span class="cart-button--spinner"><svg class="icon--root icon--spinner" data-invertible="false">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#loading-spinner"></use>
+              </svg></span>
+            </button>
+          </div>
+          {{/unless}}
+        {{/form}}
+      </cart-element>
     </div>
 
     <div class="drawer--container" data-view="filter" hidden>
@@ -333,7 +492,26 @@
       "default": "light"
     },
     { "type": "checkbox", "id": "bottom_border", "label": "Show bottom border", "default": false },
-    { "type": "checkbox", "id": "sticky_enabled", "label": "Sticky header", "default": false }
+    { "type": "checkbox", "id": "sticky_enabled", "label": "Sticky header", "default": false },
+
+    { "type": "header", "content": "Cart drawer" },
+    { "type": "text",     "id": "cart_title",                          "label": "Cart title",                       "default": "Your Cart" },
+    { "type": "text",     "id": "cart_checkout_label",                 "label": "Checkout button label",            "default": "Checkout" },
+    { "type": "text",     "id": "cart_subtotal_label",                 "label": "Subtotal label",                   "default": "Subtotal:" },
+    { "type": "text",     "id": "cart_tax_info_text",                  "label": "Tax info line",                    "default": "Taxes and shipping calculated at checkout" },
+    { "type": "text",     "id": "cart_remove_label",                   "label": "Remove link label",                "default": "Remove" },
+    { "type": "richtext", "id": "cart_empty_text",                     "label": "Empty cart text (HTML allowed)",   "default": "<span data-item=\"rte-content\">Your cart is currently empty.<br><a href=\"/collections/all\">Click here to continue shopping</a>.</span>" },
+
+    { "type": "header",   "content": "Cart drawer — free shipping bar" },
+    { "type": "checkbox", "id": "cart_show_shipping_bar",              "label": "Show progress bar",                "default": true },
+    { "type": "number",   "id": "cart_free_shipping_threshold_cents",  "label": "Threshold (cents, e.g. 10000 = $100.00)", "default": 10000 },
+    { "type": "text",     "id": "cart_shipping_message_default",       "label": "Default message",                  "default": "You are $100.00 USD from free shipping." },
+    { "type": "text",     "id": "cart_shipping_message_template",      "label": "Template (use {{remaining}})",     "info": "JS replaces {{remaining}} with the remaining amount, e.g. \"$80.00 USD\".", "default": "You are {{remaining}} from free shipping." },
+    { "type": "text",     "id": "cart_shipping_message_success",       "label": "When threshold reached",           "default": "You qualified for free shipping." },
+
+    { "type": "header",   "content": "Cart drawer — order note" },
+    { "type": "checkbox", "id": "cart_show_order_note",                "label": "Show order note textarea",         "default": true },
+    { "type": "text",     "id": "cart_order_note_label",               "label": "Order note label",                 "default": "Leave a note with your order" }
   ]
 }
 {{/schema}}

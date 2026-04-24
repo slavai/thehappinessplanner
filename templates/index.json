@@ -352,14 +352,15 @@
         "heading_url": "/collections/guided-journals",
         "show_more_url": "/collections/guided-journals",
         "show_more_text": "View collection",
-        "columns_desktop": 4,
+        "columns_desktop": 3,
         "columns_mobile": 1,
         "background_color": "accent-2",
         "products_to_show": 6,
         "sort_by": "collection",
         "featured_collection": "12274440833762087900180650"
       },
-      "blocks": {}
+      "blocks": {},
+      "custom_css": []
     },
     "s-23": {
       "disabled": false,

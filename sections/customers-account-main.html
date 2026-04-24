@@ -7,7 +7,7 @@
       <span class="customers--nav--logout">{{{ customer_logout_link 'Log out' }}}</span>
     </nav>
 
-    <h1 class="customers--heading" data-item="section-heading">{{ section.settings.greeting_prefix }} {{ default customer.first_name customer.email }}</h1>
+    <h1 class="customers--heading" data-item="section-heading">{{#if customer.first_name}}{{ section.settings.greeting_prefix }} {{ customer.first_name }}{{else}}{{ section.settings.greeting_fallback }}{{/if}}</h1>
     {{#if section.settings.subheading}}
     <p class="customers--subheading">{{ section.settings.subheading }}</p>
     {{/if}}
@@ -49,15 +49,15 @@
     {{#if customer.default_address}}
       <div class="customers--card">
         <p>
-          {{#if customer.default_address.firstName}}{{ customer.default_address.firstName }} {{ customer.default_address.lastName }}<br>{{/if}}
+          {{#if customer.default_address.first_name}}{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}<br>{{/if}}
           {{#if customer.default_address.company}}{{ customer.default_address.company }}<br>{{/if}}
-          {{#if customer.default_address.addr}}{{ customer.default_address.addr }}<br>{{/if}}
-          {{#if customer.default_address.addrTwo}}{{ customer.default_address.addrTwo }}<br>{{/if}}
-          {{#if customer.default_address.city}}{{ customer.default_address.city }}{{#if customer.default_address.province}}, {{ customer.default_address.province }}{{/if}} {{ customer.default_address.zipCode }}<br>{{/if}}
-          {{ customer.default_address.country }}
-          {{#if customer.default_address.mobilePhone}}<br>{{ customer.default_address.mobilePhone }}{{/if}}
+          {{#if customer.default_address.address1}}{{ customer.default_address.address1 }}<br>{{/if}}
+          {{#if customer.default_address.address2}}{{ customer.default_address.address2 }}<br>{{/if}}
+          {{#if customer.default_address.city}}{{ customer.default_address.city }}{{#if customer.default_address.province}}, {{ customer.default_address.province }}{{/if}}<br>{{/if}}
+          {{ customer.default_address.country.name }}
+          {{#if customer.default_address.phone}}<br>{{ customer.default_address.phone }}{{/if}}
         </p>
-        <p style="margin-top: 12px;"><a class="customers--link" href="{{ routes.account_address_new_url }}">Manage addresses ({{ customer.addresses_count }})</a></p>
+        <p style="margin-top: 12px;"><a class="customers--link" href="{{ routes.account_address_new_url }}">Manage addresses</a></p>
       </div>
     {{else}}
       <p class="customers--empty">No address on file. <a class="customers--link" href="{{ routes.account_address_new_url }}">Add one</a>.</p>
@@ -75,8 +75,9 @@
   "tag": "div",
   "class": "shopify-section section--customers-account",
   "settings": [
-    { "type": "text",  "id": "greeting_prefix", "label": "Greeting prefix", "default": "Hello," },
-    { "type": "text",  "id": "subheading",      "label": "Subheading",      "default": "Manage your orders, addresses and account details." },
+    { "type": "text",  "id": "greeting_prefix",   "label": "Greeting prefix",                "default": "Hello," },
+    { "type": "text",  "id": "greeting_fallback", "label": "Greeting (when no first name)",  "default": "Welcome back" },
+    { "type": "text",  "id": "subheading",        "label": "Subheading",                     "default": "Manage your orders, addresses and account details." },
     { "type": "range", "id": "recent_count",    "label": "Recent orders to show", "min": 1, "max": 10, "step": 1, "default": 3 }
   ]
 }

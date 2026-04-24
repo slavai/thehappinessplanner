@@ -84,13 +84,13 @@
       <div class="customers--card">
         <h3 style="margin-top: 0;">Shipping address</h3>
         <p>
-          {{#if order.shipping_address.firstName}}{{ order.shipping_address.firstName }} {{ order.shipping_address.lastName }}<br>{{/if}}
+          {{#if order.shipping_address.first_name}}{{ order.shipping_address.first_name }} {{ order.shipping_address.last_name }}<br>{{/if}}
           {{#if order.shipping_address.company}}{{ order.shipping_address.company }}<br>{{/if}}
-          {{#if order.shipping_address.addr}}{{ order.shipping_address.addr }}<br>{{/if}}
-          {{#if order.shipping_address.addrTwo}}{{ order.shipping_address.addrTwo }}<br>{{/if}}
-          {{ order.shipping_address.city }}{{#if order.shipping_address.province}}, {{ order.shipping_address.province }}{{/if}} {{ order.shipping_address.zipCode }}<br>
-          {{ order.shipping_address.country }}
-          {{#if order.shipping_address.mobilePhone}}<br>{{ order.shipping_address.mobilePhone }}{{/if}}
+          {{#if order.shipping_address.address1}}{{ order.shipping_address.address1 }}<br>{{/if}}
+          {{#if order.shipping_address.address2}}{{ order.shipping_address.address2 }}<br>{{/if}}
+          {{ order.shipping_address.city }}{{#if order.shipping_address.province}}, {{ order.shipping_address.province }}{{/if}}<br>
+          {{ order.shipping_address.country.name }}
+          {{#if order.shipping_address.phone}}<br>{{ order.shipping_address.phone }}{{/if}}
         </p>
         {{#if order.shipping_methods}}
           {{#each order.shipping_methods as |sm|}}
@@ -104,12 +104,12 @@
       <div class="customers--card">
         <h3 style="margin-top: 0;">Billing address</h3>
         <p>
-          {{#if order.billing_address.firstName}}{{ order.billing_address.firstName }} {{ order.billing_address.lastName }}<br>{{/if}}
+          {{#if order.billing_address.first_name}}{{ order.billing_address.first_name }} {{ order.billing_address.last_name }}<br>{{/if}}
           {{#if order.billing_address.company}}{{ order.billing_address.company }}<br>{{/if}}
-          {{#if order.billing_address.addr}}{{ order.billing_address.addr }}<br>{{/if}}
-          {{#if order.billing_address.addrTwo}}{{ order.billing_address.addrTwo }}<br>{{/if}}
-          {{ order.billing_address.city }}{{#if order.billing_address.province}}, {{ order.billing_address.province }}{{/if}} {{ order.billing_address.zipCode }}<br>
-          {{ order.billing_address.country }}
+          {{#if order.billing_address.address1}}{{ order.billing_address.address1 }}<br>{{/if}}
+          {{#if order.billing_address.address2}}{{ order.billing_address.address2 }}<br>{{/if}}
+          {{ order.billing_address.city }}{{#if order.billing_address.province}}, {{ order.billing_address.province }}{{/if}}<br>
+          {{ order.billing_address.country.name }}
         </p>
       </div>
       {{/if}}

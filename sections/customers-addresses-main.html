@@ -17,15 +17,14 @@
       {{#each customer.addresses as |address|}}
       <div class="customers--card">
         <p>
-          {{#if address.firstName}}<strong>{{ address.firstName }} {{ address.lastName }}</strong><br>{{/if}}
+          {{#if address.first_name}}<strong>{{ address.first_name }} {{ address.last_name }}</strong><br>{{/if}}
           {{#if address.company}}{{ address.company }}<br>{{/if}}
-          {{#if address.addr}}{{ address.addr }}<br>{{/if}}
-          {{#if address.addrTwo}}{{ address.addrTwo }}<br>{{/if}}
-          {{ address.city }}{{#if address.province}}, {{ address.province }}{{/if}} {{ address.zipCode }}<br>
-          {{ address.country }}
-          {{#if address.mobilePhone}}<br>{{ address.mobilePhone }}{{/if}}
+          {{#if address.address1}}{{ address.address1 }}<br>{{/if}}
+          {{#if address.address2}}{{ address.address2 }}<br>{{/if}}
+          {{ address.city }}{{#if address.province}}, {{ address.province }}{{/if}}<br>
+          {{ address.country.name }}
+          {{#if address.phone}}<br>{{ address.phone }}{{/if}}
         </p>
-        {{#if address.def}}<p style="margin-top: 8px; font-size: var(--font--sub-nav--size); color: var(--color--body--light);">Default address</p>{{/if}}
 
         <details style="margin-top: 12px;">
           <summary style="cursor: pointer; font-size: var(--font--sub-nav--size); text-transform: uppercase; letter-spacing: 0.06em;">Edit</summary>
@@ -33,11 +32,11 @@
             {{#form 'customer_address' address=address class="customers--form customers--edit-address-form" return_to=routes.account_address_new_url}}
               <div class="customers--field">
                 <label class="customers--label">First name</label>
-                <input class="customers--input" type="text" name="address[firstName]" value="{{ address.firstName }}">
+                <input class="customers--input" type="text" name="address[firstName]" value="{{ address.first_name }}">
               </div>
               <div class="customers--field">
                 <label class="customers--label">Last name</label>
-                <input class="customers--input" type="text" name="address[lastName]" value="{{ address.lastName }}">
+                <input class="customers--input" type="text" name="address[lastName]" value="{{ address.last_name }}">
               </div>
               <div class="customers--field">
                 <label class="customers--label">Company</label>
@@ -45,11 +44,11 @@
               </div>
               <div class="customers--field">
                 <label class="customers--label">Address</label>
-                <input class="customers--input" type="text" name="address[addr]" value="{{ address.addr }}">
+                <input class="customers--input" type="text" name="address[addr]" value="{{ address.address1 }}">
               </div>
               <div class="customers--field">
                 <label class="customers--label">Apartment, suite, etc.</label>
-                <input class="customers--input" type="text" name="address[addrTwo]" value="{{ address.addrTwo }}">
+                <input class="customers--input" type="text" name="address[addrTwo]" value="{{ address.address2 }}">
               </div>
               <div class="customers--field">
                 <label class="customers--label">City</label>
@@ -68,17 +67,9 @@
                 </select>
               </div>
               <div class="customers--field">
-                <label class="customers--label">Postal / Zip code</label>
-                <input class="customers--input" type="text" name="address[zipCode]" value="{{ address.zipCode }}">
-              </div>
-              <div class="customers--field">
                 <label class="customers--label">Phone</label>
-                <input class="customers--input" type="tel" name="address[mobilePhone]" value="{{ address.mobilePhone }}">
+                <input class="customers--input" type="tel" name="address[mobilePhone]" value="{{ address.phone }}">
               </div>
-              <label class="customers--checkbox-row">
-                <input type="checkbox" name="address[def]" value="true" {{#if address.def}}checked{{/if}}>
-                <span>Set as default address</span>
-              </label>
               <button class="customers--button" type="submit">Save changes</button>
             {{/form}}
 

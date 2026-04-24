@@ -287,14 +287,15 @@
         "heading_url": "/collections/premium-printables-1",
         "show_more_url": "/collections/premium-printables-1",
         "show_more_text": "View collection",
-        "columns_desktop": 4,
+        "columns_desktop": 3,
         "columns_mobile": 1,
         "background_color": "light",
         "products_to_show": 3,
         "sort_by": "collection",
         "featured_collection": "12274440833660585306270650"
       },
-      "blocks": {}
+      "blocks": {},
+      "custom_css": []
     },
     "s-19": {
       "disabled": false,

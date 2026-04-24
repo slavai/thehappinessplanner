@@ -1,0 +1,84 @@
+<div class="customers--root" data-section-id="{{ section.id }}">
+  <h1 class="customers--heading" data-item="section-heading">{{ section.settings.heading }}</h1>
+  {{#if section.settings.subheading}}
+  <p class="customers--subheading">{{ section.settings.subheading }}</p>
+  {{/if}}
+
+  {{#form 'activate_customer_password' id="customer-activate-form" class="customers--form"}}
+    {{#if form.errors}}
+    <div class="customers--error" role="alert" data-form-error>{{ form.errors.messages }}</div>
+    {{/if}}
+
+    <div class="customers--field">
+      <label class="customers--label" for="customer-activate-password">Set password</label>
+      <input class="customers--input" type="password" id="customer-activate-password" name="customer[password]" autocomplete="new-password" required minlength="6">
+    </div>
+
+    {{#if section.settings.show_marketing}}
+    <label class="customers--checkbox-row">
+      <input type="checkbox" name="customer[acceptsEmailMarketing]" value="true">
+      <span>{{ section.settings.marketing_label }}</span>
+    </label>
+    {{/if}}
+
+    <button class="customers--button" type="submit">{{ section.settings.submit_label }}</button>
+
+    <div class="customers--links">
+      <a class="customers--link" href="{{ routes.account_login_url }}">Back to sign in</a>
+    </div>
+  {{/form}}
+</div>
+
+<script>
+  (function () {
+    function init() {
+      var form = document.getElementById('customer-activate-form');
+      if (!form) return;
+      var errorBox = form.querySelector('[data-form-error]');
+      var activate = new window.Shopline.customerAccount.Activate(form);
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        activate.submit()
+          .then(function () {
+            window.location.href = '{{ routes.account_login_url }}';
+          })
+          .catch(function (error) {
+            var message = (error && (error.message || error.errorMessage)) || 'Could not activate account. The activation link may have expired.';
+            if (!errorBox) {
+              errorBox = document.createElement('div');
+              errorBox.className = 'customers--error';
+              errorBox.setAttribute('role', 'alert');
+              errorBox.setAttribute('data-form-error', '');
+              form.insertBefore(errorBox, form.firstChild);
+            }
+            errorBox.textContent = message;
+          });
+      });
+    }
+    if (window.Shopline && typeof window.Shopline.loadFeatures === 'function') {
+      window.Shopline.loadFeatures(
+        [{ name: 'customer-account-api', version: '0.3' }],
+        function (err) {
+          if (err) { console.error('customer-account-api load failed', err); return; }
+          init();
+        }
+      );
+    }
+  })();
+</script>
+
+{{#schema}}
+{
+  "name": "Customer activate account",
+  "tag": "div",
+  "class": "shopify-section section--customers-activate",
+  "settings": [
+    { "type": "text",     "id": "heading",         "label": "Heading",         "default": "Activate account" },
+    { "type": "text",     "id": "subheading",      "label": "Subheading",      "default": "Choose a password to activate your account." },
+    { "type": "text",     "id": "submit_label",    "label": "Submit label",    "default": "Activate account" },
+    { "type": "checkbox", "id": "show_marketing",  "label": "Show email marketing checkbox", "default": true },
+    { "type": "text",     "id": "marketing_label", "label": "Marketing checkbox label",      "default": "Send me updates and 10% off my first order." }
+  ]
+}
+{{/schema}}

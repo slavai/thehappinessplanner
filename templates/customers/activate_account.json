@@ -1,0 +1,8 @@
+{
+  "name": "customers/activate_account.html",
+  "layout": "theme",
+  "sections": {
+    "main": { "type": "customers-activate-account-main", "settings": {} }
+  },
+  "order": ["main"]
+}

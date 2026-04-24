@@ -489,8 +489,8 @@
           if (remaining <= 0) {
             text.textContent = el.getAttribute('data-message-success') || 'You qualified for free shipping.';
           } else {
-            var template = el.getAttribute('data-message-template') || 'You are {{remaining}} from free shipping.';
-            text.textContent = template.replace('{{remaining}}', fmt(remaining));
+            var template = el.getAttribute('data-message-template') || 'You are [REMAINING] from free shipping.';
+            text.textContent = template.replace('[REMAINING]', fmt(remaining));
           }
         }
       });
@@ -551,7 +551,7 @@
     { "type": "checkbox", "id": "cart_show_shipping_bar",              "label": "Show progress bar",                "default": true },
     { "type": "number",   "id": "cart_free_shipping_threshold_cents",  "label": "Threshold (cents, e.g. 10000 = $100.00)", "default": 10000 },
     { "type": "text",     "id": "cart_shipping_message_default",       "label": "Default message",                  "default": "You are $100.00 USD from free shipping." },
-    { "type": "text",     "id": "cart_shipping_message_template",      "label": "Template (use {{remaining}})",     "info": "JS replaces {{remaining}} with the remaining amount, e.g. \"$80.00 USD\".", "default": "You are {{remaining}} from free shipping." },
+    { "type": "text",     "id": "cart_shipping_message_template",      "label": "Template (use [REMAINING])",     "info": "JS replaces [REMAINING] with the remaining amount, e.g. \"$80.00 USD\".", "default": "You are [REMAINING] from free shipping." },
     { "type": "text",     "id": "cart_shipping_message_success",       "label": "When threshold reached",           "default": "You qualified for free shipping." },
 
     { "type": "header",   "content": "Cart drawer — order note" },

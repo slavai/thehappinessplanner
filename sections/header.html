@@ -47,16 +47,16 @@
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] {
     background: var(--bg-color--body, #f1efe9) !important;
     height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
-    padding: 0 !important;
+    padding: 0 !important; min-height: 0;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--root {
-    display: flex; flex-direction: column; height: 100%; min-height: 0;
+    display: flex; flex-direction: column; flex: 1 1 0; min-height: 0;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--form {
-    display: flex; flex-direction: column; height: 100%; min-height: 0;
+    display: flex; flex-direction: column; flex: 1 1 0; min-height: 0;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--wrapper {
-    flex: 1; overflow-y: auto; padding: 56px 24px 16px; box-sizing: border-box;
+    flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 56px 24px 16px; box-sizing: border-box;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--header { text-align: center; }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--title {
@@ -135,7 +135,7 @@
     padding: 40px 20px; text-align: center;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--summary {
-    padding: 20px 24px 24px; border-top: 1px solid rgba(0,0,0,.08); background: var(--bg-color--body, #f1efe9);
+    flex: 0 0 auto; padding: 20px 24px 24px; border-top: 1px solid rgba(0,0,0,.08); background: var(--bg-color--body, #f1efe9);
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--total {
     display: flex; justify-content: center; align-items: baseline; gap: 12px; font-size: 18px;
@@ -459,6 +459,47 @@
     </div>
   </div>
 </drawer-element>
+
+<script>
+  /* Cart drawer free-shipping bar recalc.
+     Reads data-subtotal (cents) + data-threshold-cents from .cart--shipping
+     and rewrites the message text + --progress-percent CSS var. Money
+     formatted via Intl.NumberFormat in the shop's currency. Runs on load
+     and on the document `cart:updated` event so callers (qty/remove
+     handlers in theme.js) can broadcast post-update without reloading. */
+  (function () {
+    function fmt(cents, currency) {
+      try {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(cents / 100) + ' ' + (currency || 'USD');
+      } catch (e) {
+        return '$' + (cents / 100).toFixed(2) + ' ' + (currency || 'USD');
+      }
+    }
+    function update() {
+      document.querySelectorAll('.cart--shipping[data-threshold-cents]').forEach(function (el) {
+        var subtotal = Number(el.getAttribute('data-subtotal') || 0);
+        var threshold = Number(el.getAttribute('data-threshold-cents') || 0);
+        if (!threshold) return;
+        var remaining = Math.max(0, threshold - subtotal);
+        var pct = Math.min(100, Math.max(0, (subtotal / threshold) * 100));
+        var bar = el.querySelector('.cart--shipping-bar');
+        var text = el.querySelector('[data-shipping-progress-text]');
+        if (bar) bar.style.setProperty('--progress-percent', pct + '%');
+        if (text) {
+          if (remaining <= 0) {
+            text.textContent = el.getAttribute('data-message-success') || 'You qualified for free shipping.';
+          } else {
+            var template = el.getAttribute('data-message-template') || 'You are {{remaining}} from free shipping.';
+            text.textContent = template.replace('{{remaining}}', fmt(remaining));
+          }
+        }
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', update);
+    else update();
+    document.addEventListener('cart:updated', update);
+  })();
+</script>
 </header>
 
 {{#schema}}

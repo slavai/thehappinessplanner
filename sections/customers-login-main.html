@@ -1,0 +1,80 @@
+<div class="customers--root" data-section-id="{{ section.id }}">
+  <h1 class="customers--heading" data-item="section-heading">{{ section.settings.heading }}</h1>
+  {{#if section.settings.subheading}}
+  <p class="customers--subheading">{{ section.settings.subheading }}</p>
+  {{/if}}
+
+  {{#form 'customer_login' id="customer-login-form" class="customers--form"}}
+    {{#if form.errors}}
+    <div class="customers--error" role="alert" data-form-error>{{ form.errors.messages }}</div>
+    {{/if}}
+
+    <div class="customers--field">
+      <label class="customers--label" for="customer-login-email">Email</label>
+      <input class="customers--input" type="email" id="customer-login-email" name="customer[email]" autocomplete="email" required>
+    </div>
+
+    <div class="customers--field">
+      <label class="customers--label" for="customer-login-password">Password</label>
+      <input class="customers--input" type="password" id="customer-login-password" name="customer[password]" autocomplete="current-password" required>
+    </div>
+
+    <button class="customers--button" type="submit">{{ section.settings.submit_label }}</button>
+
+    <div class="customers--links">
+      <a class="customers--link" href="{{ routes.account_recover_url }}">Forgot your password?</a>
+      <a class="customers--link" href="{{ routes.account_register_url }}">Create account</a>
+    </div>
+  {{/form}}
+</div>
+
+<script>
+  (function () {
+    function init() {
+      var form = document.getElementById('customer-login-form');
+      if (!form) return;
+      var errorBox = form.querySelector('[data-form-error]');
+      var login = new window.Shopline.customerAccount.Login(form);
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        login.submit()
+          .then(function () {
+            window.location.href = '{{ routes.account_url }}';
+          })
+          .catch(function (error) {
+            var message = (error && (error.message || error.errorMessage)) || 'Sign in failed. Please check your email and password.';
+            if (!errorBox) {
+              errorBox = document.createElement('div');
+              errorBox.className = 'customers--error';
+              errorBox.setAttribute('role', 'alert');
+              errorBox.setAttribute('data-form-error', '');
+              form.insertBefore(errorBox, form.firstChild);
+            }
+            errorBox.textContent = message;
+          });
+      });
+    }
+    if (window.Shopline && typeof window.Shopline.loadFeatures === 'function') {
+      window.Shopline.loadFeatures(
+        [{ name: 'customer-account-api', version: '0.3' }],
+        function (err) {
+          if (err) { console.error('customer-account-api load failed', err); return; }
+          init();
+        }
+      );
+    }
+  })();
+</script>
+
+{{#schema}}
+{
+  "name": "Customer login",
+  "tag": "div",
+  "class": "shopify-section section--customers-login",
+  "settings": [
+    { "type": "text", "id": "heading",       "label": "Heading",       "default": "Sign in" },
+    { "type": "text", "id": "subheading",    "label": "Subheading",    "default": "Welcome back. Please enter your details." },
+    { "type": "text", "id": "submit_label",  "label": "Submit label",  "default": "Sign in" }
+  ]
+}
+{{/schema}}

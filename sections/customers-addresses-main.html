@@ -1,0 +1,206 @@
+<div class="customers--root" data-section-id="{{ section.id }}" data-width="wide">
+  <nav class="customers--nav" aria-label="Account">
+    <a href="{{ routes.account_url }}">Account</a>
+    <a href="{{ routes.account_order_list_url }}">Orders</a>
+    <a href="{{ routes.account_address_new_url }}" aria-current="true">Addresses</a>
+    <span class="customers--nav--logout">{{{ customer_logout_link 'Log out' }}}</span>
+  </nav>
+
+  <h1 class="customers--heading" data-item="section-heading">{{ section.settings.heading }}</h1>
+  {{#if section.settings.subheading}}
+  <p class="customers--subheading">{{ section.settings.subheading }}</p>
+  {{/if}}
+
+  {{#if customer.addresses_count}}
+    <h2 class="customers--section-title">Saved addresses ({{ customer.addresses_count }})</h2>
+    <div class="customers--grid">
+      {{#each customer.addresses as |address|}}
+      <div class="customers--card">
+        <p>
+          {{#if address.firstName}}<strong>{{ address.firstName }} {{ address.lastName }}</strong><br>{{/if}}
+          {{#if address.company}}{{ address.company }}<br>{{/if}}
+          {{#if address.addr}}{{ address.addr }}<br>{{/if}}
+          {{#if address.addrTwo}}{{ address.addrTwo }}<br>{{/if}}
+          {{ address.city }}{{#if address.province}}, {{ address.province }}{{/if}} {{ address.zipCode }}<br>
+          {{ address.country }}
+          {{#if address.mobilePhone}}<br>{{ address.mobilePhone }}{{/if}}
+        </p>
+        {{#if address.def}}<p style="margin-top: 8px; font-size: var(--font--sub-nav--size); color: var(--color--body--light);">Default address</p>{{/if}}
+
+        <details style="margin-top: 12px;">
+          <summary style="cursor: pointer; font-size: var(--font--sub-nav--size); text-transform: uppercase; letter-spacing: 0.06em;">Edit</summary>
+          <div style="margin-top: 16px;">
+            {{#form 'customer_address' address=address class="customers--form customers--edit-address-form" return_to=routes.account_address_new_url}}
+              <div class="customers--field">
+                <label class="customers--label">First name</label>
+                <input class="customers--input" type="text" name="address[firstName]" value="{{ address.firstName }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Last name</label>
+                <input class="customers--input" type="text" name="address[lastName]" value="{{ address.lastName }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Company</label>
+                <input class="customers--input" type="text" name="address[company]" value="{{ address.company }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Address</label>
+                <input class="customers--input" type="text" name="address[addr]" value="{{ address.addr }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Apartment, suite, etc.</label>
+                <input class="customers--input" type="text" name="address[addrTwo]" value="{{ address.addrTwo }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">City</label>
+                <input class="customers--input" type="text" name="address[city]" value="{{ address.city }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Country</label>
+                <select class="customers--input" name="address[country]" data-address-country>
+                  {{{ all_country_option_tags }}}
+                </select>
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Province / State</label>
+                <select class="customers--input" name="address[province]" data-address-province>
+                  <option value="{{ address.province }}">{{ address.province }}</option>
+                </select>
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Postal / Zip code</label>
+                <input class="customers--input" type="text" name="address[zipCode]" value="{{ address.zipCode }}">
+              </div>
+              <div class="customers--field">
+                <label class="customers--label">Phone</label>
+                <input class="customers--input" type="tel" name="address[mobilePhone]" value="{{ address.mobilePhone }}">
+              </div>
+              <label class="customers--checkbox-row">
+                <input type="checkbox" name="address[def]" value="true" {{#if address.def}}checked{{/if}}>
+                <span>Set as default address</span>
+              </label>
+              <button class="customers--button" type="submit">Save changes</button>
+            {{/form}}
+
+            {{#form 'customer_address' address_seq=address.id class="customers--form customers--delete-address-form" return_to=routes.account_address_new_url}}
+              <button class="customers--button customers--button--ghost" type="submit" onclick="return confirm('Delete this address?');">Delete address</button>
+            {{/form}}
+          </div>
+        </details>
+      </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="customers--empty">No addresses on file. Add your first one below.</p>
+  {{/if}}
+
+  <h2 class="customers--section-title">Add new address</h2>
+  {{#form 'customer_address' id="new-address-form" class="customers--form" return_to=routes.account_address_new_url}}
+    {{#if form.errors}}
+    <div class="customers--error" role="alert">{{ form.errors.messages }}</div>
+    {{/if}}
+    <div class="customers--field">
+      <label class="customers--label">First name</label>
+      <input class="customers--input" type="text" name="address[firstName]" autocomplete="given-name">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Last name</label>
+      <input class="customers--input" type="text" name="address[lastName]" autocomplete="family-name">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Company</label>
+      <input class="customers--input" type="text" name="address[company]" autocomplete="organization">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Address</label>
+      <input class="customers--input" type="text" name="address[addr]" autocomplete="address-line1">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Apartment, suite, etc.</label>
+      <input class="customers--input" type="text" name="address[addrTwo]" autocomplete="address-line2">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">City</label>
+      <input class="customers--input" type="text" name="address[city]" autocomplete="address-level2">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Country</label>
+      <select class="customers--input" name="address[country]" data-address-country>
+        {{{ all_country_option_tags }}}
+      </select>
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Province / State</label>
+      <select class="customers--input" name="address[province]" data-address-province></select>
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Postal / Zip code</label>
+      <input class="customers--input" type="text" name="address[zipCode]" autocomplete="postal-code">
+    </div>
+    <div class="customers--field">
+      <label class="customers--label">Phone</label>
+      <input class="customers--input" type="tel" name="address[mobilePhone]" autocomplete="tel">
+    </div>
+    <label class="customers--checkbox-row">
+      <input type="checkbox" name="address[def]" value="true">
+      <span>Set as default address</span>
+    </label>
+    <button class="customers--button" type="submit">{{ section.settings.submit_label }}</button>
+  {{/form}}
+</div>
+
+<script>
+  /* Province <select> hydration: each <option> emitted by all_country_option_tags
+     carries a `data-provinces` JSON attribute. Whenever the country select
+     changes, we read data-provinces from the selected option and (re)build
+     the province select. If the country has no provinces, the select is
+     hidden so empty list isn't shown. */
+  (function () {
+    function hydrate(form) {
+      var country = form.querySelector('[data-address-country]');
+      var province = form.querySelector('[data-address-province]');
+      if (!country || !province) return;
+      var preselected = province.value;
+
+      function update() {
+        var opt = country.options[country.selectedIndex];
+        var raw = opt && opt.getAttribute('data-provinces');
+        var list = [];
+        try { list = raw ? JSON.parse(raw) : []; } catch (e) { list = []; }
+        province.innerHTML = '';
+        if (!list.length) {
+          province.parentElement.style.display = 'none';
+          return;
+        }
+        province.parentElement.style.display = '';
+        list.forEach(function (item) {
+          var v, l;
+          if (Array.isArray(item)) { v = item[0]; l = item[1] || item[0]; }
+          else if (item && typeof item === 'object') { v = item.code || item.value || item.name; l = item.name || item.label || v; }
+          else { v = l = String(item); }
+          var o = document.createElement('option');
+          o.value = v;
+          o.textContent = l;
+          if (preselected && (preselected === v || preselected === l)) o.selected = true;
+          province.appendChild(o);
+        });
+      }
+      country.addEventListener('change', update);
+      update();
+    }
+    document.querySelectorAll('#new-address-form, .customers--edit-address-form').forEach(hydrate);
+  })();
+</script>
+
+{{#schema}}
+{
+  "name": "Customer addresses",
+  "tag": "div",
+  "class": "shopify-section section--customers-addresses",
+  "settings": [
+    { "type": "text", "id": "heading",      "label": "Heading",      "default": "Addresses" },
+    { "type": "text", "id": "subheading",   "label": "Subheading",   "default": "Manage your saved shipping and billing addresses." },
+    { "type": "text", "id": "submit_label", "label": "Submit label", "default": "Add address" }
+  ]
+}
+{{/schema}}

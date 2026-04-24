@@ -1,0 +1,8 @@
+{
+  "name": "customers/addresses.html",
+  "layout": "theme",
+  "sections": {
+    "main": { "type": "customers-addresses-main", "settings": {} }
+  },
+  "order": ["main"]
+}

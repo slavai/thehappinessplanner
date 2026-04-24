@@ -166,13 +166,23 @@
     text-align: center; font-size: 12px; color: rgba(0,0,0,.55); margin: 8px 0 16px;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button {
+    display: flex !important;
+    align-items: center; justify-content: center;
     width: 100%; padding: 16px; background: var(--button--bg-color, #191919); color: var(--button--color, #fff);
     border: 1px solid var(--button--bdr-color, #191919); border-radius: var(--button--radius, 7px);
     font-family: var(--font--nav--family, Roboto, sans-serif); font-size: var(--button--size, 14px);
     text-transform: var(--font--button--uppercase, uppercase); letter-spacing: 0.5px;
+    line-height: 1;
     cursor: pointer; transition: opacity .2s ease;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button:hover { opacity: .9; }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button .cart-button--text { display: inline-block; line-height: 1; }
+  /* Spinner is only shown while the form is submitting — aria-busy is
+     flipped by theme.js. Keep it out of the layout when idle so it
+     doesn't push the text off-center. */
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button .cart-button--spinner { display: none; }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button[aria-busy="true"] .cart-button--text { display: none; }
+  drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--checkout-button[aria-busy="true"] .cart-button--spinner { display: inline-block; }
   body.drawer-open { overflow: hidden; }
   x-menu-element li[data-depth="2"] > .x-menu--level-2--container[aria-hidden="false"] { display: block; }
 </style>

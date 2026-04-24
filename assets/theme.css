@@ -478,7 +478,18 @@
    Shared layout + form styling. Uses theme CSS tokens so it inherits fonts,
    colors, button treatment from the rest of the site.
    ====================================================================== */
+.customers--root,
+.customers--root .customers--form,
+.customers--root .customers--field,
+.customers--root .customers--links,
+.customers--root .customers--checkbox-row,
+.customers--root .customers--verifycode {
+  /* SHOPLINE injects an unscoped `display: flex` somewhere on customer-page
+     elements; force the layout we actually want with a higher-specificity
+     descendant chain. */
+}
 .customers--root {
+  display: block !important;
   max-width: 480px;
   margin: 0 auto;
   padding: 56px 20px 80px;
@@ -486,13 +497,22 @@
   color: var(--color--body);
 }
 .customers--root[data-width='wide'] { max-width: 880px; }
+.customers--root .customers--form { display: grid !important; gap: 16px; grid-auto-flow: row; }
+.customers--root .customers--field { display: grid !important; gap: 6px; grid-auto-flow: row; }
+.customers--root .customers--links { display: flex !important; flex-direction: row; gap: 12px; justify-content: space-between; }
+.customers--root .customers--checkbox-row { display: flex !important; gap: 8px; align-items: center; }
+.customers--root .customers--verifycode { display: grid !important; grid-template-columns: 1fr auto; gap: 8px; }
 
 .customers--heading {
+  display: block;
   font-family: var(--font--heading--family);
   font-weight: var(--font--heading--weight);
-  font-size: var(--font--banner--size);
+  font-size: var(--font--featured--size);
   line-height: 1.1;
   margin: 0 0 8px;
+}
+@media only screen and (max-width: 767px) {
+  .customers--heading { font-size: var(--font--featured--mobile-size); }
 }
 .customers--subheading {
   font-family: var(--font--paragraph--family);

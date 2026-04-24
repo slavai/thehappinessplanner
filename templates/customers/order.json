@@ -1,0 +1,8 @@
+{
+  "name": "customers/order.html",
+  "layout": "theme",
+  "sections": {
+    "main": { "type": "customers-order-main", "settings": {} }
+  },
+  "order": ["main"]
+}

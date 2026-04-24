@@ -1,0 +1,65 @@
+<div class="customers--root" data-section-id="{{ section.id }}" data-width="wide">
+  <nav class="customers--nav" aria-label="Account">
+    <a href="{{ routes.account_url }}">Account</a>
+    <a href="{{ routes.account_order_list_url }}" aria-current="true">Orders</a>
+    <a href="{{ routes.account_address_new_url }}">Addresses</a>
+    <span class="customers--nav--logout">{{{ customer_logout_link 'Log out' }}}</span>
+  </nav>
+
+  <h1 class="customers--heading" data-item="section-heading">{{ section.settings.heading }}</h1>
+  {{#if section.settings.subheading}}
+  <p class="customers--subheading">{{ section.settings.subheading }}</p>
+  {{/if}}
+
+  {{#if customer.orders_count}}
+    {{#paginate customer.orders by=section.settings.per_page}}
+    <table class="customers--table">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Date</th>
+          <th>Items</th>
+          <th>Payment</th>
+          <th>Fulfillment</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each customer.orders as |order|}}
+        <tr>
+          <td><a class="customers--link" href="{{ order.customer_url }}">{{ order.name }}</a></td>
+          <td>{{ date order.created_at '%B %d, %Y' }}</td>
+          <td>{{ order.item_count }}</td>
+          <td>{{ order.financial_status_label }}</td>
+          <td>{{ order.fulfillment_status_label }}</td>
+          <td>{{ money_with_currency order.total_price }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    {{#if (gt paginate.pages 1)}}
+    <div class="customers--links" style="justify-content: center; margin-top: 24px;">
+      {{#if paginate.previous}}<a class="customers--link" href="{{ paginate.previous.url }}">&larr; Previous</a>{{/if}}
+      <span>Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+      {{#if paginate.next}}<a class="customers--link" href="{{ paginate.next.url }}">Next &rarr;</a>{{/if}}
+    </div>
+    {{/if}}
+    {{/paginate}}
+  {{else}}
+    <p class="customers--empty">You have not placed any orders yet.</p>
+  {{/if}}
+</div>
+
+{{#schema}}
+{
+  "name": "Customer orders",
+  "tag": "div",
+  "class": "shopify-section section--customers-orders",
+  "settings": [
+    { "type": "text",  "id": "heading",    "label": "Heading",    "default": "Your orders" },
+    { "type": "text",  "id": "subheading", "label": "Subheading", "default": "" },
+    { "type": "range", "id": "per_page",   "label": "Orders per page", "min": 5, "max": 50, "step": 5, "default": 20 }
+  ]
+}
+{{/schema}}

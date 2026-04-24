@@ -1,0 +1,135 @@
+<div class="customers--root" data-section-id="{{ section.id }}" data-width="wide">
+  <nav class="customers--nav" aria-label="Account">
+    <a href="{{ routes.account_url }}">Account</a>
+    <a href="{{ routes.account_order_list_url }}" aria-current="true">Orders</a>
+    <a href="{{ routes.account_address_new_url }}">Addresses</a>
+    <span class="customers--nav--logout">{{{ customer_logout_link 'Log out' }}}</span>
+  </nav>
+
+  {{#if order}}
+    <h1 class="customers--heading" data-item="section-heading">Order {{ order.name }}</h1>
+    <p class="customers--subheading">Placed on {{ date order.created_at '%B %d, %Y' }}</p>
+
+    <div class="customers--card">
+      <p>
+        <strong>Payment:</strong> {{ order.financial_status_label }}<br>
+        <strong>Fulfillment:</strong> {{ order.fulfillment_status_label }}
+        {{#if order.cancelled}}<br><strong>Cancelled:</strong> {{ date order.cancelled_at '%B %d, %Y' }}{{#if order.cancel_reason}} — {{ order.cancel_reason }}{{/if}}{{/if}}
+      </p>
+      {{#if order.order_status_url}}
+      <p style="margin-top: 12px;"><a class="customers--link" href="{{ order.order_status_url }}">Track this order</a></p>
+      {{/if}}
+    </div>
+
+    <h2 class="customers--section-title">Items</h2>
+    <table class="customers--table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>SKU</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each order.line_items as |line|}}
+        <tr>
+          <td>
+            <strong>{{ line.product.title }}</strong>
+            {{#unless line.product.has_only_default_variant}}
+              <br>
+              {{#each line.options_with_values as |opt|}}
+                <span style="color: var(--color--body--light); font-size: var(--font--sub-nav--size);">{{ opt.name }}: {{ opt.value }}</span>{{#unless @last}}, {{/unless}}
+              {{/each}}
+            {{/unless}}
+          </td>
+          <td>{{ line.sku }}</td>
+          <td>{{ line.quantity }}</td>
+          <td>{{ money_with_currency line.final_line_price }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align: right;">Subtotal</td>
+          <td>{{ money_with_currency order.line_items_subtotal_price }}</td>
+        </tr>
+        {{#if order.total_discounts}}
+        <tr>
+          <td colspan="3" style="text-align: right;">Discount</td>
+          <td>−{{ money_with_currency order.total_discounts }}</td>
+        </tr>
+        {{/if}}
+        {{#if order.shipping_price}}
+        <tr>
+          <td colspan="3" style="text-align: right;">Shipping</td>
+          <td>{{ money_with_currency order.shipping_price }}</td>
+        </tr>
+        {{/if}}
+        {{#if order.tax_price}}
+        <tr>
+          <td colspan="3" style="text-align: right;">Tax</td>
+          <td>{{ money_with_currency order.tax_price }}</td>
+        </tr>
+        {{/if}}
+        <tr>
+          <td colspan="3" style="text-align: right;"><strong>Total</strong></td>
+          <td><strong>{{ money_with_currency order.total_price }}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="customers--grid" style="margin-top: 32px;">
+      {{#if order.shipping_address}}
+      <div class="customers--card">
+        <h3 style="margin-top: 0;">Shipping address</h3>
+        <p>
+          {{#if order.shipping_address.firstName}}{{ order.shipping_address.firstName }} {{ order.shipping_address.lastName }}<br>{{/if}}
+          {{#if order.shipping_address.company}}{{ order.shipping_address.company }}<br>{{/if}}
+          {{#if order.shipping_address.addr}}{{ order.shipping_address.addr }}<br>{{/if}}
+          {{#if order.shipping_address.addrTwo}}{{ order.shipping_address.addrTwo }}<br>{{/if}}
+          {{ order.shipping_address.city }}{{#if order.shipping_address.province}}, {{ order.shipping_address.province }}{{/if}} {{ order.shipping_address.zipCode }}<br>
+          {{ order.shipping_address.country }}
+          {{#if order.shipping_address.mobilePhone}}<br>{{ order.shipping_address.mobilePhone }}{{/if}}
+        </p>
+        {{#if order.shipping_methods}}
+          {{#each order.shipping_methods as |sm|}}
+            <p style="margin-top: 12px; color: var(--color--body--light);">{{ sm.title }} — {{ money_with_currency sm.price }}</p>
+          {{/each}}
+        {{/if}}
+      </div>
+      {{/if}}
+
+      {{#if order.billing_address}}
+      <div class="customers--card">
+        <h3 style="margin-top: 0;">Billing address</h3>
+        <p>
+          {{#if order.billing_address.firstName}}{{ order.billing_address.firstName }} {{ order.billing_address.lastName }}<br>{{/if}}
+          {{#if order.billing_address.company}}{{ order.billing_address.company }}<br>{{/if}}
+          {{#if order.billing_address.addr}}{{ order.billing_address.addr }}<br>{{/if}}
+          {{#if order.billing_address.addrTwo}}{{ order.billing_address.addrTwo }}<br>{{/if}}
+          {{ order.billing_address.city }}{{#if order.billing_address.province}}, {{ order.billing_address.province }}{{/if}} {{ order.billing_address.zipCode }}<br>
+          {{ order.billing_address.country }}
+        </p>
+      </div>
+      {{/if}}
+    </div>
+
+    {{#if order.note}}
+    <div class="customers--card" style="margin-top: 24px;">
+      <h3 style="margin-top: 0;">Order note</h3>
+      <p>{{ order.note }}</p>
+    </div>
+    {{/if}}
+  {{else}}
+    <p class="customers--empty">Order not found.</p>
+  {{/if}}
+</div>
+
+{{#schema}}
+{
+  "name": "Customer order detail",
+  "tag": "div",
+  "class": "shopify-section section--customers-order"
+}
+{{/schema}}

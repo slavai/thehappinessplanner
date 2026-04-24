@@ -57,7 +57,15 @@
     display: flex; flex-direction: column; flex: 1 1 0; min-height: 0;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--wrapper {
-    flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 56px 24px 16px; box-sizing: border-box;
+    /* theme.css ships .cart--wrapper with position:absolute (sized for
+       /cart page layout). In the drawer we need it as a normal flex
+       item that shrinks to the space left by the sticky summary. */
+    position: static !important;
+    display: block !important;
+    flex: 1 1 0 !important; min-height: 0 !important;
+    overflow-y: auto !important;
+    padding: 56px 24px 16px; box-sizing: border-box;
+    width: auto !important; height: auto !important;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--header { text-align: center; }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--title {
@@ -136,7 +144,14 @@
     padding: 40px 20px; text-align: center;
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--summary {
-    flex: 0 0 auto; padding: 20px 24px 24px; border-top: 1px solid rgba(0,0,0,.08); background: var(--bg-color--body, #f1efe9);
+    /* theme.css ships .cart--summary with position:fixed (anchored to
+       viewport bottom on /cart). In the drawer we want it as a static
+       flex item that sits at the bottom of the cart--form. */
+    position: static !important;
+    display: block !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    padding: 20px 24px 24px; border-top: 1px solid rgba(0,0,0,.08); background: var(--bg-color--body, #f1efe9);
   }
   drawer-element.drawer--root .drawer--container[data-view="cart-drawer"] .cart--total {
     display: flex; justify-content: center; align-items: baseline; gap: 12px; font-size: 18px;

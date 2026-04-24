@@ -5,11 +5,12 @@ live SHOPLINE store — pushes sync in ~10 seconds).
 
 ---
 
-## 2026-04-24 — Sprint 6 (post-release nested-menu)
+## 2026-04-24 — Sprint 6 (post-release nested-menu + scroll reveal)
 
 | Commit | Bug | Summary |
 |---|---|---|
 | `c73a1db` | nested menu | Drawer's `<y-menu-element>` was never registered, so clicking a level-1 item with children (only PLANNERS & JOURNALS in the current main menu) did nothing — `aria-current` stayed `true` on level-1 and theme.css `[aria-current=false]{display:none}` kept level-2 hidden. Added `YMenuElement` custom element: click on a level-1 button with `aria-controls` flips `aria-current` (level-1→false, level-2→true) and sets `--current-level: 1`, which triggers the original transform `translate(-100%)` that slides level-1 out and level-2 into view. Back button reverses. `Drawer.close()` now calls `ym.reset()` so reopening always starts at level-1. |
+| `ec97a51` | scroll reveal | Captured home sections had `data-transition-active="true"` hardcoded on every `[data-transition-item]`, short-circuiting the intended hidden→fade/slide-in on scroll. Added IntersectionObserver (`rootMargin: 0px 0px -10% 0px`) that pre-deactivates all non-drawer `[data-transition-container]` items at boot and re-activates them when the container enters the viewport. Per-item `--transition--delay` (inline) stays — the original staggered cascade plays unchanged. Verified: `s-03→s-07` each activate (`active=N/N`) at expected scroll-Y. |
 
 ---
 

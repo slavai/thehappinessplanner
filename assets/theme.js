@@ -156,6 +156,15 @@
   // `display: none` on inactive level-2 lists (see theme.css rule).
   class YMenuElement extends HTMLElement {
     connectedCallback() {
+      // Normalize --transition--delay on level-2 items: the Handlebars template
+      // uses @index scoped to each subtree (back-link, parent-link, children),
+      // so real items restart from 0ms and collide with the back-link / parent.
+      // Rewrite delays in document order: 0, 100, 200, 300…ms per container.
+      $$(".y-menu--level-2--container", this).forEach((l2) => {
+        [...l2.querySelectorAll("[data-transition-item]")].forEach((item, i) => {
+          item.style.setProperty("--transition--delay", i * 100 + "ms");
+        });
+      });
       $$(".y-menu--level-1--link[data-depth='2'] > button[aria-controls]", this).forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();

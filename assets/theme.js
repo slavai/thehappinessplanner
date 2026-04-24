@@ -76,6 +76,10 @@
       drawer.querySelectorAll("[data-transition-item][data-transition-active='true']").forEach((item) => {
         item.setAttribute("data-transition-active", "false");
       });
+      // Reset y-menu back to level-1 so reopen always starts at the root.
+      drawer.querySelectorAll("y-menu-element").forEach((ym) => {
+        if (typeof ym.reset === "function") ym.reset();
+      });
       document.body.classList.remove("drawer-open");
       document.documentElement.style.overflow = "";
     },
@@ -143,6 +147,62 @@
     }
   }
   define("x-menu-element", XMenuElement);
+
+  // --- y-menu-element (mobile drawer nested nav) -------------------------
+  // Original theme.css positions level-2 lists at `left: 100%` and slides the
+  // level-1 container with `transform: translate(calc(var(--current-level) * -100%))`.
+  // Clicking a level-1 item with a submenu flips `--current-level` to 1 so the
+  // level-2 list slides in; the Back button restores 0. aria-current gates the
+  // `display: none` on inactive level-2 lists (see theme.css rule).
+  class YMenuElement extends HTMLElement {
+    connectedCallback() {
+      $$(".y-menu--level-1--link[data-depth='2'] > button[aria-controls]", this).forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const id = btn.getAttribute("aria-controls");
+          const level2 = id && this.querySelector(`#${CSS.escape(id)}`);
+          if (level2) this._showLevel2(level2, btn);
+        });
+      });
+      $$(".y-menu--back-link > button[aria-controls]", this).forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          this._showRoot();
+        });
+      });
+    }
+    _showLevel2(level2, triggerBtn) {
+      $$(".y-menu--level-2--container", this).forEach((l2) => l2.setAttribute("aria-current", "false"));
+      const root = this.querySelector(".y-menu--level-1--container");
+      if (root) root.setAttribute("aria-current", "false");
+      level2.setAttribute("aria-current", "true");
+      if (triggerBtn) triggerBtn.setAttribute("aria-expanded", "true");
+      this.style.setProperty("--current-level", "1");
+      requestAnimationFrame(() => {
+        level2.querySelectorAll("[data-transition-item]").forEach((item) => {
+          item.setAttribute("data-transition-active", "true");
+        });
+      });
+    }
+    _showRoot() {
+      const root = this.querySelector(".y-menu--level-1--container");
+      if (root) root.setAttribute("aria-current", "true");
+      $$(".y-menu--level-2--container", this).forEach((l2) => {
+        l2.setAttribute("aria-current", "false");
+        l2.querySelectorAll("[data-transition-item][data-transition-active='true']").forEach((item) => {
+          item.setAttribute("data-transition-active", "false");
+        });
+      });
+      $$(".y-menu--level-1--link > button[aria-expanded='true']", this).forEach((btn) => {
+        btn.setAttribute("aria-expanded", "false");
+      });
+      this.style.setProperty("--current-level", "0");
+    }
+    reset() {
+      this._showRoot();
+    }
+  }
+  define("y-menu-element", YMenuElement);
 
   // --- disclosure-element (country selector, footer expanders, option picker) ---
   // data-type switches behavior:

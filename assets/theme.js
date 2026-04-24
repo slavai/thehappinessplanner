@@ -357,7 +357,6 @@
     "quantity-input-element",
     "collection-filters-element",
     "pagination-element",
-    "reveal-element",
     "accordion-element",
     "tabs-element",
     "product-price-element",
@@ -366,6 +365,44 @@
     "modal-element",
     "price-range-element",
   ].forEach((n) => define(n, class extends HTMLElement {}));
+
+  // --- section reveal on scroll ------------------------------------------
+  // Captured markup has [data-transition-active="true"] hardcoded on items,
+  // which short-circuits the original scroll-triggered reveal. We flip items
+  // to "false" on boot, then re-activate each [data-transition-container]'s
+  // items when the container enters the viewport. Per-item --transition--delay
+  // remains inline, so the original staggered cascade plays unchanged.
+  // Drawer-internal containers (y-menu, cart-drawer, search) are excluded —
+  // Drawer.open() already triggers their cascade on open.
+  class RevealElement extends HTMLElement {}
+  define("reveal-element", RevealElement);
+
+  const initSectionReveal = () => {
+    const containers = $$(
+      "[data-transition-container]:not([data-transition-container='viewport'])"
+    ).filter((el) => !el.closest("drawer-element"));
+    if (!containers.length || !("IntersectionObserver" in window)) return;
+    containers.forEach((container) => {
+      container.querySelectorAll("[data-transition-item][data-transition-active='true']").forEach((item) => {
+        item.setAttribute("data-transition-active", "false");
+      });
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.querySelectorAll("[data-transition-item]").forEach((item) => {
+          item.setAttribute("data-transition-active", "true");
+        });
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.01 });
+    containers.forEach((c) => io.observe(c));
+  };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSectionReveal);
+  } else {
+    initSectionReveal();
+  }
 
   // --- Carousel base ----------------------------------------------------
   // Shared paging engine used by <slideshow-carousel>, <carousel-element>,

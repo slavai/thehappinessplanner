@@ -5,6 +5,14 @@ live SHOPLINE store — pushes sync in ~10 seconds).
 
 ---
 
+## 2026-04-24 — Sprint 6 (post-release nested-menu)
+
+| Commit | Bug | Summary |
+|---|---|---|
+| `c73a1db` | nested menu | Drawer's `<y-menu-element>` was never registered, so clicking a level-1 item with children (only PLANNERS & JOURNALS in the current main menu) did nothing — `aria-current` stayed `true` on level-1 and theme.css `[aria-current=false]{display:none}` kept level-2 hidden. Added `YMenuElement` custom element: click on a level-1 button with `aria-controls` flips `aria-current` (level-1→false, level-2→true) and sets `--current-level: 1`, which triggers the original transform `translate(-100%)` that slides level-1 out and level-2 into view. Back button reverses. `Drawer.close()` now calls `ym.reset()` so reopening always starts at level-1. |
+
+---
+
 ## 2026-04-21 — Sprint 0–5 (22 QA bugs triaged, 14 code-fixed)
 
 ### Sprint 0 — P0 broken functionality

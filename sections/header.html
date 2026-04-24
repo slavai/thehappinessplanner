@@ -11,7 +11,7 @@
      menu items go to the menu, and clicks on the dimmed area close the
      drawer. theme.css ships overlay with z-index:98 — override. */
   drawer-element.drawer--root .drawer--overlay { position: absolute !important; inset: 0 !important; background: rgba(0,0,0,.45) !important; opacity: 0; transition: opacity .25s ease; pointer-events: none; z-index: 1 !important; }
-  drawer-element.drawer--root[data-drawer-status="open"] .drawer--overlay { opacity: 1; pointer-events: auto; }
+  drawer-element.drawer--root[data-drawer-status="open"] .drawer--overlay { opacity: 1 !important; pointer-events: auto !important; }
   drawer-element.drawer--root .drawer--side { position: absolute !important; background: #fff !important; box-shadow: 0 0 20px rgba(0,0,0,.12) !important; transition: transform .3s ease !important; overflow: auto !important; z-index: 2 !important; }
   /* y-menu drawer matches original: beige surface spans the whole side,
      not only the level-2 list (which was the only element beige by default). */

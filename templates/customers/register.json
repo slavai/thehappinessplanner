@@ -1,0 +1,8 @@
+{
+  "name": "customers/register.html",
+  "layout": "theme",
+  "sections": {
+    "main": { "type": "customers-register-main", "settings": {} }
+  },
+  "order": ["main"]
+}

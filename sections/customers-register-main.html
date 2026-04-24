@@ -1,0 +1,127 @@
+<div class="customers--root" data-section-id="{{ section.id }}">
+  <h1 class="customers--heading" data-item="section-heading">{{ section.settings.heading }}</h1>
+  {{#if section.settings.subheading}}
+  <p class="customers--subheading">{{ section.settings.subheading }}</p>
+  {{/if}}
+
+  {{#form 'create_customer' id="customer-register-form" class="customers--form"}}
+    {{#if form.errors}}
+    <div class="customers--error" role="alert" data-form-error>{{ form.errors.messages }}</div>
+    {{/if}}
+
+    {{#if form.registerConfig.firstNameCheck}}
+    <div class="customers--field">
+      <label class="customers--label" for="customer-register-first-name">First name</label>
+      <input class="customers--input" type="text" id="customer-register-first-name" name="customer[first_name]" autocomplete="given-name">
+    </div>
+    {{/if}}
+
+    {{#if form.registerConfig.lastNameCheck}}
+    <div class="customers--field">
+      <label class="customers--label" for="customer-register-last-name">Last name</label>
+      <input class="customers--input" type="text" id="customer-register-last-name" name="customer[last_name]" autocomplete="family-name">
+    </div>
+    {{/if}}
+
+    <div class="customers--field">
+      <label class="customers--label" for="customer-register-email">Email</label>
+      <input class="customers--input" type="email" id="customer-register-email" name="customer[email]" autocomplete="email" required>
+    </div>
+
+    <div class="customers--field">
+      <label class="customers--label" for="customer-register-password">Password</label>
+      <input class="customers--input" type="password" id="customer-register-password" name="customer[password]" autocomplete="new-password" required minlength="6">
+    </div>
+
+    {{#if form.registerConfig.checkTag}}
+    <div class="customers--verifycode">
+      <input class="customers--input" type="text" name="customer[verifycode]" placeholder="Verification code" autocomplete="one-time-code">
+      <button type="button" class="customers--verifycode-btn" data-verifycode-btn>{{ section.settings.verifycode_label }}</button>
+    </div>
+    {{/if}}
+
+    {{#if section.settings.show_marketing}}
+    <label class="customers--checkbox-row">
+      <input type="checkbox" name="customer[accepts_marketing]" value="true">
+      <span>{{ section.settings.marketing_label }}</span>
+    </label>
+    {{/if}}
+
+    <button class="customers--button" type="submit">{{ section.settings.submit_label }}</button>
+
+    <div class="customers--links">
+      <a class="customers--link" href="{{ routes.account_login_url }}">Already have an account? Sign in</a>
+    </div>
+  {{/form}}
+</div>
+
+<script>
+  (function () {
+    function init() {
+      var form = document.getElementById('customer-register-form');
+      if (!form) return;
+      var errorBox = form.querySelector('[data-form-error]');
+      var verifyBtn = form.querySelector('[data-verifycode-btn]');
+      var register = new window.Shopline.customerAccount.Register(form);
+
+      if (verifyBtn) {
+        verifyBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (verifyBtn.getAttribute('aria-disabled') === 'true') return;
+          verifyBtn.setAttribute('aria-disabled', 'true');
+          register.sendVerifyCode()
+            .then(function (response) {
+              if (response && response.errorMessage) {
+                console.warn('verify code error', response.errorMessage);
+              }
+            })
+            .finally(function () { verifyBtn.removeAttribute('aria-disabled'); });
+        });
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        register.submit()
+          .then(function () {
+            window.location.href = '{{ routes.account_url }}';
+          })
+          .catch(function (error) {
+            var message = (error && (error.message || error.errorMessage)) || 'Registration failed. Please check your details and try again.';
+            if (!errorBox) {
+              errorBox = document.createElement('div');
+              errorBox.className = 'customers--error';
+              errorBox.setAttribute('role', 'alert');
+              errorBox.setAttribute('data-form-error', '');
+              form.insertBefore(errorBox, form.firstChild);
+            }
+            errorBox.textContent = message;
+          });
+      });
+    }
+    if (window.Shopline && typeof window.Shopline.loadFeatures === 'function') {
+      window.Shopline.loadFeatures(
+        [{ name: 'customer-account-api', version: '0.3' }],
+        function (err) {
+          if (err) { console.error('customer-account-api load failed', err); return; }
+          init();
+        }
+      );
+    }
+  })();
+</script>
+
+{{#schema}}
+{
+  "name": "Customer register",
+  "tag": "div",
+  "class": "shopify-section section--customers-register",
+  "settings": [
+    { "type": "text",     "id": "heading",          "label": "Heading",          "default": "Create account" },
+    { "type": "text",     "id": "subheading",       "label": "Subheading",       "default": "Join the community to track orders, save addresses, and check out faster." },
+    { "type": "text",     "id": "submit_label",     "label": "Submit label",     "default": "Create account" },
+    { "type": "text",     "id": "verifycode_label", "label": "Verify code label","default": "Send code" },
+    { "type": "checkbox", "id": "show_marketing",   "label": "Show email marketing checkbox", "default": true },
+    { "type": "text",     "id": "marketing_label",  "label": "Marketing checkbox label",      "default": "Send me updates and 10% off my first order." }
+  ]
+}
+{{/schema}}
